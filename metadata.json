@@ -1,0 +1,7 @@
+{
+  "name": "Ouzze Tecnologia",
+  "description": "Soluções em locação de computadores, notebooks, impressoras e celulares, venda de equipamentos e serviços de tecnologia para empresas.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
