@@ -74,8 +74,8 @@ export const RENTAL_EQUIPMENT: EquipmentItem[] = [
     name: 'Computadores & Workstations',
     category: 'computadores',
     categoryLabel: 'Desktops & Workstations',
-    shortDesc: 'Equipamentos configurados para tarefas administrativas ou cargas pesadas de engenharia e design.',
-    specs: ['Processadores Intel Core i5/i7/i9 & Xeon', 'Memória RAM de 16GB a 64GB DDR4/DDR5', 'Armazenamento SSD NVMe Ultra Rápido', 'Opções com Placas Gráficas Dedicadas RTX'],
+    shortDesc: 'Equipamentos corporativos configurados para tarefas administrativas ou cargas pesadas de engenharia e design.',
+    specs: ['Processadores Intel Core i5/i7/i9 e equivalentes', 'Memória RAM de 16GB a 64GB DDR4/DDR5', 'Armazenamento SSD NVMe de alta velocidade', 'Opções com Placas Gráficas Dedicadas'],
     recommendedFor: 'Escritórios, Desenvolvedores, Engenharia, Finanças',
     iconName: 'Monitor',
     badge: 'Alta Performance'
@@ -85,8 +85,8 @@ export const RENTAL_EQUIPMENT: EquipmentItem[] = [
     name: 'Notebooks Corporativos',
     category: 'notebooks',
     categoryLabel: 'Notebooks Corporativos',
-    shortDesc: 'Mobilidade com segurança de dados, chassi reforçado e longa duração de bateria.',
-    specs: ['Telas 14" e 15.6" Full HD / IPS Anti-reflexo', 'Processadores corporativos com TPM 2.0', 'Baterias de alta densidade e carregamento rápido', 'Peso reduzido e resistência estrutural'],
+    shortDesc: 'Mobilidade corporativa com segurança de dados, chassi reforçado e autonomia para a rotina de trabalho.',
+    specs: ['Telas 14" e 15.6" Full HD Anti-reflexo', 'Processadores corporativos com segurança por hardware', 'Baterias com autonomia para jornada de trabalho', 'Estrutura reforçada para uso corporativo'],
     recommendedFor: 'Equipes Híbridas, Vendas Externas, Gestores e Docentes',
     iconName: 'Laptop',
     badge: 'Mobilidade'
@@ -96,8 +96,8 @@ export const RENTAL_EQUIPMENT: EquipmentItem[] = [
     name: 'Impressoras & Multifuncionais',
     category: 'impressoras',
     categoryLabel: 'Impressoras & Outsourcing',
-    shortDesc: 'Parque de impressão controlado com fornecimento contínuo de consumíveis e manutenção.',
-    specs: ['Laser Monocromático e Colorido de Alta Velocidade', 'Digitalização em rede e duplex automático', 'Controle de cotas de impressão por usuário', 'Manutenção preventiva e troca de suprimentos inclusa'],
+    shortDesc: 'Parque de impressão corporativo com suporte, manutenção e substituição de consumíveis conforme contrato.',
+    specs: ['Laser Monocromático e Colorido de Alta Velocidade', 'Digitalização em rede e duplex automático', 'Gerenciamento e controle de impressão', 'Manutenção e suporte técnico inclusos'],
     recommendedFor: 'Escolas, Clínicas, Escritórios e Centros Logísticos',
     iconName: 'Printer',
     badge: 'Gestão Inteligente'
@@ -107,33 +107,33 @@ export const RENTAL_EQUIPMENT: EquipmentItem[] = [
     name: 'Celulares & Tablets Corporativos',
     category: 'celulares',
     categoryLabel: 'Dispositivos Móveis',
-    shortDesc: 'Smartphones e tablets gerenciados com MDM para forças de vendas e equipes de campo.',
-    specs: ['Android Enterprise & iOS homologados', 'Gestão remota de aplicativos e segurança (MDM)', 'Capas de proteção e películas aplicadas', 'Chips de dados configuráveis sob demanda'],
+    shortDesc: 'Smartphones e tablets corporativos com suporte a gerenciamento centralizado (MDM) para equipes.',
+    specs: ['Compatibilidade com ecossistemas corporativos', 'Suporte a gerenciamento remoto e políticas de segurança', 'Acessórios de proteção para uso diário', 'Configuração e preparação sob medida'],
     recommendedFor: 'Logística, Vendas em Campo, Ensino Digital e Auditorias',
     iconName: 'Smartphone',
-    badge: 'MDM Pronto'
+    badge: 'Uso Corporativo'
   },
   {
     id: 'monitores-ergonomia',
     name: 'Monitores Profissionais',
     category: 'monitores',
     categoryLabel: 'Monitores & Displays',
-    shortDesc: 'Telas com certificação ergonômica NR-17, ajuste de altura e fidelidade visual.',
-    specs: ['Telas IPS de 24", 27" e 34" Ultrawide', 'Ajuste de altura, inclinação e rotação pivot', 'Filtro de luz azul para proteção ocular contínua', 'Conexões HDMI, DisplayPort e USB-C Hub'],
+    shortDesc: 'Telas profissionais com ajustes de ergonomia, conforto visual e alta nitidez para trabalho contínuo.',
+    specs: ['Telas IPS de 24", 27" e formatos ultrawide', 'Ajuste de altura, inclinação e rotação pivot', 'Recursos de conforto visual contra fadiga ocular', 'Conexões HDMI, DisplayPort e USB'],
     recommendedFor: 'Produtividade de escritório, Design, Finanças e Operações',
     iconName: 'Tv',
-    badge: 'Ergonomia'
+    badge: 'Conforto Visual'
   },
   {
     id: 'infra-servidores',
     name: 'Equipamentos de Infra & Redes',
     category: 'corporativo',
     categoryLabel: 'Infraestrutura de TI',
-    shortDesc: 'Switches gerenciáveis, roteadores empresariais, access points corporativos e nobreaks senoidais.',
-    specs: ['Switches PoE+ Gigabit e 10G SFP+', 'Access Points corporativos com roaming contínuo', 'Nobreaks senoidais com autonomia expansível', 'Racks de 19" e patch panels organizados'],
+    shortDesc: 'Switches empresariais, access points corporativos, nobreaks senoidais e soluções de conectividade.',
+    specs: ['Switches gerenciáveis Gigabit e PoE', 'Access Points corporativos com ampla cobertura', 'Nobreaks senoidais para proteção energética', 'Acessórios de cabeamento e organização'],
     recommendedFor: 'Novas filiais, reestruturações de sede e eventos temporários',
     iconName: 'Server',
-    badge: 'Rede Segura'
+    badge: 'Rede Corporativa'
   }
 ];
 
@@ -142,8 +142,8 @@ export const SERVICES_LIST: ServiceItem[] = [
     id: 'suporte-remoto',
     title: 'Suporte Remoto Proativo',
     category: 'suporte',
-    description: 'Central de Service Desk para resolução ágil de chamados do dia a dia, dúvidas de usuários e correção de falhas de software sem deslocamento.',
-    features: ['Atendimento por múltiplos canais (Helpdesk, WhatsApp, Telefone)', 'Abertura e controle de chamados com protocolo direto', 'Instalação remota de softwares e drivers autorizados', 'Limpeza lógica e segurança de endpoints'],
+    description: 'Central de atendimento para resolução ágil de chamados do dia a dia, dúvidas de usuários e suporte a softwares sem deslocamento.',
+    features: ['Atendimento por múltiplos canais (WhatsApp e chamados)', 'Abertura e acompanhamento estruturado de solicitações', 'Instalação e configuração remota de softwares autorizados', 'Diagnóstico e manutenção lógica de computadores'],
     sla: 'Atendimento ágil multicanal',
     iconName: 'Headphones'
   },
@@ -151,45 +151,45 @@ export const SERVICES_LIST: ServiceItem[] = [
     id: 'suporte-presencial',
     title: 'Suporte Presencial (Field Service)',
     category: 'suporte',
-    description: 'Técnicos especializados para visitas agendadas ou intervenções na sua sede, resolvendo falhas físicas e de infraestrutura.',
-    features: ['Visitas periódicas de rotina e vistorias de conformidade', 'Substituição rápida de peças e equipamentos com defeito', 'Alocação de técnico residente para operações de grande porte', 'Organização física de postos de trabalho e cabeamento'],
-    sla: 'Atendimento presencial prioritário',
+    description: 'Técnicos qualificados para visitas agendadas ou atendimentos na sua sede, resolvendo falhas físicas e de infraestrutura.',
+    features: ['Visitas de rotina e vistorias preventivas', 'Substituição ágil de peças e equipamentos', 'Alocação técnica conforme necessidade do contrato', 'Organização de postos de trabalho e cabeamento'],
+    sla: 'Atendimento presencial programado',
     iconName: 'UserCheck'
   },
   {
     id: 'manutencao-preventiva',
     title: 'Manutenção Preventiva',
     category: 'manutencao',
-    description: 'Inspeções programadas para limpeza interna, troca de pasta térmica, atualização de firmwares e testes de hardware.',
-    features: ['Prolonga a vida útil do parque tecnológico', 'Evita paradas repentinas e perda de dados operacionais', 'Relatórios técnicos de integridade de discos e componentes', 'Padronização periódica do sistema operacional'],
-    sla: 'Cronograma programado',
+    description: 'Inspeções periódicas para limpeza interna, renovação de pasta térmica, atualização de softwares e testes de hardware.',
+    features: ['Prolonga a vida útil do parque de TI', 'Reduz o risco de paradas inesperadas', 'Avaliação da integridade de discos e memórias', 'Padronização periódica do sistema operacional'],
+    sla: 'Cronograma periódico',
     iconName: 'ShieldCheck'
   },
   {
     id: 'manutencao-corretiva',
     title: 'Manutenção Corretiva Especializada',
     category: 'manutencao',
-    description: 'Laboratório técnico próprio para conserto avançado de placas-mãe, fontes, dobradiças e displays de notebooks.',
-    features: ['Diagnóstico com instrumental eletrônico especializado', 'Reparo em nível de componentes (BGA, SMD e circuitos)', 'Peças de reposição originais e certificadas', 'Garantia técnica documentada por ordem de serviço'],
-    sla: 'Laudo técnico detalhado',
+    description: 'Diagnóstico e conserto especializado para recuperação de notebooks, desktops, fontes e componentes de hardware.',
+    features: ['Diagnóstico técnico com instrumental especializado', 'Reparo e recuperação de placas e conectores', 'Substituição por peças compatíveis de alta qualidade', 'Relatório e garantia do serviço executado'],
+    sla: 'Laudo técnico estruturado',
     iconName: 'Wrench'
   },
   {
     id: 'redes-conectividade',
     title: 'Infraestrutura de Redes e Wi-Fi',
     category: 'infraestrutura',
-    description: 'Engenharia de rede cabeada Cat6/Cat6a, fibra óptica e redes sem fio corporativas com segmentação de tráfego.',
-    features: ['Mapeamento e certificação de pontos de rede cabeada', 'Wi-Fi corporativo de alta densidade sem zonas de sombra', 'Configuração de Firewalls, VPNs corporativas e roteamento', 'Organização e identificação padrão de racks e patch panels'],
-    sla: 'Projetos certificados',
+    description: 'Projetos de rede cabeada estruturada, fibra óptica e redes sem fio empresariais com estabilidade e segurança.',
+    features: ['Planejamento e passagem de pontos de rede cabeada', 'Wi-Fi corporativo de alta densidade sem pontos cegos', 'Configuração de roteadores, switches e firewalls', 'Organização e identificação padrão de racks'],
+    sla: 'Projetos estruturados',
     iconName: 'Network'
   },
   {
     id: 'implantacao-configuracao',
     title: 'Instalação e Configuração de TI',
     category: 'instalacao',
-    description: 'Padronização completa de novos parques computacionais com criação de imagens de sistema personalizadas.',
-    features: ['Clonagem e implantação rápida de lotes de máquinas', 'Ingresso em domínios Active Directory / Azure AD / Google Workspace', 'Políticas de segurança de endpoint e proteção corporativa', 'Backup automatizado de dados e perfis de usuário'],
-    sla: 'Implantação estruturada',
+    description: 'Padronização e preparação de parques computacionais para operação imediata dos colaboradores e equipes.',
+    features: ['Instalação e clonagem de sistemas em lote', 'Configuração de e-mails corporativos e perfis de acesso', 'Aplicação de políticas de segurança e proteção de dados', 'Configuração de rotinas de backup e restauração'],
+    sla: 'Implantação ágil',
     iconName: 'Cpu'
   }
 ];
@@ -199,27 +199,27 @@ export const SEGMENTS_DATA: SegmentItem[] = [
     id: 'educacao',
     title: 'Educação',
     subtitle: 'Escolas, faculdades e instituições de ensino',
-    description: 'Laboratórios de informática modernos, notebooks para docentes, tablets pedagógicos e infraestrutura de rede resiliente para aulas e avaliações.',
+    description: 'Laboratórios de informática, notebooks para corpo docente, tablets pedagógicos e infraestrutura de rede resiliente para aulas presenciais e plataformas digitais.',
     keyBenefits: [
-      'Laboratórios completos com bloqueio pedagógico',
-      'Notebooks resistentes para corpo docente',
-      'Rede Wi-Fi de alta densidade para múltiplos acessos simultâneos',
-      'Suporte prioritário durante períodos letivos e matrículas'
+      'Laboratórios completos configurados para o ambiente escolar',
+      'Notebooks resistentes para coordenação e professores',
+      'Rede Wi-Fi dimensionada para múltiplos acessos simultâneos',
+      'Suporte técnico alinhado ao calendário letivo'
     ],
     slug: '/educacao',
     iconName: 'GraduationCap',
-    statsHighlight: 'Solução Especializada'
+    statsHighlight: 'Destaque Educacional'
   },
   {
     id: 'empresas',
     title: 'Empresas & Escritórios',
     subtitle: 'Soluções completas para operações corporativas',
-    description: 'Padronização de computadores, suporte Helpdesk dedicado e escalabilidade ágil para contratações, novas filiais e trabalho híbrido.',
+    description: 'Padronização de computadores, suporte técnico dedicado e flexibilidade para contratações, novas filiais e trabalho híbrido.',
     keyBenefits: [
       'Parque de máquinas atualizado com flexibilidade de contrato',
       'Redução de paradas operacionais e chamados improdutivos',
-      'Gestão de ativos de TI e inventário simplificado',
-      'Substituição ágil de equipamentos sem custo extra'
+      'Gestão simplificada do inventário de TI',
+      'Substituição ágil de equipamentos inclusa'
     ],
     slug: '#empresas-info',
     iconName: 'Building2',
@@ -228,28 +228,28 @@ export const SEGMENTS_DATA: SegmentItem[] = [
   {
     id: 'saude',
     title: 'Saúde & Clínicas',
-    subtitle: 'Clínicas, laboratórios e hospitais',
-    description: 'Equipamentos higienizáveis para recepções e consultórios, computadores de alta resolução para laudos médicos e suporte ininterrupto.',
+    subtitle: 'Clínicas, consultórios e laboratórios',
+    description: 'Equipamentos ágeis para recepções e consultórios, monitores de alta nitidez para visualização de sistemas e suporte confiável.',
     keyBenefits: [
       'Estações de trabalho rápidas para prontuários eletrônicos',
-      'Monitores com fidelidade para visualização de exames',
-      'Rede isolada para segurança e conformidade LGPD',
-      'Impressão térmica e de receituários com reposição rápida'
+      'Monitores com alta definição e conforto visual',
+      'Ambiente de rede configurado com foco em segurança de dados',
+      'Impressão de laudos e receituários com reposição ágil'
     ],
     slug: '#saude-info',
     iconName: 'Activity',
-    statsHighlight: 'Segurança & Conformidade'
+    statsHighlight: 'Segurança & Estabilidade'
   },
   {
     id: 'eventos',
     title: 'Eventos & Feiras',
     subtitle: 'Estrutura tecnológica temporária',
-    description: 'Locação de curto prazo de notebooks para credenciamento, totens interativos, impressoras térmicas para crachás e Wi-Fi de evento.',
+    description: 'Locação sob medida de notebooks para credenciamento, totens, impressoras de crachás e infraestrutura de conectividade temporária.',
     keyBenefits: [
-      'Locação sob medida por dias, semanas ou meses',
-      'Equipamentos entregues testados e pré-configurados',
-      'Plantão técnico presencial durante a realização do evento',
-      'Logística de montagem, desmontagem e recolhimento'
+      'Locação flexível por dias, semanas ou meses',
+      'Equipamentos testados e prontos para uso imediato',
+      'Suporte técnico presencial durante a realização do evento',
+      'Logística de entrega, instalação e retirada'
     ],
     slug: '#eventos-info',
     iconName: 'CalendarRange',
@@ -259,12 +259,12 @@ export const SEGMENTS_DATA: SegmentItem[] = [
     id: 'setor-publico',
     title: 'Setor Público',
     subtitle: 'Órgãos e instituições públicas',
-    description: 'Atendimento a editais, atas de registro de preços e contratos governamentais com rigor documental, garantias fiscais e suporte técnico formal.',
+    description: 'Atendimento a editais, atas e contratos com rigor documental, conformidade técnica e suporte formal.',
     keyBenefits: [
-      'Equipamentos em estrita conformidade com termos de referência',
-      'Documentação fiscal e certidões sempre atualizadas',
-      'Acompanhamento técnico por especialistas',
-      'Capacidade operacional para entregas de grande volume'
+      'Equipamentos em conformidade com o termo de referência',
+      'Documentação e certidões organizadas',
+      'Acompanhamento técnico por profissionais qualificados',
+      'Capacidade de atendimento conforme o projeto contratado'
     ],
     slug: '#setor-publico-info',
     iconName: 'Landmark',
@@ -349,45 +349,46 @@ export const EDUCATION_PAGE_DATA = {
     badge: 'Ouzze Educação',
     title: 'Tecnologia que transforma salas de aula em centros de inovação.',
     subtitle: 'Soluções completas de locação e infraestrutura de TI para escolas, faculdades e redes de ensino.',
-    description: 'Fornecemos desde laboratórios completos e notebooks para professores até redes Wi-Fi de alta densidade e suporte técnico dedicado para sua instituição nunca parar.',
+    description: 'Fornecemos desde laboratórios completos e notebooks para professores até redes Wi-Fi de alta densidade e suporte técnico dedicado conforme o projeto contratado.',
   },
   solutions: [
     {
       title: 'Laboratórios de Informática Completos',
-      desc: 'Computadores de alta durabilidade, telas ergonômicas, softwares pedagógicos pré-instalados e sistemas de congelamento/bloqueio para alunos.',
+      desc: 'Computadores de alta durabilidade, monitores ergonômicos e softwares pedagógicos configurados para a rotina de alunos e professores.',
       icon: 'Monitor'
     },
     {
       title: 'Notebooks para Professores & Coordenação',
-      desc: 'Dispositivos portáteis e ágeis com autonomia de bateria para preparo de aulas, diários eletrônicos e transmissões ao vivo.',
+      desc: 'Dispositivos portáteis e ágeis com boa autonomia de bateria para preparo de aulas, diários eletrônicos e atividades pedagógicas.',
       icon: 'Laptop'
     },
     {
       title: 'Tablets & Dispositivos Educacionais',
-      desc: 'Tablets com proteção antichoque e gestão de conteúdo (MDM) para projetos de leitura digital e salas colaborativas.',
+      desc: 'Tablets com acessórios de proteção e suporte a gestão de conteúdo para projetos de leitura digital e salas colaborativas.',
       icon: 'Tablet'
     },
     {
       title: 'Ambientes Administrativos & Secretaria',
-      desc: 'Desktops, impressoras com controle de cotas e nobreaks para manter a secretaria e o financeiro sem interrupções.',
+      desc: 'Desktops, impressoras gerenciadas e nobreaks para manter a secretaria e o setor administrativo sempre operacionais.',
       icon: 'Printer'
     },
     {
       title: 'Wi-Fi Escolar de Alta Densidade',
-      desc: 'Projetos de rede sem fio capazes de suportar centenas de alunos conectados simultaneamente no pátio e salas sem lentidão.',
+      desc: 'Projetos de rede sem fio dimensionados para suportar múltiplos alunos e docentes conectados simultaneamente com estabilidade.',
       icon: 'Wifi'
     },
     {
       title: 'Suporte Técnico Dedicado para Ensino',
-      desc: 'Atendimento ágil e plantão técnico durante períodos de avaliações, vestibulares e matrículas escolares.',
+      desc: 'Atendimento técnico e manutenção programados de acordo com a rotina e o calendário letivo da instituição.',
       icon: 'ShieldCheck'
     }
   ],
   benefits: [
-    'Preservação do caixa da escola: sem imobilizar grandes valores em compra de equipamentos',
+    'Preservação do capital: sem imobilizar grandes recursos em compra de equipamentos',
     'Renovação programada do parque tecnológico a cada ciclo contratual',
-    'Substituição de máquinas com defeito inclusa no contrato',
-    'Conformidade com a BNCC e capacitação para ferramentas digitais'
+    'Substituição de equipamentos com defeito inclusa no contrato',
+    'Suporte técnico e implantação orientados para o ambiente escolar'
   ]
 };
+
 

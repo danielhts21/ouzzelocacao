@@ -9,7 +9,9 @@ import {
   ArrowRight, 
   Check, 
   Sparkles,
-  ChevronRight
+  ChevronRight,
+  ShieldCheck,
+  Zap
 } from 'lucide-react';
 import { SEGMENTS_DATA } from '../../data/siteData';
 import { SegmentItem } from '../../types';
@@ -67,12 +69,12 @@ export const SegmentsSection: React.FC<SegmentsSectionProps> = ({
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white tracking-tight">
               Tecnologia pensada para <br />
               <span className="text-red-600">
-                cada negócio.
+                cada setor do mercado.
               </span>
             </h2>
 
             <p className="text-zinc-400 text-base sm:text-lg leading-relaxed">
-              Entendemos que uma escola possui desafios diferentes de um hospital ou de um escritório corporativo. Desenvolvemos ecossistemas sob medida para cada setor.
+              Entendemos as particularidades regulatórias e operacionais de diferentes segmentos empresariais, educacionais e corporativos.
             </p>
           </div>
 
@@ -80,7 +82,7 @@ export const SegmentsSection: React.FC<SegmentsSectionProps> = ({
             <button
               id="segments-custom-proposal-btn"
               onClick={() => onOpenProposal('Segmentos Especiais')}
-              className="px-5 py-3 rounded-sm bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-white/10 hover:border-red-600/50 text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 cursor-pointer active:scale-98"
+              className="px-5 py-3 rounded-sm bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-white/10 hover:border-red-600/50 text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 cursor-pointer active:scale-98 focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:outline-none"
             >
               <span>Consultar projeto personalizado</span>
               <ChevronRight className="w-4 h-4 text-red-500" />
@@ -88,84 +90,96 @@ export const SegmentsSection: React.FC<SegmentsSectionProps> = ({
           </div>
         </div>
 
-        {/* 5 Modular Segment Cards */}
+        {/* Bento Grid Layout */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {SEGMENTS_DATA.map((segment, idx) => (
-            <motion.div
-              key={segment.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-40px' }}
-              transition={{ duration: 0.4, delay: idx * 0.08 }}
-              className={`group relative rounded-lg bg-zinc-900 border p-6 sm:p-7 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 shadow-lg ${
-                segment.id === 'educacao'
-                  ? 'border-red-600/60 hover:border-red-600 ring-1 ring-red-600/30 hover:shadow-[0_20px_40px_rgba(0,0,0,0.85),0_0_24px_rgba(220,38,38,0.2)]'
-                  : 'border-white/10 hover:border-red-600/50 hover:shadow-[0_20px_40px_rgba(0,0,0,0.85),0_0_20px_rgba(220,38,38,0.12)]'
-              }`}
-            >
-              {/* Segment Badge if Featured */}
-              {segment.id === 'educacao' && (
-                <div className="absolute -top-3 right-6 px-3 py-0.5 rounded-sm bg-red-600 text-white text-[10px] font-bold uppercase tracking-wider shadow-[0_0_12px_rgba(220,38,38,0.4)] flex items-center gap-1">
-                  <Sparkles className="w-3 h-3" />
-                  <span>Landing Page Exclusiva</span>
-                </div>
-              )}
+          {SEGMENTS_DATA.map((segment, idx) => {
+            const isFeaturedEducation = segment.id === 'educacao';
 
-              <div>
-                {/* Icon & Title */}
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="w-12 h-12 rounded-sm bg-black border border-white/10 group-hover:border-red-600/50 group-hover:shadow-[0_0_12px_rgba(220,38,38,0.25)] flex items-center justify-center transition-all">
-                    {getSegmentIcon(segment.iconName)}
+            return (
+              <motion.div
+                key={segment.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.4, delay: idx * 0.08 }}
+                className={`group relative rounded-lg bg-zinc-900 border p-6 sm:p-8 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 shadow-lg ${
+                  isFeaturedEducation
+                    ? 'lg:col-span-2 border-red-600/40 hover:border-red-600 bg-gradient-to-br from-zinc-900 via-zinc-900 to-black ring-1 ring-red-600/20 hover:shadow-[0_20px_40px_rgba(0,0,0,0.85),0_0_24px_rgba(220,38,38,0.18)]'
+                    : 'lg:col-span-1 border-white/10 hover:border-red-600/40 hover:shadow-[0_20px_40px_rgba(0,0,0,0.85),0_0_18px_rgba(220,38,38,0.1)]'
+                }`}
+              >
+                {/* Segment Badge if Featured */}
+                {isFeaturedEducation && (
+                  <div className="absolute -top-3 right-6 px-3 py-1 rounded-sm bg-red-600 text-white text-[10px] font-bold uppercase tracking-wider shadow-[0_0_12px_rgba(220,38,38,0.4)] flex items-center gap-1.5">
+                    <Sparkles className="w-3 h-3" />
+                    <span>Área Educacional Dedicada</span>
                   </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-white group-hover:text-red-500 transition-colors uppercase tracking-tight">
-                      {segment.title}
-                    </h3>
-                    <p className="text-xs text-zinc-400">
-                      {segment.subtitle}
-                    </p>
-                  </div>
-                </div>
+                )}
 
-                <p className="text-xs sm:text-sm text-zinc-300 mb-5 leading-relaxed">
-                  {segment.description}
-                </p>
-
-                {/* Key Benefits */}
-                <div className="space-y-2 pt-3 border-t border-white/10 mb-6">
-                  {segment.keyBenefits.map((benefit, i) => (
-                    <div key={i} className="flex items-start gap-2 text-xs text-zinc-400">
-                      <Check className="w-3.5 h-3.5 text-red-600 shrink-0 mt-0.5" />
-                      <span>{benefit}</span>
+                <div>
+                  {/* Icon & Title */}
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-12 h-12 rounded-sm bg-black border border-white/10 group-hover:border-red-600/50 group-hover:shadow-[0_0_12px_rgba(220,38,38,0.25)] flex items-center justify-center transition-all shrink-0">
+                      {getSegmentIcon(segment.iconName)}
                     </div>
-                  ))}
-                </div>
-              </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-white group-hover:text-red-500 transition-colors uppercase tracking-tight">
+                        {segment.title}
+                      </h3>
+                      <p className="text-xs text-zinc-400">
+                        {segment.subtitle}
+                      </p>
+                    </div>
+                  </div>
 
-              {/* Bottom Action */}
-              <div className="pt-2">
-                <button
-                  id={`segment-btn-${segment.id}`}
-                  onClick={() => handleCardClick(segment)}
-                  className={`w-full py-3 px-4 rounded-sm text-xs font-bold uppercase tracking-wider transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer active:scale-98 ${
-                    segment.id === 'educacao'
-                      ? 'bg-red-600 hover:bg-red-700 text-white neon-glow-btn'
-                      : 'bg-zinc-800 hover:bg-red-600 text-zinc-200 hover:text-white border border-white/10 hover:border-red-600 shadow-sm hover:shadow-[0_0_15px_rgba(220,38,38,0.35)]'
-                  }`}
-                >
-                  <span>{segment.id === 'educacao' ? 'Ver Soluções para Educação' : 'Conhecer soluções'}</span>
-                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                </button>
-              </div>
-            </motion.div>
-          ))}
+                  <p className="text-xs sm:text-sm text-zinc-300 mb-5 leading-relaxed">
+                    {segment.description}
+                  </p>
+
+                  {/* Key Benefits Grid for Bento Featured vs Standard */}
+                  <div className={`pt-3 border-t border-white/10 mb-6 ${
+                    isFeaturedEducation 
+                      ? 'grid grid-cols-1 sm:grid-cols-2 gap-3' 
+                      : 'space-y-2'
+                  }`}>
+                    {segment.keyBenefits.map((benefit, i) => (
+                      <div key={i} className="flex items-start gap-2 text-xs text-zinc-400">
+                        <Check className="w-3.5 h-3.5 text-red-600 shrink-0 mt-0.5" />
+                        <span>{benefit}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Bottom Action */}
+                <div className="pt-2">
+                  <button
+                    id={`segment-btn-${segment.id}`}
+                    onClick={() => handleCardClick(segment)}
+                    className={`w-full py-3 px-4 rounded-sm text-xs font-bold uppercase tracking-wider transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer active:scale-98 focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:outline-none ${
+                      isFeaturedEducation
+                        ? 'bg-red-600 hover:bg-red-700 text-white neon-glow-btn'
+                        : 'bg-zinc-800 hover:bg-red-600 text-zinc-200 hover:text-white border border-white/10 hover:border-red-600 shadow-sm hover:shadow-[0_0_15px_rgba(220,38,38,0.3)]'
+                    }`}
+                  >
+                    <span>{isFeaturedEducation ? 'Acessar Soluções para Educação' : 'Conhecer detalhes'}</span>
+                    <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                  </button>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
 
       </div>
 
       {/* Segment Quick Detail Modal for non-education segments */}
       {selectedSegment && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in">
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in"
+          role="dialog"
+          aria-modal="true"
+        >
           <div className="relative w-full max-w-lg rounded-lg bg-zinc-900 border border-white/10 p-6 sm:p-8 shadow-2xl">
             <div className="flex items-center gap-4 mb-4">
               <div className="w-12 h-12 rounded-sm bg-black border border-red-600/40 flex items-center justify-center">
@@ -182,7 +196,7 @@ export const SegmentsSection: React.FC<SegmentsSectionProps> = ({
             </p>
 
             <div className="p-3.5 rounded-sm bg-black border border-white/10 space-y-2 mb-6">
-              <h4 className="text-[10px] font-mono font-bold text-red-500 uppercase tracking-wider">Diferenciais do Segmento:</h4>
+              <h4 className="text-[10px] font-mono font-bold text-red-500 uppercase tracking-wider">Diferenciais do Atendimento:</h4>
               {selectedSegment.keyBenefits.map((b, i) => (
                 <div key={i} className="flex items-start gap-2 text-xs text-zinc-300">
                   <Check className="w-3.5 h-3.5 text-red-600 shrink-0 mt-0.5" />
@@ -194,7 +208,7 @@ export const SegmentsSection: React.FC<SegmentsSectionProps> = ({
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setSelectedSegment(null)}
-                className="w-1/2 py-3 rounded-sm bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-bold uppercase tracking-wider border border-white/10 cursor-pointer"
+                className="w-1/2 py-3 rounded-sm bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-bold uppercase tracking-wider border border-white/10 cursor-pointer focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:outline-none"
               >
                 Fechar
               </button>
@@ -204,7 +218,7 @@ export const SegmentsSection: React.FC<SegmentsSectionProps> = ({
                   setSelectedSegment(null);
                   onOpenProposal(segTitle);
                 }}
-                className="w-1/2 py-3 rounded-sm bg-red-600 hover:bg-red-700 text-white text-xs font-bold uppercase tracking-wider shadow-md cursor-pointer"
+                className="w-1/2 py-3 rounded-sm bg-red-600 hover:bg-red-700 text-white text-xs font-bold uppercase tracking-wider shadow-md cursor-pointer focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none"
               >
                 Solicitar Proposta
               </button>
@@ -215,3 +229,4 @@ export const SegmentsSection: React.FC<SegmentsSectionProps> = ({
     </section>
   );
 };
+

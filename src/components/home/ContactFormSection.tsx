@@ -1,17 +1,11 @@
 import React, { useState } from 'react';
-import { motion } from 'motion/react';
 import { 
   Send, 
   CheckCircle2, 
-  Building, 
-  User, 
-  Mail, 
-  Phone, 
-  MapPin, 
-  HelpCircle,
-  FileCheck,
-  Sparkles,
-  PhoneCall
+  PhoneCall,
+  ArrowRight,
+  ExternalLink,
+  MessageSquare
 } from 'lucide-react';
 import { ProposalFormData } from '../../types';
 import { siteConfig } from '../../config/siteConfig';
@@ -37,8 +31,7 @@ export const ContactFormSection: React.FC<ContactFormSectionProps> = ({
     message: ''
   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [hasSubmitted, setHasSubmitted] = useState(false);
 
   const brazilianStates = [
     'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 
@@ -46,30 +39,34 @@ export const ContactFormSection: React.FC<ContactFormSectionProps> = ({
     'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    // Simulate reliable submission feedback
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSuccess(true);
-      if (onSuccess) onSuccess();
-    }, 1000);
+  const buildWhatsAppMessage = () => {
+    return `*Solicitação de Proposta - Ouzze Tecnologia*\n\n` +
+      `*Nome:* ${formData.name}\n` +
+      `*Empresa:* ${formData.company}\n` +
+      (formData.cnpj ? `*CNPJ:* ${formData.cnpj}\n` : '') +
+      `*Localização:* ${formData.city}/${formData.state}\n` +
+      `*Telefone:* ${formData.phone}\n` +
+      `*E-mail:* ${formData.email}\n` +
+      `*Solução:* ${formData.solutionType}\n` +
+      `*Necessidade:* ${formData.message || 'Gostaria de atendimento consultivo.'}`;
   };
 
-  const handleWhatsAppDirect = () => {
-    const text = `*Solicitação de Proposta - Ouzze Tecnologia*%0A%0A` +
-      `*Nome:* ${formData.name}%0A` +
-      `*Empresa:* ${formData.company}%0A` +
-      (formData.cnpj ? `*CNPJ:* ${formData.cnpj}%0A` : '') +
-      `*Local:* ${formData.city}/${formData.state}%0A` +
-      `*Telefone:* ${formData.phone}%0A` +
-      `*E-mail:* ${formData.email}%0A` +
-      `*Solução:* ${formData.solutionType}%0A` +
-      `*Necessidade:* ${formData.message || 'Gostaria de atendimento consultivo.'}`;
+  const getWhatsAppUrl = () => {
+    const text = buildWhatsAppMessage();
+    return `https://wa.me/${siteConfig.whatsapp.phone}?text=${encodeURIComponent(text)}`;
+  };
 
-    window.open(`https://wa.me/${siteConfig.whatsapp.phone}?text=${text}`, '_blank');
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const url = getWhatsAppUrl();
+    window.open(url, '_blank');
+    setHasSubmitted(true);
+    if (onSuccess) onSuccess();
+  };
+
+  const handleOpenWhatsAppAgain = () => {
+    const url = getWhatsAppUrl();
+    window.open(url, '_blank');
   };
 
   return (
@@ -92,40 +89,40 @@ export const ContactFormSection: React.FC<ContactFormSectionProps> = ({
             </h2>
 
             <p className="text-zinc-400 text-sm sm:text-base leading-relaxed">
-              Preencha o formulário com os detalhes da sua necessidade. Nossos especialistas técnicos entrarão em contato com uma cotação transparente e ajustada à sua realidade operacional.
+              Preencha as informações da sua demanda para iniciar o atendimento consultivo. Nossa equipe técnica analisará suas necessidades para estruturar a melhor solução.
             </p>
 
             <div className="p-6 rounded-lg bg-zinc-900 border border-white/10 space-y-4">
               <h4 className="text-xs font-mono font-bold text-white uppercase tracking-wider">
-                O que você recebe:
+                Como funciona o atendimento:
               </h4>
 
               <div className="space-y-3 text-xs sm:text-sm text-zinc-300">
                 <div className="flex items-start gap-3">
                   <CheckCircle2 className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
-                  <span>Dimensionamento técnico sem custos ou compromisso.</span>
+                  <span>Dimensionamento técnico e consultoria personalizada.</span>
                 </div>
                 <div className="flex items-start gap-3">
                   <CheckCircle2 className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
-                  <span>Opções de prazos contratuais e modelos fiscais (OPEX vs CAPEX).</span>
+                  <span>Opções flexíveis de contratos, locação ou fornecimento.</span>
                 </div>
                 <div className="flex items-start gap-3">
                   <CheckCircle2 className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
-                  <span>SLA documentado com garantia de troca de peças expressa.</span>
+                  <span>Atendimento direto com especialistas da Ouzze.</span>
                 </div>
               </div>
             </div>
 
             <div className="pt-2">
-              <p className="text-xs text-zinc-400 mb-2">Prefere falar instantaneamente por mensagem?</p>
+              <p className="text-xs text-zinc-400 mb-2">Prefere contato direto via WhatsApp?</p>
               <a
                 href={`https://wa.me/${siteConfig.whatsapp.phone}?text=${encodeURIComponent(siteConfig.whatsapp.defaultMessage)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-sm bg-zinc-900 hover:bg-zinc-800 border border-white/10 text-emerald-400 text-xs font-bold uppercase tracking-wider transition-all"
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-sm bg-zinc-900 hover:bg-zinc-800 border border-white/10 hover:border-emerald-500/40 text-emerald-400 text-xs font-bold uppercase tracking-wider transition-all focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:outline-none"
               >
                 <PhoneCall className="w-4 h-4" />
-                <span>WhatsApp: {siteConfig.whatsapp.formattedPhone}</span>
+                <span>Atendimento via WhatsApp</span>
               </a>
             </div>
           </div>
@@ -134,43 +131,43 @@ export const ContactFormSection: React.FC<ContactFormSectionProps> = ({
           <div className="lg:col-span-7">
             <div className="rounded-lg bg-zinc-900 border border-white/10 p-6 sm:p-10 shadow-2xl relative">
               
-              {isSuccess ? (
-                <div className="text-center py-12 space-y-5 animate-in fade-in zoom-in-95">
-                  <div className="w-16 h-16 rounded-sm bg-emerald-950/60 border border-emerald-500/40 text-emerald-400 flex items-center justify-center mx-auto">
-                    <CheckCircle2 className="w-8 h-8" />
+              {hasSubmitted ? (
+                <div className="text-center py-8 space-y-5 animate-in fade-in duration-300">
+                  <div className="w-16 h-16 rounded-sm bg-emerald-950/60 border border-emerald-500/40 text-emerald-400 flex items-center justify-center mx-auto shadow-[0_0_20px_rgba(16,185,129,0.2)]">
+                    <MessageSquare className="w-8 h-8" />
                   </div>
-                  <h3 className="text-2xl font-bold text-white uppercase tracking-tight">Solicitação enviada com sucesso!</h3>
-                  <p className="text-zinc-300 text-sm max-w-md mx-auto">
-                    Agradecemos seu contato. Um consultor corporativo da Ouzze Tecnologia entrará em contato em breve através do e-mail ou telefone informado.
-                  </p>
+                  
+                  <div className="space-y-2">
+                    <h3 className="text-2xl font-bold text-white uppercase tracking-tight">
+                      Mensagem formatada para o WhatsApp
+                    </h3>
+                    <p className="text-zinc-300 text-sm max-w-md mx-auto leading-relaxed">
+                      Sua solicitação foi estruturada para abertura direta com a nossa equipe de atendimento no WhatsApp. Caso a janela não tenha aberto automaticamente, clique no botão abaixo:
+                    </p>
+                  </div>
+
+                  <div className="p-4 rounded bg-black/60 border border-white/10 text-left text-xs font-mono text-zinc-300 space-y-1 max-w-md mx-auto">
+                    <p><span className="text-zinc-500">Empresa:</span> {formData.company}</p>
+                    <p><span className="text-zinc-500">Contato:</span> {formData.name} ({formData.phone})</p>
+                    <p><span className="text-zinc-500">Solução:</span> {formData.solutionType}</p>
+                    <p><span className="text-zinc-500">Local:</span> {formData.city}/{formData.state}</p>
+                  </div>
 
                   <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
                     <button
-                      onClick={handleWhatsAppDirect}
-                      className="w-full sm:w-auto px-5 py-3 rounded-sm bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer"
+                      id="btn-whatsapp-open-again"
+                      onClick={handleOpenWhatsAppAgain}
+                      className="w-full sm:w-auto px-6 py-3.5 rounded-sm bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-[0_0_15px_rgba(16,185,129,0.3)] transition-all focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:outline-none"
                     >
-                      <PhoneCall className="w-4 h-4" />
-                      <span>Agilizar pelo WhatsApp</span>
+                      <ExternalLink className="w-4 h-4" />
+                      <span>Abrir WhatsApp Comercial</span>
                     </button>
                     
                     <button
-                      onClick={() => {
-                        setIsSuccess(false);
-                        setFormData({
-                          name: '',
-                          company: '',
-                          cnpj: '',
-                          city: '',
-                          state: 'SP',
-                          phone: '',
-                          email: '',
-                          solutionType: 'Locação',
-                          message: ''
-                        });
-                      }}
-                      className="w-full sm:w-auto px-5 py-3 rounded-sm bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-bold uppercase tracking-wider border border-white/10 cursor-pointer"
+                      onClick={() => setHasSubmitted(false)}
+                      className="w-full sm:w-auto px-5 py-3.5 rounded-sm bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-bold uppercase tracking-wider border border-white/10 cursor-pointer transition-all focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:outline-none"
                     >
-                      Enviar outra solicitação
+                      Editar dados do formulário
                     </button>
                   </div>
                 </div>
@@ -190,7 +187,7 @@ export const ContactFormSection: React.FC<ContactFormSectionProps> = ({
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         placeholder="Ex: Carlos Silva"
-                        className="w-full px-3.5 py-2.5 rounded-sm bg-black border border-white/10 text-white text-sm focus:border-red-600 focus:outline-none transition-colors"
+                        className="w-full px-3.5 py-2.5 rounded-sm bg-black border border-white/10 text-white text-sm focus:border-red-600 focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:outline-none transition-colors"
                       />
                     </div>
 
@@ -204,8 +201,8 @@ export const ContactFormSection: React.FC<ContactFormSectionProps> = ({
                         required
                         value={formData.company}
                         onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                        placeholder="Ex: Alfa Logística S/A"
-                        className="w-full px-3.5 py-2.5 rounded-sm bg-black border border-white/10 text-white text-sm focus:border-red-600 focus:outline-none transition-colors"
+                        placeholder="Ex: Alfa Logística"
+                        className="w-full px-3.5 py-2.5 rounded-sm bg-black border border-white/10 text-white text-sm focus:border-red-600 focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:outline-none transition-colors"
                       />
                     </div>
                   </div>
@@ -222,7 +219,7 @@ export const ContactFormSection: React.FC<ContactFormSectionProps> = ({
                         value={formData.cnpj}
                         onChange={(e) => setFormData({ ...formData, cnpj: e.target.value })}
                         placeholder="00.000.000/0001-00"
-                        className="w-full px-3.5 py-2.5 rounded-sm bg-black border border-white/10 text-white text-sm focus:border-red-600 focus:outline-none transition-colors"
+                        className="w-full px-3.5 py-2.5 rounded-sm bg-black border border-white/10 text-white text-sm focus:border-red-600 focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:outline-none transition-colors"
                       />
                     </div>
 
@@ -234,12 +231,12 @@ export const ContactFormSection: React.FC<ContactFormSectionProps> = ({
                         id="form-solution-type"
                         value={formData.solutionType}
                         onChange={(e) => setFormData({ ...formData, solutionType: e.target.value as any })}
-                        className="w-full px-3.5 py-2.5 rounded-sm bg-black border border-white/10 text-white text-sm focus:border-red-600 focus:outline-none transition-colors cursor-pointer"
+                        className="w-full px-3.5 py-2.5 rounded-sm bg-black border border-white/10 text-white text-sm focus:border-red-600 focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:outline-none transition-colors cursor-pointer"
                       >
                         <option value="Locação">Locação de Equipamentos</option>
-                        <option value="Compra">Compra / Vendas Corporativas</option>
+                        <option value="Compra">Vendas Corporativas</option>
                         <option value="Serviços">Serviços / Suporte de TI</option>
-                        <option value="Não sei ainda">Não sei ainda (Preciso de consultoria)</option>
+                        <option value="Não sei ainda">Preciso de consultoria</option>
                       </select>
                     </div>
                   </div>
@@ -257,7 +254,7 @@ export const ContactFormSection: React.FC<ContactFormSectionProps> = ({
                         value={formData.city}
                         onChange={(e) => setFormData({ ...formData, city: e.target.value })}
                         placeholder="Ex: São Paulo"
-                        className="w-full px-3.5 py-2.5 rounded-sm bg-black border border-white/10 text-white text-sm focus:border-red-600 focus:outline-none transition-colors"
+                        className="w-full px-3.5 py-2.5 rounded-sm bg-black border border-white/10 text-white text-sm focus:border-red-600 focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:outline-none transition-colors"
                       />
                     </div>
 
@@ -269,7 +266,7 @@ export const ContactFormSection: React.FC<ContactFormSectionProps> = ({
                         id="form-state"
                         value={formData.state}
                         onChange={(e) => setFormData({ ...formData, state: e.target.value })}
-                        className="w-full px-3.5 py-2.5 rounded-sm bg-black border border-white/10 text-white text-sm focus:border-red-600 focus:outline-none transition-colors cursor-pointer"
+                        className="w-full px-3.5 py-2.5 rounded-sm bg-black border border-white/10 text-white text-sm focus:border-red-600 focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:outline-none transition-colors cursor-pointer"
                       >
                         {brazilianStates.map((uf) => (
                           <option key={uf} value={uf}>{uf}</option>
@@ -290,8 +287,8 @@ export const ContactFormSection: React.FC<ContactFormSectionProps> = ({
                         required
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        placeholder="(11) 99999-9999"
-                        className="w-full px-3.5 py-2.5 rounded-sm bg-black border border-white/10 text-white text-sm focus:border-red-600 focus:outline-none transition-colors"
+                        placeholder="(00) 00000-0000"
+                        className="w-full px-3.5 py-2.5 rounded-sm bg-black border border-white/10 text-white text-sm focus:border-red-600 focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:outline-none transition-colors"
                       />
                     </div>
 
@@ -305,8 +302,8 @@ export const ContactFormSection: React.FC<ContactFormSectionProps> = ({
                         required
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        placeholder="nome@empresa.com.br"
-                        className="w-full px-3.5 py-2.5 rounded-sm bg-black border border-white/10 text-white text-sm focus:border-red-600 focus:outline-none transition-colors"
+                        placeholder="contato@empresa.com.br"
+                        className="w-full px-3.5 py-2.5 rounded-sm bg-black border border-white/10 text-white text-sm focus:border-red-600 focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:outline-none transition-colors"
                       />
                     </div>
                   </div>
@@ -314,15 +311,15 @@ export const ContactFormSection: React.FC<ContactFormSectionProps> = ({
                   {/* Row 5: Mensagem */}
                   <div>
                     <label className="block text-[11px] font-mono uppercase text-zinc-400 mb-1">
-                      Necessidade (quantidade de máquinas, prazo, etc.)
+                      Detalhes da necessidade (quantidade aproximada, modelos, etc.)
                     </label>
                     <textarea
                       id="form-message"
                       rows={3}
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      placeholder="Ex: Precisamos locar 25 notebooks corporativos e 2 impressoras para um projeto de 12 meses..."
-                      className="w-full px-3.5 py-2.5 rounded-sm bg-black border border-white/10 text-white text-sm focus:border-red-600 focus:outline-none transition-colors resize-none"
+                      placeholder="Ex: Precisamos cotar 20 notebooks corporativos e suporte técnico..."
+                      className="w-full px-3.5 py-2.5 rounded-sm bg-black border border-white/10 text-white text-sm focus:border-red-600 focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:outline-none transition-colors resize-none"
                     />
                   </div>
 
@@ -331,22 +328,15 @@ export const ContactFormSection: React.FC<ContactFormSectionProps> = ({
                     <button
                       id="form-submit-btn"
                       type="submit"
-                      disabled={isSubmitting}
-                      className="w-full py-4 rounded-sm bg-red-600 hover:bg-red-700 text-white font-bold text-xs uppercase tracking-wider neon-glow-btn transition-all duration-200 active:scale-98 flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
+                      className="w-full py-4 rounded-sm bg-red-600 hover:bg-red-700 text-white font-bold text-xs uppercase tracking-wider neon-glow-btn transition-all duration-200 active:scale-98 flex items-center justify-center gap-2 cursor-pointer focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none"
                     >
-                      {isSubmitting ? (
-                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                      ) : (
-                        <>
-                          <span>Enviar solicitação de proposta</span>
-                          <Send className="w-4 h-4" />
-                        </>
-                      )}
+                      <span>Solicitar Proposta via WhatsApp</span>
+                      <Send className="w-4 h-4" />
                     </button>
                   </div>
 
-                  <p className="text-[11px] text-zinc-500 text-center font-mono">
-                    🔒 Seus dados estão seguros e protegidos em conformidade com a LGPD.
+                  <p className="text-[11px] text-zinc-400 text-center font-normal">
+                    Ao entrar em contato, seus dados serão utilizados exclusivamente para atendimento da sua solicitação.
                   </p>
                 </form>
               )}
@@ -360,3 +350,4 @@ export const ContactFormSection: React.FC<ContactFormSectionProps> = ({
     </section>
   );
 };
+

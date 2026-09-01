@@ -24,9 +24,20 @@ export const Header: React.FC<HeaderProps> = ({
         setIsScrolled(false);
       }
     };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && mobileMenuOpen) {
+        setMobileMenuOpen(false);
+      }
+    };
+
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [mobileMenuOpen]);
 
   const handleLinkClick = (href: string) => {
     setMobileMenuOpen(false);
@@ -83,7 +94,8 @@ export const Header: React.FC<HeaderProps> = ({
           <button 
             id="header-logo-btn"
             onClick={() => handleLinkClick('#hero')}
-            className="flex items-center gap-2 text-left group focus:outline-none"
+            className="flex items-center gap-2 text-left group focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:outline-none rounded-sm"
+            aria-label="Ir para o início"
           >
             <div className="flex items-baseline">
               <span className="text-2xl sm:text-3xl font-black tracking-tighter text-red-600 uppercase italic">
@@ -96,13 +108,13 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
 
           {/* DESKTOP NAVIGATION */}
-          <nav className="hidden lg:flex items-center gap-6 xl:gap-8 text-sm font-medium tracking-wide text-zinc-400">
+          <nav className="hidden lg:flex items-center gap-6 xl:gap-8 text-sm font-medium tracking-wide text-zinc-400" aria-label="Navegação Principal">
             {navItems.map((item) => (
               <button
                 key={item.label}
                 id={`nav-link-${item.label.toLowerCase()}`}
                 onClick={() => handleLinkClick(item.href)}
-                className="hover:text-red-500 transition-colors py-1 cursor-pointer"
+                className="hover:text-red-500 transition-colors py-1 cursor-pointer focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:outline-none rounded-sm"
               >
                 {item.label}
               </button>
@@ -112,7 +124,7 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               id="nav-link-educacao"
               onClick={() => handleLinkClick('/educacao')}
-              className={`py-1 flex items-center gap-1.5 transition-colors cursor-pointer ${
+              className={`py-1 flex items-center gap-1.5 transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:outline-none rounded-sm ${
                 activePath === '/educacao'
                   ? 'text-red-500 font-bold'
                   : 'hover:text-red-500 text-zinc-400'
@@ -128,7 +140,7 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               id="header-proposal-btn"
               onClick={() => onOpenProposal('geral')}
-              className="bg-red-600 hover:bg-red-700 text-white px-6 py-2.5 rounded-sm text-xs font-bold uppercase tracking-widest transition-all cursor-pointer neon-glow-btn active:scale-95 flex items-center gap-2"
+              className="bg-red-600 hover:bg-red-700 text-white px-6 py-2.5 rounded-sm text-xs font-bold uppercase tracking-widest transition-all cursor-pointer neon-glow-btn active:scale-95 flex items-center gap-2 focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none"
             >
               <span>Solicitar Proposta</span>
             </button>
@@ -139,7 +151,7 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               id="mobile-menu-proposal-quick-btn"
               onClick={() => onOpenProposal('geral')}
-              className="px-3 py-1.5 text-xs font-bold uppercase tracking-wider bg-red-600 hover:bg-red-700 text-white rounded-sm"
+              className="px-3 py-1.5 text-xs font-bold uppercase tracking-wider bg-red-600 hover:bg-red-700 text-white rounded-sm focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none"
             >
               Proposta
             </button>
@@ -147,8 +159,9 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               id="mobile-menu-toggle-btn"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-sm bg-zinc-900 text-zinc-300 hover:text-white border border-white/10 focus:outline-none"
-              aria-label="Abrir menu"
+              className="p-2 rounded-sm bg-zinc-900 text-zinc-300 hover:text-white border border-white/10 focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:outline-none"
+              aria-label={mobileMenuOpen ? "Fechar menu de navegação" : "Abrir menu de navegação"}
+              aria-expanded={mobileMenuOpen}
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>

@@ -38,6 +38,23 @@ export default function App() {
     return () => window.removeEventListener('popstate', syncPath);
   }, []);
 
+  // Dynamic SEO metadata updates
+  useEffect(() => {
+    if (currentPath === '/educacao') {
+      document.title = 'Ouzze Tecnologia | Soluções de TI para Educação e Instituições de Ensino';
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) {
+        metaDesc.setAttribute('content', 'Locação e implantação de laboratórios de informática, notebooks pedagógicos e infraestrutura de TI para colégios, faculdades e polos educacionais.');
+      }
+    } else {
+      document.title = 'Ouzze Tecnologia | Locação, Venda e Serviços de TI';
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) {
+        metaDesc.setAttribute('content', 'Soluções corporativas em locação de computadores, notebooks e impressoras, venda de hardware e serviços de TI para empresas.');
+      }
+    }
+  }, [currentPath]);
+
   const handleNavigate = (path: string) => {
     if (path === '/educacao' || path === '/escolas') {
       window.history.pushState({}, '', '/educacao');

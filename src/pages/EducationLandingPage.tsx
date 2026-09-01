@@ -12,10 +12,8 @@ import {
   ArrowLeft, 
   Send, 
   PhoneCall, 
-  Sparkles,
-  Layers,
-  Award,
-  BookOpen
+  ExternalLink,
+  MessageSquare
 } from 'lucide-react';
 import { EDUCATION_PAGE_DATA } from '../data/siteData';
 import { siteConfig } from '../config/siteConfig';
@@ -36,7 +34,7 @@ export const EducationLandingPage: React.FC<EducationLandingPageProps> = ({
   const [studentCount, setStudentCount] = useState('100 a 500');
   const [interestArea, setInterestArea] = useState('Laboratório de Informática');
   const [notes, setNotes] = useState('');
-  const [submitted, setSubmitted] = useState(false);
+  const [hasSubmitted, setHasSubmitted] = useState(false);
 
   const getSolutionIcon = (iconName: string) => {
     switch (iconName) {
@@ -57,22 +55,32 @@ export const EducationLandingPage: React.FC<EducationLandingPageProps> = ({
     }
   };
 
-  const handleSchoolSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitted(true);
+  const buildEducationWhatsAppMessage = () => {
+    return `*Contato Ouzze Educação*\n\n` +
+      `*Instituição:* ${schoolName}\n` +
+      `*Responsável:* ${responsibleName}\n` +
+      `*WhatsApp:* ${phone}\n` +
+      `*E-mail:* ${email}\n` +
+      `*Porte Estimado:* ${studentCount}\n` +
+      `*Área de Interesse:* ${interestArea}\n` +
+      `*Observações:* ${notes || 'Gostaria de atendimento consultivo para minha instituição de ensino.'}`;
   };
 
-  const handleWhatsAppEducation = () => {
-    const text = `*Contato Comercial Ouzze Educação*%0A%0A` +
-      `*Escola/Instituição:* ${schoolName}%0A` +
-      `*Responsável:* ${responsibleName}%0A` +
-      `*Telefone:* ${phone}%0A` +
-      `*E-mail:* ${email}%0A` +
-      `*Alunos Estimados:* ${studentCount}%0A` +
-      `*Interesse:* ${interestArea}%0A` +
-      `*Observações:* ${notes || 'Solicito contato para consultoria educacional.'}`;
+  const getWhatsAppEducationUrl = () => {
+    const text = buildEducationWhatsAppMessage();
+    return `https://wa.me/${siteConfig.whatsapp.phone}?text=${encodeURIComponent(text)}`;
+  };
 
-    window.open(`https://wa.me/${siteConfig.whatsapp.phone}?text=${text}`, '_blank');
+  const handleSchoolSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const url = getWhatsAppEducationUrl();
+    window.open(url, '_blank');
+    setHasSubmitted(true);
+  };
+
+  const handleOpenEducationWhatsAppAgain = () => {
+    const url = getWhatsAppEducationUrl();
+    window.open(url, '_blank');
   };
 
   return (
@@ -81,8 +89,9 @@ export const EducationLandingPage: React.FC<EducationLandingPageProps> = ({
       {/* Top Breadcrumb / Return */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
         <button
+          id="btn-back-home"
           onClick={onBackToHome}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-sm bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-white/10 text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-sm bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-white/10 text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:outline-none"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Voltar para a página inicial</span>
@@ -110,18 +119,20 @@ export const EducationLandingPage: React.FC<EducationLandingPageProps> = ({
 
           <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
+              id="cta-edu-form"
               href="#formulario-escolas"
-              className="w-full sm:w-auto px-8 py-3.5 rounded-sm bg-red-600 hover:bg-red-700 text-white font-bold text-xs uppercase tracking-wider shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full sm:w-auto px-8 py-3.5 rounded-sm bg-red-600 hover:bg-red-700 text-white font-bold text-xs uppercase tracking-wider neon-glow-btn transition-all flex items-center justify-center gap-2 cursor-pointer focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none"
             >
               <span>Solicitar projeto para sua escola</span>
-              <Sparkles className="w-4 h-4" />
+              <Send className="w-4 h-4" />
             </a>
 
             <button
-              onClick={() => onOpenProposal('Educação - Geral')}
-              className="w-full sm:w-auto px-8 py-3.5 rounded-sm bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-white/10 font-bold text-xs uppercase tracking-wider transition-all cursor-pointer"
+              id="cta-edu-modal"
+              onClick={() => onOpenProposal('Educação - Soluções')}
+              className="w-full sm:w-auto px-8 py-3.5 rounded-sm bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-white/10 hover:border-white/20 font-bold text-xs uppercase tracking-wider transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:outline-none"
             >
-              Cotação rápida em 2 minutos
+              Atendimento Consultivo
             </button>
           </div>
         </div>
@@ -133,7 +144,7 @@ export const EducationLandingPage: React.FC<EducationLandingPageProps> = ({
           
           <div className="text-center max-w-2xl mx-auto mb-14 space-y-3">
             <div className="inline-block px-3 py-1 border border-red-600/30 bg-red-600/10 text-red-500 text-[10px] font-bold uppercase tracking-widest rounded-sm">
-              Ecossistema Educacional 360°
+              Ecossistema Educacional
             </div>
             <h2 className="text-2xl sm:text-4xl font-bold text-white tracking-tight uppercase">
               Soluções integradas para ensino fundamental, médio e superior
@@ -148,7 +159,7 @@ export const EducationLandingPage: React.FC<EducationLandingPageProps> = ({
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: i * 0.08 }}
-                className="p-6 sm:p-7 rounded-lg bg-zinc-900 border border-white/5 hover:border-red-600/50 transition-all group shadow-lg"
+                className="p-6 sm:p-7 rounded-lg bg-zinc-900 border border-white/5 hover:border-red-600/40 transition-all group shadow-lg"
               >
                 <div className="w-12 h-12 rounded-sm bg-black border border-white/10 flex items-center justify-center mb-5 group-hover:border-red-600/40 transition-colors">
                   {getSolutionIcon(sol.icon)}
@@ -172,13 +183,13 @@ export const EducationLandingPage: React.FC<EducationLandingPageProps> = ({
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             <div>
               <div className="inline-block px-3 py-1 border border-red-600/30 bg-red-600/10 text-red-500 text-[10px] font-bold uppercase tracking-widest rounded-sm mb-3">
-                Gestão Financeira & Pedagógica
+                Gestão Estruturada
               </div>
               <h3 className="text-2xl sm:text-3xl font-bold text-white mb-4 uppercase tracking-tight">
-                Por que as principais escolas e faculdades escolhem a Ouzze?
+                Vantagens da terceirização e infraestrutura Ouzze para ensino
               </h3>
               <p className="text-xs sm:text-sm text-zinc-400 mb-6 leading-relaxed">
-                Garantimos que sua equipe pedagógica e seus alunos tenham acesso à tecnologia sempre atualizada, com manutenção preventiva nas férias escolares e plantão nos períodos de provas e vestibulares.
+                Garantimos que sua equipe pedagógica e seus alunos tenham acesso à tecnologia moderna e estável, com rotinas de suporte programadas para atender o calendário da sua instituição.
               </p>
 
               <div className="space-y-3">
@@ -193,22 +204,44 @@ export const EducationLandingPage: React.FC<EducationLandingPageProps> = ({
 
             {/* Specialized Education Form */}
             <div id="formulario-escolas" className="rounded-lg bg-black border border-white/10 p-6 sm:p-8">
-              {submitted ? (
-                <div className="text-center py-8 space-y-4">
-                  <div className="w-12 h-12 rounded-sm bg-emerald-950/70 text-emerald-400 border border-emerald-500/40 flex items-center justify-center mx-auto">
-                    <Check className="w-6 h-6" />
+              {hasSubmitted ? (
+                <div className="text-center py-6 space-y-4 animate-in fade-in duration-300">
+                  <div className="w-14 h-14 rounded-sm bg-emerald-950/70 text-emerald-400 border border-emerald-500/40 flex items-center justify-center mx-auto shadow-[0_0_15px_rgba(16,185,129,0.2)]">
+                    <MessageSquare className="w-7 h-7" />
                   </div>
-                  <h4 className="text-xl font-bold text-white uppercase tracking-tight">Solicitação de Consultoria Enviada!</h4>
-                  <p className="text-xs text-zinc-300">
-                    Nossa equipe de consultores educacionais entrará em contato com a sua instituição.
-                  </p>
-                  <button
-                    onClick={handleWhatsAppEducation}
-                    className="w-full py-3 rounded-sm bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-md"
-                  >
-                    <PhoneCall className="w-4 h-4" />
-                    <span>Falar agora com o consultor de ensino</span>
-                  </button>
+                  
+                  <div className="space-y-1">
+                    <h4 className="text-xl font-bold text-white uppercase tracking-tight">
+                      Mensagem formatada para o WhatsApp
+                    </h4>
+                    <p className="text-xs text-zinc-300 leading-relaxed">
+                      Sua solicitação de consultoria educacional foi preparada para envio direto no WhatsApp corporativo da Ouzze.
+                    </p>
+                  </div>
+
+                  <div className="p-3.5 rounded bg-zinc-900 border border-white/10 text-left text-xs font-mono text-zinc-300 space-y-1">
+                    <p><span className="text-zinc-500">Instituição:</span> {schoolName}</p>
+                    <p><span className="text-zinc-500">Responsável:</span> {responsibleName} ({phone})</p>
+                    <p><span className="text-zinc-500">Área:</span> {interestArea}</p>
+                  </div>
+
+                  <div className="pt-2 flex flex-col gap-2">
+                    <button
+                      id="btn-edu-open-again"
+                      onClick={handleOpenEducationWhatsAppAgain}
+                      className="w-full py-3.5 rounded-sm bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-md focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:outline-none"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      <span>Abrir WhatsApp Comercial</span>
+                    </button>
+
+                    <button
+                      onClick={() => setHasSubmitted(false)}
+                      className="w-full py-2.5 rounded-sm bg-zinc-900 hover:bg-zinc-800 text-zinc-300 text-xs font-bold uppercase tracking-wider border border-white/10 cursor-pointer focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:outline-none"
+                    >
+                      Editar informações
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <form onSubmit={handleSchoolSubmit} className="space-y-3">
@@ -224,7 +257,7 @@ export const EducationLandingPage: React.FC<EducationLandingPageProps> = ({
                       value={schoolName}
                       onChange={(e) => setSchoolName(e.target.value)}
                       placeholder="Ex: Colégio Horizon / Faculdade Nova"
-                      className="w-full px-3 py-2 rounded-sm bg-zinc-900 border border-white/10 text-white text-xs focus:border-red-600 focus:outline-none transition-colors"
+                      className="w-full px-3 py-2 rounded-sm bg-zinc-900 border border-white/10 text-white text-xs focus:border-red-600 focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:outline-none transition-colors"
                     />
                   </div>
 
@@ -236,8 +269,8 @@ export const EducationLandingPage: React.FC<EducationLandingPageProps> = ({
                         required
                         value={responsibleName}
                         onChange={(e) => setResponsibleName(e.target.value)}
-                        placeholder="Nome do diretor/TI"
-                        className="w-full px-3 py-2 rounded-sm bg-zinc-900 border border-white/10 text-white text-xs focus:border-red-600 focus:outline-none transition-colors"
+                        placeholder="Nome do gestor"
+                        className="w-full px-3 py-2 rounded-sm bg-zinc-900 border border-white/10 text-white text-xs focus:border-red-600 focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:outline-none transition-colors"
                       />
                     </div>
                     <div>
@@ -247,8 +280,8 @@ export const EducationLandingPage: React.FC<EducationLandingPageProps> = ({
                         required
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
-                        placeholder="(11) 99999-9999"
-                        className="w-full px-3 py-2 rounded-sm bg-zinc-900 border border-white/10 text-white text-xs focus:border-red-600 focus:outline-none transition-colors"
+                        placeholder="(00) 00000-0000"
+                        className="w-full px-3 py-2 rounded-sm bg-zinc-900 border border-white/10 text-white text-xs focus:border-red-600 focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:outline-none transition-colors"
                       />
                     </div>
                   </div>
@@ -259,7 +292,7 @@ export const EducationLandingPage: React.FC<EducationLandingPageProps> = ({
                       <select
                         value={studentCount}
                         onChange={(e) => setStudentCount(e.target.value)}
-                        className="w-full px-3 py-2 rounded-sm bg-zinc-900 border border-white/10 text-white text-xs focus:border-red-600 focus:outline-none transition-colors cursor-pointer"
+                        className="w-full px-3 py-2 rounded-sm bg-zinc-900 border border-white/10 text-white text-xs focus:border-red-600 focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:outline-none transition-colors cursor-pointer"
                       >
                         <option value="Até 100">Até 100 alunos</option>
                         <option value="100 a 500">100 a 500 alunos</option>
@@ -272,13 +305,13 @@ export const EducationLandingPage: React.FC<EducationLandingPageProps> = ({
                       <select
                         value={interestArea}
                         onChange={(e) => setInterestArea(e.target.value)}
-                        className="w-full px-3 py-2 rounded-sm bg-zinc-900 border border-white/10 text-white text-xs focus:border-red-600 focus:outline-none transition-colors cursor-pointer"
+                        className="w-full px-3 py-2 rounded-sm bg-zinc-900 border border-white/10 text-white text-xs focus:border-red-600 focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:outline-none transition-colors cursor-pointer"
                       >
                         <option value="Laboratório de Informática">Laboratório de Informática</option>
                         <option value="Notebooks para Professores">Notebooks para Professores</option>
                         <option value="Tablets & Mobilidade">Tablets & Mobilidade</option>
                         <option value="Wi-Fi de Alta Densidade">Wi-Fi de Alta Densidade</option>
-                        <option value="Projeto Geral 360°">Projeto Geral 360°</option>
+                        <option value="Projeto Geral">Projeto Geral</option>
                       </select>
                     </div>
                   </div>
@@ -290,20 +323,25 @@ export const EducationLandingPage: React.FC<EducationLandingPageProps> = ({
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="diretoria@colegio.com.br"
-                      className="w-full px-3 py-2 rounded-sm bg-zinc-900 border border-white/10 text-white text-xs focus:border-red-600 focus:outline-none transition-colors"
+                      placeholder="diretoria@escola.com.br"
+                      className="w-full px-3 py-2 rounded-sm bg-zinc-900 border border-white/10 text-white text-xs focus:border-red-600 focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:outline-none transition-colors"
                     />
                   </div>
 
                   <div className="pt-2">
                     <button
+                      id="btn-edu-submit"
                       type="submit"
-                      className="w-full py-3 rounded-sm bg-red-600 hover:bg-red-700 text-white font-bold text-xs uppercase tracking-wider shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+                      className="w-full py-3 rounded-sm bg-red-600 hover:bg-red-700 text-white font-bold text-xs uppercase tracking-wider neon-glow-btn transition-all flex items-center justify-center gap-2 cursor-pointer focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none"
                     >
-                      <span>Receber proposta para minha escola</span>
+                      <span>Receber proposta via WhatsApp</span>
                       <Send className="w-3.5 h-3.5" />
                     </button>
                   </div>
+
+                  <p className="text-[10px] text-zinc-400 text-center font-normal pt-1">
+                    Ao enviar, seus dados serão utilizados apenas para atendimento da solicitação.
+                  </p>
                 </form>
               )}
             </div>
@@ -315,3 +353,4 @@ export const EducationLandingPage: React.FC<EducationLandingPageProps> = ({
     </div>
   );
 };
+
