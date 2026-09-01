@@ -63,16 +63,16 @@ export const BenefitsSection: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: idx * 0.08 }}
-              className={`rounded-lg bg-zinc-900 border border-white/5 p-7 flex flex-col justify-between transition-all duration-300 hover:border-red-600/50 hover:-translate-y-1 shadow-lg ${
+              className={`group rounded-lg bg-zinc-900 border border-white/10 p-7 flex flex-col justify-between transition-all duration-300 hover:border-red-600/50 hover:shadow-[0_20px_40px_rgba(0,0,0,0.85),0_0_20px_rgba(220,38,38,0.12)] hover:-translate-y-1 shadow-lg ${
                 idx === 0 ? 'md:col-span-2 lg:col-span-1' : ''
               }`}
             >
               <div>
-                <div className="w-12 h-12 rounded-sm bg-black border border-white/10 flex items-center justify-center mb-5">
+                <div className="w-12 h-12 rounded-sm bg-black border border-white/10 group-hover:border-red-600/50 group-hover:shadow-[0_0_12px_rgba(220,38,38,0.25)] flex items-center justify-center mb-5 transition-all">
                   {getBenefitIcon(benefit.iconName)}
                 </div>
 
-                <h3 className="text-xl font-bold text-white mb-2.5 uppercase tracking-tight">
+                <h3 className="text-xl font-bold text-white group-hover:text-red-500 transition-colors mb-2.5 uppercase tracking-tight">
                   {benefit.title}
                 </h3>
 

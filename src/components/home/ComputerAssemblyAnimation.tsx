@@ -55,9 +55,9 @@ export const ComputerAssemblyAnimation: React.FC<ComputerAssemblyAnimationProps>
       {/* ========================================================================= */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden flex items-center justify-center">
         
-        {/* Ouzze Crimson Red Studio Spotlight (Diffused behind the workstation) */}
+        {/* Ouzze Crimson Red Studio Spotlight (Diffused & Atmospheric behind workstation) */}
         <div 
-          className="absolute w-[380px] sm:w-[460px] h-[320px] sm:h-[380px] rounded-full bg-gradient-to-b from-red-600/20 via-red-600/5 to-transparent blur-[100px] pointer-events-none transition-transform duration-700 ease-out"
+          className="absolute w-[400px] sm:w-[480px] h-[340px] sm:h-[400px] rounded-full bg-gradient-to-b from-red-600/25 via-red-600/8 to-transparent blur-[110px] pointer-events-none transition-transform duration-700 ease-out"
           style={{
             transform: `translate(${glowX}px, ${glowY}px)`
           }}
@@ -65,15 +65,15 @@ export const ComputerAssemblyAnimation: React.FC<ComputerAssemblyAnimationProps>
 
         {/* Soft Lateral White Studio Rim Light (For crisp hardware edge definition) */}
         <div 
-          className="absolute w-[300px] h-[260px] rounded-full bg-white/[0.035] blur-[80px] pointer-events-none"
+          className="absolute w-[320px] h-[280px] rounded-full bg-white/[0.04] blur-[85px] pointer-events-none"
           style={{
             transform: `translate(${glowX * 0.4}px, ${glowY * 0.4}px)`
           }}
         />
 
-        {/* Subtle Fine Studio Grid */}
+        {/* Subtle Fine Studio Grid with soft crimson radial vignette */}
         <div 
-          className="absolute inset-0 opacity-10 transition-transform duration-700 ease-out"
+          className="absolute inset-0 opacity-12 transition-transform duration-700 ease-out"
           style={{
             transform: `translate(${bgGridX}px, ${bgGridY}px)`,
             backgroundImage: `
@@ -115,7 +115,7 @@ export const ComputerAssemblyAnimation: React.FC<ComputerAssemblyAnimationProps>
             <img
               src={workstationImage}
               alt="Estação de Trabalho Corporativa Ouzze Tecnologia"
-              className="w-full h-full object-contain filter drop-shadow-[0_20px_50px_rgba(0,0,0,0.9)] transition-transform duration-700 ease-out"
+              className="w-full h-full object-contain filter drop-shadow-[0_20px_50px_rgba(0,0,0,0.95)] transition-transform duration-700 ease-out"
               loading="eager"
               decoding="async"
             />
@@ -141,9 +141,9 @@ export const ComputerAssemblyAnimation: React.FC<ComputerAssemblyAnimationProps>
         style={{
           transform: `translate(${foregroundBadgeX}px, ${foregroundBadgeY}px)`
         }}
-        className="absolute -bottom-2 sm:-bottom-3 right-3 sm:right-6 z-30 flex items-center gap-2.5 px-3.5 py-2 rounded-sm bg-zinc-950/90 backdrop-blur-md border border-white/15 shadow-[0_15px_35px_rgba(0,0,0,0.85)]"
+        className="absolute -bottom-2 sm:-bottom-3 right-3 sm:right-6 z-30 flex items-center gap-2.5 px-3.5 py-2 rounded-sm bg-zinc-950/90 backdrop-blur-md border border-white/15 hover:border-red-600/40 transition-colors shadow-[0_15px_35px_rgba(0,0,0,0.85)] hover:shadow-[0_0_20px_rgba(220,38,38,0.15)]"
       >
-        <div className="w-6 h-6 rounded-sm bg-red-600/10 border border-red-600/30 flex items-center justify-center text-red-500">
+        <div className="w-6 h-6 rounded-sm bg-red-600/10 border border-red-600/40 flex items-center justify-center text-red-500 shadow-[0_0_10px_rgba(220,38,38,0.25)]">
           <ShieldCheck className="w-3.5 h-3.5" />
         </div>
         <div className="flex flex-col">
@@ -164,9 +164,9 @@ export const ComputerAssemblyAnimation: React.FC<ComputerAssemblyAnimationProps>
         style={{
           transform: `translate(${foregroundBadgeX * -0.7}px, ${foregroundBadgeY * -0.7}px)`
         }}
-        className="hidden sm:flex absolute -top-2 left-2 z-30 items-center gap-2 px-3 py-1.5 rounded-sm bg-zinc-950/80 backdrop-blur-md border border-white/10 shadow-lg text-[10px] font-mono text-zinc-300 uppercase tracking-wider"
+        className="hidden sm:flex absolute -top-2 left-2 z-30 items-center gap-2 px-3 py-1.5 rounded-sm bg-zinc-950/85 backdrop-blur-md border border-white/10 hover:border-red-600/30 transition-colors shadow-lg text-[10px] font-mono text-zinc-300 uppercase tracking-wider"
       >
-        <span className="w-1.5 h-1.5 rounded-full bg-red-600 shadow-[0_0_6px_#DC2626]" />
+        <span className="w-1.5 h-1.5 rounded-full bg-red-600 neon-dot" />
         <span>Locação • Venda • Serviços</span>
       </motion.div>
 

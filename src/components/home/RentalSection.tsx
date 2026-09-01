@@ -90,8 +90,8 @@ export const RentalSection: React.FC<RentalSectionProps> = ({ onOpenProposal }) 
               onClick={() => setActiveFilter(cat.id)}
               className={`px-4 py-2.5 rounded-sm text-xs font-bold uppercase tracking-wider whitespace-nowrap transition-all duration-200 cursor-pointer ${
                 activeFilter === cat.id
-                  ? 'bg-red-600 text-white shadow-sm'
-                  : 'bg-zinc-900 text-zinc-400 hover:text-white hover:bg-zinc-800 border border-white/10'
+                  ? 'bg-red-600 text-white shadow-[0_0_15px_rgba(220,38,38,0.35)]'
+                  : 'bg-zinc-900 text-zinc-400 hover:text-white hover:bg-zinc-800 border border-white/10 hover:border-red-600/30'
               }`}
             >
               {cat.label}
@@ -108,16 +108,16 @@ export const RentalSection: React.FC<RentalSectionProps> = ({ onOpenProposal }) 
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: idx * 0.05 }}
-              className="group rounded-lg bg-zinc-900 border border-white/5 hover:border-red-600/50 p-6 flex flex-col justify-between transition-all duration-300 shadow-lg"
+              className="group rounded-lg bg-zinc-900 border border-white/10 hover:border-red-600/50 p-6 flex flex-col justify-between transition-all duration-300 shadow-lg hover:shadow-[0_20px_40px_rgba(0,0,0,0.85),0_0_20px_rgba(220,38,38,0.12)] hover:-translate-y-1"
             >
               <div>
                 {/* Card Top */}
                 <div className="flex items-center justify-between mb-4">
-                  <div className="w-10 h-10 rounded-sm bg-black border border-white/10 group-hover:border-red-600/40 flex items-center justify-center transition-colors">
+                  <div className="w-10 h-10 rounded-sm bg-black border border-white/10 group-hover:border-red-600/50 group-hover:shadow-[0_0_12px_rgba(220,38,38,0.25)] flex items-center justify-center transition-all">
                     {getEquipIcon(equip.iconName)}
                   </div>
                   {equip.badge && (
-                    <span className="text-[10px] font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-sm bg-black border border-white/10 text-red-500">
+                    <span className="text-[10px] font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-sm bg-black border border-red-600/30 text-red-500 shadow-[0_0_8px_rgba(220,38,38,0.15)]">
                       {equip.badge}
                     </span>
                   )}
@@ -159,7 +159,7 @@ export const RentalSection: React.FC<RentalSectionProps> = ({ onOpenProposal }) 
               <button
                 id={`quote-rental-${equip.id}`}
                 onClick={() => onOpenProposal(`Locação - ${equip.name}`)}
-                className="w-full py-3 px-4 rounded-sm bg-zinc-800 hover:bg-red-600 text-white font-bold uppercase tracking-wider text-xs transition-all duration-200 flex items-center justify-center gap-2 border border-white/10 hover:border-red-600 cursor-pointer shadow-sm active:scale-98"
+                className="w-full py-3 px-4 rounded-sm bg-zinc-800 hover:bg-red-600 text-white font-bold uppercase tracking-wider text-xs transition-all duration-200 flex items-center justify-center gap-2 border border-white/10 hover:border-red-600 cursor-pointer shadow-sm hover:shadow-[0_0_15px_rgba(220,38,38,0.35)] active:scale-98"
               >
                 <span>Cotar locação deste item</span>
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -169,9 +169,9 @@ export const RentalSection: React.FC<RentalSectionProps> = ({ onOpenProposal }) 
         </div>
 
         {/* Value Prop Banner for Rental */}
-        <div className="mt-12 p-6 sm:p-8 rounded-lg bg-zinc-900 border border-white/10 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="mt-12 p-6 sm:p-8 rounded-lg bg-zinc-900 border border-white/10 hover:border-red-600/30 transition-all flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-sm bg-black border border-red-600/30 text-red-500 flex items-center justify-center shrink-0">
+            <div className="w-12 h-12 rounded-sm bg-black border border-red-600/40 text-red-500 shadow-[0_0_12px_rgba(220,38,38,0.2)] flex items-center justify-center shrink-0">
               <Zap className="w-6 h-6" />
             </div>
             <div>
@@ -182,7 +182,7 @@ export const RentalSection: React.FC<RentalSectionProps> = ({ onOpenProposal }) 
           <button
             id="rental-custom-batch-btn"
             onClick={() => onOpenProposal('Locação Personalizada')}
-            className="shrink-0 px-6 py-3.5 rounded-sm bg-red-600 hover:bg-red-700 text-white font-bold uppercase tracking-widest text-xs transition-all cursor-pointer shadow-sm active:scale-95"
+            className="shrink-0 px-6 py-3.5 rounded-sm bg-red-600 hover:bg-red-700 text-white font-bold uppercase tracking-widest text-xs transition-all cursor-pointer neon-glow-btn active:scale-95"
           >
             Falar com Especialista
           </button>

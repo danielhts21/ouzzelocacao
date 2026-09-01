@@ -88,7 +88,7 @@ export const StatsSection: React.FC = () => {
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={isInView ? { opacity: 1, scale: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className="rounded-lg bg-zinc-900 border border-white/10 p-6 sm:p-7 text-center relative group hover:border-red-600/50 transition-all duration-300 shadow-xl hover:-translate-y-1"
+              className="rounded-lg bg-zinc-900 border border-white/10 p-6 sm:p-7 text-center relative group hover:border-red-600/50 hover:shadow-[0_20px_40px_rgba(0,0,0,0.85),0_0_20px_rgba(220,38,38,0.14)] transition-all duration-300 shadow-xl hover:-translate-y-1"
             >
               {/* Animated Stat Value */}
               <div className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white font-mono tracking-tight group-hover:text-red-500 transition-colors">
@@ -109,8 +109,8 @@ export const StatsSection: React.FC = () => {
                 </p>
               </div>
 
-              {/* Red Indicator Dot */}
-              <div className="absolute top-3 right-3 w-1.5 h-1.5 rounded-full bg-red-600 opacity-60 group-hover:opacity-100 group-hover:shadow-[0_0_8px_#DC2626] transition-all" />
+              {/* Red Indicator Dot with Subtle Neon */}
+              <div className="absolute top-3.5 right-3.5 w-1.5 h-1.5 rounded-full bg-red-600 opacity-60 group-hover:opacity-100 group-hover:shadow-[0_0_8px_#DC2626] transition-all" />
             </motion.div>
           ))}
         </div>

@@ -70,7 +70,7 @@ export const HowItWorksSection: React.FC = () => {
               className="relative z-10 flex flex-col items-center md:items-start text-center md:text-left group"
             >
               {/* Step Circle & Number */}
-              <div className="w-14 h-14 rounded-sm bg-zinc-900 border border-white/10 group-hover:border-red-600 flex items-center justify-center mb-5 shadow-lg transition-all duration-300">
+              <div className="w-14 h-14 rounded-sm bg-zinc-900 border border-white/10 group-hover:border-red-600/60 group-hover:shadow-[0_0_16px_rgba(220,38,38,0.3)] flex items-center justify-center mb-5 shadow-lg transition-all duration-300">
                 <div className="flex flex-col items-center">
                   <span className="text-[10px] font-mono font-bold text-red-500 group-hover:scale-110 transition-transform">
                     {step.number}

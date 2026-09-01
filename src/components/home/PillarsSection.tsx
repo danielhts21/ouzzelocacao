@@ -79,20 +79,20 @@ export const PillarsSection: React.FC<PillarsSectionProps> = ({
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-50px' }}
               transition={{ duration: 0.5, delay: idx * 0.12, ease: [0.16, 1, 0.3, 1] }}
-              className="group relative bg-zinc-900 p-6 sm:p-8 border border-white/10 hover:border-red-600/50 transition-all duration-300 rounded-lg flex flex-col justify-between shadow-xl hover:shadow-[0_20px_40px_rgba(0,0,0,0.8),0_0_20px_rgba(220,38,38,0.12)] hover:-translate-y-1.5"
+              className="group relative bg-zinc-900 p-6 sm:p-8 border border-white/10 hover:border-red-600/50 transition-all duration-300 rounded-lg flex flex-col justify-between shadow-xl hover:shadow-[0_20px_40px_rgba(0,0,0,0.85),0_0_24px_rgba(220,38,38,0.15)] hover:-translate-y-1.5"
             >
               {/* Subtle Red Accent Top Border Line on Hover */}
-              <div className="absolute top-0 left-0 right-0 h-[2px] bg-red-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-t-lg" />
+              <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-red-600 via-red-500 to-red-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-t-lg neon-line-subtle" />
 
               {/* Card Top Pill & Icon */}
               <div>
                 {/* Step / Number Tag */}
                 <div className="text-red-500 mb-3 font-bold text-xs uppercase tracking-widest flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-red-600 rounded-full shadow-[0_0_6px_#DC2626]"></div> 
+                    <div className="w-2 h-2 bg-red-600 rounded-full neon-dot"></div> 
                     <span>0{idx + 1}. {pillar.tag}</span>
                   </div>
-                  <div className="w-8 h-8 rounded-sm bg-black border border-white/10 flex items-center justify-center group-hover:border-red-600/40 transition-colors">
+                  <div className="w-8 h-8 rounded-sm bg-black border border-white/10 flex items-center justify-center group-hover:border-red-600/50 group-hover:shadow-[0_0_12px_rgba(220,38,38,0.25)] transition-all">
                     {getPillarIcon(pillar.id)}
                   </div>
                 </div>
@@ -125,7 +125,7 @@ export const PillarsSection: React.FC<PillarsSectionProps> = ({
                 <button
                   id={`pillar-btn-${pillar.id}`}
                   onClick={() => scrollToTarget(pillar.targetSection)}
-                  className="w-full py-3.5 px-4 rounded-sm bg-zinc-800 hover:bg-red-600 text-white font-bold uppercase tracking-wider text-xs transition-all duration-200 flex items-center justify-center gap-2 border border-white/10 hover:border-red-600 cursor-pointer shadow-sm active:scale-98 group/btn"
+                  className="w-full py-3.5 px-4 rounded-sm bg-zinc-800 hover:bg-red-600 text-white font-bold uppercase tracking-wider text-xs transition-all duration-200 flex items-center justify-center gap-2 border border-white/10 hover:border-red-600 cursor-pointer shadow-sm hover:shadow-[0_0_18px_rgba(220,38,38,0.4)] active:scale-98 group/btn"
                 >
                   <span>{pillar.ctaText}</span>
                   <ChevronRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />

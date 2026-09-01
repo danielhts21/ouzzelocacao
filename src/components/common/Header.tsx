@@ -118,7 +118,7 @@ export const Header: React.FC<HeaderProps> = ({
                   : 'hover:text-red-500 text-zinc-400'
               }`}
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-red-600" />
+              <span className="w-1.5 h-1.5 rounded-full bg-red-600 neon-dot" />
               Educação
             </button>
           </nav>
@@ -128,7 +128,7 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               id="header-proposal-btn"
               onClick={() => onOpenProposal('geral')}
-              className="bg-red-600 hover:bg-red-700 text-white px-6 py-2.5 rounded-sm text-xs font-bold uppercase tracking-widest transition-all cursor-pointer shadow-sm active:scale-95 flex items-center gap-2"
+              className="bg-red-600 hover:bg-red-700 text-white px-6 py-2.5 rounded-sm text-xs font-bold uppercase tracking-widest transition-all cursor-pointer neon-glow-btn active:scale-95 flex items-center gap-2"
             >
               <span>Solicitar Proposta</span>
             </button>

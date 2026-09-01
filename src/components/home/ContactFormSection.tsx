@@ -332,7 +332,7 @@ export const ContactFormSection: React.FC<ContactFormSectionProps> = ({
                       id="form-submit-btn"
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full py-4 rounded-sm bg-red-600 hover:bg-red-700 text-white font-bold text-xs uppercase tracking-wider shadow-lg transition-all duration-200 active:scale-98 flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
+                      className="w-full py-4 rounded-sm bg-red-600 hover:bg-red-700 text-white font-bold text-xs uppercase tracking-wider neon-glow-btn transition-all duration-200 active:scale-98 flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
                     >
                       {isSubmitting ? (
                         <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />

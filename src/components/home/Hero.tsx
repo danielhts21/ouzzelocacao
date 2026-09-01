@@ -107,9 +107,10 @@ export const Hero: React.FC<HeroProps> = ({ onOpenProposal }) => {
               initial={{ opacity: 0, y: -15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="inline-block px-3 py-1 border border-red-600/40 bg-red-600/10 text-red-500 text-[10px] font-bold uppercase tracking-widest rounded-sm shadow-[0_0_15px_rgba(220,38,38,0.15)]"
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 border border-red-600/40 bg-red-950/30 text-red-500 text-[10px] font-bold uppercase tracking-widest rounded-sm shadow-[0_0_15px_rgba(220,38,38,0.2)]"
             >
-              Inovação & Performance • Ecossistema B2B
+              <span className="w-1.5 h-1.5 rounded-full bg-red-600 neon-dot" />
+              <span>Inovação & Performance • Ecossistema B2B</span>
             </motion.div>
 
             {/* 2. Main Premium Headline (Enters with Blur & TranslateY) */}
@@ -121,7 +122,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenProposal }) => {
             >
               Tecnologia que <span className="text-red-600 relative inline-block">
                 impulsiona
-                <span className="absolute bottom-1 left-0 w-full h-[2px] bg-red-600/40 rounded-full" />
+                <span className="absolute -bottom-1 left-0 w-full h-[2px] bg-gradient-to-r from-red-600 via-red-500 to-red-600 rounded-full neon-line-subtle" />
               </span> o seu negócio.
             </motion.h1>
 
@@ -146,7 +147,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenProposal }) => {
               <button
                 id="hero-cta-proposal"
                 onClick={() => onOpenProposal('geral')}
-                className="relative group bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-sm text-xs sm:text-sm font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer flex items-center justify-center gap-2.5 shadow-[0_4px_20px_rgba(220,38,38,0.35)] hover:shadow-[0_6px_28px_rgba(220,38,38,0.5)] active:scale-98 hover:scale-[1.02]"
+                className="relative group bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-sm text-xs sm:text-sm font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer flex items-center justify-center gap-2.5 neon-glow-btn active:scale-98 hover:scale-[1.02]"
               >
                 <FileText className="w-4 h-4 text-white/90" />
                 <span>Solicitar Proposta</span>
@@ -157,10 +158,10 @@ export const Hero: React.FC<HeroProps> = ({ onOpenProposal }) => {
               <button
                 id="hero-cta-solutions"
                 onClick={() => scrollToSection('pilares')}
-                className="border border-white/20 hover:border-white/40 bg-zinc-900/60 hover:bg-zinc-800 text-white px-8 py-4 rounded-sm text-xs sm:text-sm font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 group active:scale-98"
+                className="border border-white/20 hover:border-red-600/50 hover:shadow-[0_0_15px_rgba(220,38,38,0.2)] bg-zinc-900/60 hover:bg-zinc-900 text-white px-8 py-4 rounded-sm text-xs sm:text-sm font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 group active:scale-98"
               >
                 <span>Conhecer Soluções</span>
-                <ArrowRight className="w-4 h-4 text-zinc-400 group-hover:text-white transition-transform group-hover:translate-x-1" />
+                <ArrowRight className="w-4 h-4 text-zinc-400 group-hover:text-red-500 transition-all group-hover:translate-x-1" />
               </button>
             </motion.div>
 
@@ -172,21 +173,21 @@ export const Hero: React.FC<HeroProps> = ({ onOpenProposal }) => {
               className="pt-6 border-t border-white/10 grid grid-cols-2 sm:grid-cols-3 gap-4 w-full"
             >
               <div className="flex items-center gap-2.5">
-                <div className="w-2 h-2 rounded-full bg-red-600 shadow-[0_0_6px_#DC2626]" />
+                <div className="w-2 h-2 rounded-full bg-red-600 neon-dot" />
                 <span className="text-xs sm:text-sm font-medium text-zinc-300">
                   Sem imobilizar capital
                 </span>
               </div>
 
               <div className="flex items-center gap-2.5">
-                <div className="w-2 h-2 rounded-full bg-red-600 shadow-[0_0_6px_#DC2626]" />
+                <div className="w-2 h-2 rounded-full bg-red-600 neon-dot" />
                 <span className="text-xs sm:text-sm font-medium text-zinc-300">
                   Suporte especializado
                 </span>
               </div>
 
               <div className="flex items-center gap-2.5 col-span-2 sm:col-span-1">
-                <div className="w-2 h-2 rounded-full bg-red-600 shadow-[0_0_6px_#DC2626]" />
+                <div className="w-2 h-2 rounded-full bg-red-600 neon-dot" />
                 <span className="text-xs sm:text-sm font-medium text-zinc-300">
                   Hardware homologado
                 </span>
@@ -210,6 +211,9 @@ export const Hero: React.FC<HeroProps> = ({ onOpenProposal }) => {
 
         </div>
       </div>
+
+      {/* Subtle Luminous Red Section Transition Horizon */}
+      <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-red-600/35 to-transparent pointer-events-none neon-line-subtle" />
     </section>
   );
 };

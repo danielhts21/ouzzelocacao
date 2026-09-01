@@ -99,13 +99,13 @@ export const SegmentsSection: React.FC<SegmentsSectionProps> = ({
               transition={{ duration: 0.4, delay: idx * 0.08 }}
               className={`group relative rounded-lg bg-zinc-900 border p-6 sm:p-7 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 shadow-lg ${
                 segment.id === 'educacao'
-                  ? 'border-red-600/60 hover:border-red-600 ring-1 ring-red-600/30'
-                  : 'border-white/5 hover:border-red-600/50'
+                  ? 'border-red-600/60 hover:border-red-600 ring-1 ring-red-600/30 hover:shadow-[0_20px_40px_rgba(0,0,0,0.85),0_0_24px_rgba(220,38,38,0.2)]'
+                  : 'border-white/10 hover:border-red-600/50 hover:shadow-[0_20px_40px_rgba(0,0,0,0.85),0_0_20px_rgba(220,38,38,0.12)]'
               }`}
             >
               {/* Segment Badge if Featured */}
               {segment.id === 'educacao' && (
-                <div className="absolute -top-3 right-6 px-3 py-0.5 rounded-sm bg-red-600 text-white text-[10px] font-bold uppercase tracking-wider shadow-sm flex items-center gap-1">
+                <div className="absolute -top-3 right-6 px-3 py-0.5 rounded-sm bg-red-600 text-white text-[10px] font-bold uppercase tracking-wider shadow-[0_0_12px_rgba(220,38,38,0.4)] flex items-center gap-1">
                   <Sparkles className="w-3 h-3" />
                   <span>Landing Page Exclusiva</span>
                 </div>
@@ -114,7 +114,7 @@ export const SegmentsSection: React.FC<SegmentsSectionProps> = ({
               <div>
                 {/* Icon & Title */}
                 <div className="flex items-center gap-4 mb-4">
-                  <div className="w-12 h-12 rounded-sm bg-black border border-white/10 group-hover:border-red-600/40 flex items-center justify-center transition-colors">
+                  <div className="w-12 h-12 rounded-sm bg-black border border-white/10 group-hover:border-red-600/50 group-hover:shadow-[0_0_12px_rgba(220,38,38,0.25)] flex items-center justify-center transition-all">
                     {getSegmentIcon(segment.iconName)}
                   </div>
                   <div>
@@ -149,8 +149,8 @@ export const SegmentsSection: React.FC<SegmentsSectionProps> = ({
                   onClick={() => handleCardClick(segment)}
                   className={`w-full py-3 px-4 rounded-sm text-xs font-bold uppercase tracking-wider transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer active:scale-98 ${
                     segment.id === 'educacao'
-                      ? 'bg-red-600 hover:bg-red-700 text-white shadow-md'
-                      : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-200 hover:text-white border border-white/10 hover:border-white/20'
+                      ? 'bg-red-600 hover:bg-red-700 text-white neon-glow-btn'
+                      : 'bg-zinc-800 hover:bg-red-600 text-zinc-200 hover:text-white border border-white/10 hover:border-red-600 shadow-sm hover:shadow-[0_0_15px_rgba(220,38,38,0.35)]'
                   }`}
                 >
                   <span>{segment.id === 'educacao' ? 'Ver Soluções para Educação' : 'Conhecer soluções'}</span>
