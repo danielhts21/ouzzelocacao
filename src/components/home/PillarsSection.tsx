@@ -55,7 +55,7 @@ export const PillarsSection: React.FC<PillarsSectionProps> = ({
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
           <div className="inline-block px-3 py-1 border border-red-600/30 bg-red-600/10 text-red-500 text-[10px] font-bold uppercase tracking-widest rounded-sm">
-            Ecossistema Completo
+            Soluções Integradas
           </div>
           
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white tracking-tight">
@@ -66,7 +66,7 @@ export const PillarsSection: React.FC<PillarsSectionProps> = ({
           </h2>
 
           <p className="text-zinc-400 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
-            Hardware de ponta, flexibilidade financeira e suporte de alta disponibilidade para impulsionar o seu negócio sem interrupções.
+            Locação, venda e serviços integrados para simplificar a gestão de TI da sua empresa.
           </p>
         </div>
 

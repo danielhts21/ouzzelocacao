@@ -162,15 +162,15 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenProposal }) =>
 
               </div>
 
-              {/* Bottom Metrics Snapshot */}
+              {/* Bottom Commitments Snapshot */}
               <div className="mt-6 pt-4 border-t border-white/10 grid grid-cols-2 gap-3 text-center">
                 <div className="p-3 rounded-sm bg-black border border-white/5">
-                  <p className="text-[9px] font-mono text-zinc-400 uppercase tracking-widest">Tempo Médio de Atendimento</p>
-                  <p className="text-lg font-bold text-white font-mono mt-0.5">&lt; 15 min</p>
+                  <p className="text-[9px] font-mono text-zinc-400 uppercase tracking-widest">Modelo de Atendimento</p>
+                  <p className="text-sm font-bold text-white font-mono mt-0.5 uppercase">Consultivo & Direto</p>
                 </div>
                 <div className="p-3 rounded-sm bg-black border border-white/5">
-                  <p className="text-[9px] font-mono text-zinc-400 uppercase tracking-widest">Disponibilidade Contratual</p>
-                  <p className="text-lg font-bold text-red-500 font-mono mt-0.5">99.9%</p>
+                  <p className="text-[9px] font-mono text-zinc-400 uppercase tracking-widest">Parque Tecnológico</p>
+                  <p className="text-sm font-bold text-red-500 font-mono mt-0.5 uppercase">100% Homologado</p>
                 </div>
               </div>
             </div>

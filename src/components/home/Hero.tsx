@@ -110,7 +110,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenProposal }) => {
               className="inline-flex items-center gap-2 px-3.5 py-1.5 border border-red-600/40 bg-red-950/30 text-red-500 text-[10px] font-bold uppercase tracking-widest rounded-sm shadow-[0_0_15px_rgba(220,38,38,0.2)]"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-red-600 neon-dot" />
-              <span>Inovação & Performance • Ecossistema B2B</span>
+              <span>Soluções Corporativas em Tecnologia</span>
             </motion.div>
 
             {/* 2. Main Premium Headline (Enters with Blur & TranslateY) */}
@@ -133,7 +133,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenProposal }) => {
               transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
               className="text-base sm:text-lg text-zinc-300 max-w-xl leading-relaxed font-normal"
             >
-              Locação, venda e serviços de tecnologia em uma única empresa. Soluções completas em equipamentos e infraestrutura corporativa para empresas que exigem máxima confiabilidade e produtividade.
+              Locação, venda e serviços de tecnologia para empresas e instituições. Soluções completas para manter sua infraestrutura atualizada, segura e disponível.
             </motion.p>
 
             {/* 4. Action Buttons (Premium Micro-interactions) */}
@@ -151,7 +151,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenProposal }) => {
               >
                 <FileText className="w-4 h-4 text-white/90" />
                 <span>Solicitar Proposta</span>
-                <ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                <ChevronRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
               </button>
 
               {/* Secondary CTA: Conhecer Soluções */}
@@ -161,7 +161,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenProposal }) => {
                 className="border border-white/20 hover:border-red-600/50 hover:shadow-[0_0_15px_rgba(220,38,38,0.2)] bg-zinc-900/60 hover:bg-zinc-900 text-white px-8 py-4 rounded-sm text-xs sm:text-sm font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 group active:scale-98"
               >
                 <span>Conhecer Soluções</span>
-                <ArrowRight className="w-4 h-4 text-zinc-400 group-hover:text-red-500 transition-all group-hover:translate-x-1" />
+                <ArrowRight className="w-4 h-4 text-zinc-400 group-hover:text-red-500 transition-all duration-200 group-hover:translate-x-1" />
               </button>
             </motion.div>
 
@@ -189,7 +189,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenProposal }) => {
               <div className="flex items-center gap-2.5 col-span-2 sm:col-span-1">
                 <div className="w-2 h-2 rounded-full bg-red-600 neon-dot" />
                 <span className="text-xs sm:text-sm font-medium text-zinc-300">
-                  Hardware homologado
+                  Equipamentos corporativos
                 </span>
               </div>
             </motion.div>

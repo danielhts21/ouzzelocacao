@@ -70,14 +70,14 @@ export const RentalSection: React.FC<RentalSectionProps> = ({ onOpenProposal }) 
           </div>
           
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">
-            Equipamentos certos. <br className="hidden sm:block" />
+            Tecnologia sem <br className="hidden sm:block" />
             <span className="text-red-600">
-              Pelo tempo que sua empresa precisa.
+              imobilizar capital.
             </span>
           </h2>
 
           <p className="text-zinc-400 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
-            Hardware corporativo homologado com substituição expressa, suporte em tempo real e deduções fiscais em OPEX.
+            Modelos flexíveis de locação corporativa para manter o parque tecnológico sempre atualizado com suporte e substituição inclusos.
           </p>
         </div>
 

@@ -65,7 +65,7 @@ export const CommercialCTA: React.FC<CommercialCTAProps> = ({ onOpenProposal }) 
           </div>
 
           <div className="pt-4 flex flex-wrap items-center justify-center gap-6 text-[11px] text-zinc-400 font-mono">
-            <span className="flex items-center gap-1.5"><span className="w-1 h-1 rounded-full bg-red-600 neon-dot" /> PROPOSTA EM ATÉ 2 HORAS</span>
+            <span className="flex items-center gap-1.5"><span className="w-1 h-1 rounded-full bg-red-600 neon-dot" /> PROPOSTA PERSONALIZADA</span>
             <span className="flex items-center gap-1.5"><span className="w-1 h-1 rounded-full bg-red-600 neon-dot" /> CONTRATOS FLEXÍVEIS</span>
             <span className="flex items-center gap-1.5"><span className="w-1 h-1 rounded-full bg-red-600 neon-dot" /> FATURAMENTO B2B</span>
           </div>

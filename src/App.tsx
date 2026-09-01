@@ -11,7 +11,6 @@ import { SegmentsSection } from './components/home/SegmentsSection';
 import { RentalSection } from './components/home/RentalSection';
 import { ServicesSection } from './components/home/ServicesSection';
 import { BenefitsSection } from './components/home/BenefitsSection';
-import { StatsSection } from './components/home/StatsSection';
 import { HowItWorksSection } from './components/home/HowItWorksSection';
 import { CommercialCTA } from './components/home/CommercialCTA';
 import { ContactFormSection } from './components/home/ContactFormSection';
@@ -109,16 +108,13 @@ export default function App() {
             {/* 7. Benefícios: Por que escolher a Ouzze? */}
             <BenefitsSection />
 
-            {/* 8. Números & Estatísticas Animadas */}
-            <StatsSection />
-
-            {/* 9. Como Funciona (Linha do Tempo em 5 Passos) */}
+            {/* 8. Como Funciona (Linha do Tempo em 5 Passos) */}
             <HowItWorksSection />
 
-            {/* 10. Chamada Comercial de Alto Impacto */}
+            {/* 9. Chamada Comercial de Alto Impacto */}
             <CommercialCTA onOpenProposal={handleOpenProposal} />
 
-            {/* 11. Formulário Profissional de Contato / Proposta */}
+            {/* 10. Formulário Profissional de Contato / Proposta */}
             <ContactFormSection initialSolution="Locação" />
           </>
         )}

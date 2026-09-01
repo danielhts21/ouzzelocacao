@@ -52,14 +52,14 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onOpenProposal
           </div>
           
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">
-            Tecnologia funcionando. <br className="hidden sm:block" />
+            Sua operação funcionando. <br className="hidden sm:block" />
             <span className="text-red-600">
-              Sua empresa produzindo.
+              Sempre.
             </span>
           </h2>
 
           <p className="text-zinc-400 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
-            Da manutenção preventiva ao field service presencial e engenharia de redes, garantimos disponibilidade contínua para sua operação.
+            Gestão, suporte técnico especializado e manutenção para garantir continuidade operacional.
           </p>
         </div>
 
@@ -124,20 +124,20 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onOpenProposal
         <div className="mt-14 p-6 sm:p-8 rounded-lg bg-zinc-900 border border-white/10 hover:border-red-600/30 transition-all grid grid-cols-1 md:grid-cols-3 gap-6 text-center divide-y md:divide-y-0 md:divide-x divide-white/10 shadow-xl">
           <div className="space-y-1 pt-4 md:pt-0">
             <span className="text-[10px] font-mono text-red-500 uppercase tracking-widest font-bold">Atendimento Remoto</span>
-            <p className="text-xl font-bold text-white uppercase tracking-tight">SLA até 15 minutos</p>
-            <p className="text-xs text-zinc-400">Canal direto via WhatsApp e portal</p>
+            <p className="text-xl font-bold text-white uppercase tracking-tight">Suporte Multicanal</p>
+            <p className="text-xs text-zinc-400">Canal direto via WhatsApp e portal de chamados</p>
           </div>
 
           <div className="space-y-1 pt-4 md:pt-0">
             <span className="text-[10px] font-mono text-red-500 uppercase tracking-widest font-bold">Field Service Presencial</span>
-            <p className="text-xl font-bold text-white uppercase tracking-tight">Atendimento Imediato</p>
-            <p className="text-xs text-zinc-400">Técnicos com ferramental completo</p>
+            <p className="text-xl font-bold text-white uppercase tracking-tight">Equipe Especializada</p>
+            <p className="text-xs text-zinc-400">Técnicos com ferramental e instrumental completo</p>
           </div>
 
           <div className="space-y-1 pt-4 md:pt-0">
             <span className="text-[10px] font-mono text-red-500 uppercase tracking-widest font-bold">Substituição de Máquinas</span>
-            <p className="text-xl font-bold text-white uppercase tracking-tight">Backup Imediato</p>
-            <p className="text-xs text-zinc-400">Sem impacto na continuidade da equipe</p>
+            <p className="text-xl font-bold text-white uppercase tracking-tight">Troca Ágil</p>
+            <p className="text-xs text-zinc-400">Garantia de continuidade sem paradas na equipe</p>
           </div>
         </div>
 
