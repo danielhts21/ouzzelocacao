@@ -86,14 +86,6 @@ export const Hero: React.FC<HeroProps> = ({ onOpenProposal }) => {
 
         {/* Secondary Deep Crimson Ambient Glow (Left Side) */}
         <div className="absolute bottom-[-100px] left-[-80px] w-[500px] h-[500px] bg-red-600/[0.05] rounded-full blur-[160px] pointer-events-none" />
-
-        {/* Technical Coordinate Indicators */}
-        <div className="absolute top-28 left-8 text-[9px] font-mono text-zinc-700 tracking-widest hidden xl:block">
-          OUZZE.CORP.TECH // INFRA_V3
-        </div>
-        <div className="absolute bottom-12 right-12 text-[9px] font-mono text-zinc-700 tracking-widest hidden xl:block">
-          SYS_READY // ZERO_DOWNTIME
-        </div>
       </motion.div>
 
       {/* ========================================================================= */}
