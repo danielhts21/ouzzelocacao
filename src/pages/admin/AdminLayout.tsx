@@ -25,7 +25,8 @@ import {
   Monitor,
   Menu,
   X,
-  RefreshCw
+  RefreshCw,
+  Terminal
 } from 'lucide-react';
 import { Logo } from '../../components/common/Logo';
 
@@ -52,7 +53,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
   onExitAdmin,
   children
 }) => {
-  const { user, logout } = useAdminAuth();
+  const { user, logout, isLocalDevMode } = useAdminAuth();
   const {
     state,
     isDraftModified,
@@ -125,45 +126,56 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
         </div>
 
         {/* Center: Device Switcher & Live Preview indicator */}
-        <div className="hidden md:flex items-center gap-2 bg-zinc-900/90 border border-zinc-800 rounded-md p-1">
-          <button
-            onClick={() => { setPreviewDevice('desktop'); setIsPreviewMode(true); }}
-            className={`p-1.5 px-2.5 rounded text-xs font-medium flex items-center gap-1.5 transition-colors ${
-              isPreviewMode && previewDevice === 'desktop'
-                ? 'bg-zinc-800 text-white shadow-sm'
-                : 'text-zinc-400 hover:text-zinc-200'
-            }`}
-            title="Visualizar Desktop"
-          >
-            <Monitor className="w-3.5 h-3.5" />
-            <span>Desktop</span>
-          </button>
+        <div className="flex items-center gap-2">
+          {isLocalDevMode && (
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-amber-500/10 border border-amber-500/30 text-[11px] font-mono text-amber-400">
+              <Terminal className="w-3.5 h-3.5 text-amber-400" />
+              <span className="font-bold uppercase tracking-wider">AMBIENTE LOCAL</span>
+              <span className="text-zinc-500 hidden sm:inline">•</span>
+              <span className="text-amber-300/80 hidden sm:inline">Autenticação temporária</span>
+            </div>
+          )}
 
-          <button
-            onClick={() => { setPreviewDevice('tablet'); setIsPreviewMode(true); }}
-            className={`p-1.5 px-2.5 rounded text-xs font-medium flex items-center gap-1.5 transition-colors ${
-              isPreviewMode && previewDevice === 'tablet'
-                ? 'bg-zinc-800 text-white shadow-sm'
-                : 'text-zinc-400 hover:text-zinc-200'
-            }`}
-            title="Visualizar Tablet"
-          >
-            <Tablet className="w-3.5 h-3.5" />
-            <span>Tablet</span>
-          </button>
+          <div className="hidden md:flex items-center gap-2 bg-zinc-900/90 border border-zinc-800 rounded-md p-1">
+            <button
+              onClick={() => { setPreviewDevice('desktop'); setIsPreviewMode(true); }}
+              className={`p-1.5 px-2.5 rounded text-xs font-medium flex items-center gap-1.5 transition-colors ${
+                isPreviewMode && previewDevice === 'desktop'
+                  ? 'bg-zinc-800 text-white shadow-sm'
+                  : 'text-zinc-400 hover:text-zinc-200'
+              }`}
+              title="Visualizar Desktop"
+            >
+              <Monitor className="w-3.5 h-3.5" />
+              <span>Desktop</span>
+            </button>
 
-          <button
-            onClick={() => { setPreviewDevice('mobile'); setIsPreviewMode(true); }}
-            className={`p-1.5 px-2.5 rounded text-xs font-medium flex items-center gap-1.5 transition-colors ${
-              isPreviewMode && previewDevice === 'mobile'
-                ? 'bg-zinc-800 text-white shadow-sm'
-                : 'text-zinc-400 hover:text-zinc-200'
-            }`}
-            title="Visualizar Smartphone"
-          >
-            <Smartphone className="w-3.5 h-3.5" />
-            <span>Mobile</span>
-          </button>
+            <button
+              onClick={() => { setPreviewDevice('tablet'); setIsPreviewMode(true); }}
+              className={`p-1.5 px-2.5 rounded text-xs font-medium flex items-center gap-1.5 transition-colors ${
+                isPreviewMode && previewDevice === 'tablet'
+                  ? 'bg-zinc-800 text-white shadow-sm'
+                  : 'text-zinc-400 hover:text-zinc-200'
+              }`}
+              title="Visualizar Tablet"
+            >
+              <Tablet className="w-3.5 h-3.5" />
+              <span>Tablet</span>
+            </button>
+
+            <button
+              onClick={() => { setPreviewDevice('mobile'); setIsPreviewMode(true); }}
+              className={`p-1.5 px-2.5 rounded text-xs font-medium flex items-center gap-1.5 transition-colors ${
+                isPreviewMode && previewDevice === 'mobile'
+                  ? 'bg-zinc-800 text-white shadow-sm'
+                  : 'text-zinc-400 hover:text-zinc-200'
+              }`}
+              title="Visualizar Smartphone"
+            >
+              <Smartphone className="w-3.5 h-3.5" />
+              <span>Mobile</span>
+            </button>
+          </div>
         </div>
 
         {/* Right: Status, Actions, User */}
@@ -273,8 +285,15 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
             <div className="px-3 py-2 rounded bg-zinc-900/60 border border-zinc-800 text-xs">
               <div className="font-semibold text-zinc-200 truncate">{user?.name || 'Administrador Ouzze'}</div>
               <div className="text-[11px] text-zinc-400 truncate">{user?.email}</div>
-              <div className="mt-1 text-[10px] font-mono text-emerald-400 uppercase tracking-wider">
-                Função: {user?.role?.toUpperCase()}
+              <div className="mt-1 flex items-center justify-between text-[10px] font-mono">
+                <span className="text-emerald-400 uppercase tracking-wider">
+                  Função: {user?.role?.toUpperCase()}
+                </span>
+                {isLocalDevMode && (
+                  <span className="text-amber-400 bg-amber-400/10 px-1 py-0.2 rounded border border-amber-400/20">
+                    LOCAL-DEV
+                  </span>
+                )}
               </div>
             </div>
 

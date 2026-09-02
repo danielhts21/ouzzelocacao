@@ -1,5 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useCMS } from '../../../context/CMSContext';
+import { useAdminAuth } from '../../../context/AdminAuthContext';
+import { isLocalAdminEnabled, LOCAL_DEV_ADMIN_EMAIL, computeSHA256 } from '../../../lib/localAdminAuth';
 import {
   Settings,
   Phone,
@@ -12,7 +14,10 @@ import {
   Shield,
   Check,
   AlertTriangle,
-  Megaphone
+  Megaphone,
+  KeyRound,
+  Copy,
+  Terminal
 } from 'lucide-react';
 
 export const AdminSettingsTab: React.FC = () => {
@@ -21,7 +26,28 @@ export const AdminSettingsTab: React.FC = () => {
   const announcement = announcements?.[0];
 
   const [importStatus, setImportStatus] = useState<{ msg: string; error?: boolean } | null>(null);
+  const [newPasswordInput, setNewPasswordInput] = useState('');
+  const [generatedHash, setGeneratedHash] = useState<string | null>(null);
+  const [hashCopied, setHashCopied] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const { isLocalDevMode } = useAdminAuth();
+  const isLocalEnabled = isLocalAdminEnabled();
+
+  const handleGenerateHash = async () => {
+    if (!newPasswordInput.trim()) return;
+    const hash = await computeSHA256(newPasswordInput);
+    setGeneratedHash(hash);
+    setHashCopied(false);
+  };
+
+  const handleCopyHash = () => {
+    if (generatedHash) {
+      navigator.clipboard.writeText(generatedHash);
+      setHashCopied(true);
+      setTimeout(() => setHashCopied(false), 2000);
+    }
+  };
 
   const handleFileImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -339,6 +365,94 @@ export const AdminSettingsTab: React.FC = () => {
             <span>{importStatus.msg}</span>
           </div>
         )}
+      </div>
+
+      {/* SECTION 6: SEGURANÇA & DESENVOLVIMENTO LOCAL */}
+      <div className="bg-[#0E1015] border border-zinc-800 rounded-lg p-6 space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="space-y-1">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-white flex items-center gap-2">
+              <Shield className="w-4 h-4 text-red-500" />
+              <span>6. Segurança & Autenticação Local de Desenvolvimento</span>
+            </h3>
+            <p className="text-xs text-zinc-400">
+              Controle de acesso temporário para desenvolvimento e testes do painel CMS.
+            </p>
+          </div>
+
+          <span className={`text-[11px] font-mono px-2.5 py-1 rounded border flex items-center gap-1.5 ${
+            isLocalEnabled 
+              ? 'bg-amber-500/10 border-amber-500/30 text-amber-400' 
+              : 'bg-zinc-800 border-zinc-700 text-zinc-400'
+          }`}>
+            <Terminal className="w-3.5 h-3.5" />
+            <span>{isLocalEnabled ? 'Modo Local Ativo' : 'Desabilitado em Produção'}</span>
+          </span>
+        </div>
+
+        <div className="p-4 rounded bg-black/60 border border-zinc-800 text-xs space-y-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <span className="text-zinc-400 font-mono text-[11px]">E-mail autorizado:</span>
+              <span className="ml-2 font-mono text-zinc-200">{LOCAL_DEV_ADMIN_EMAIL}</span>
+            </div>
+            <div className="text-[11px] text-zinc-500 font-mono">
+              Provedor atual: <span className="text-zinc-300">{isLocalDevMode ? 'local-dev (sessão temporária)' : 'supabase / padrão'}</span>
+            </div>
+          </div>
+
+          <div className="border-t border-zinc-800/80 pt-3 space-y-2">
+            <div className="flex items-center gap-2 text-zinc-200 font-semibold">
+              <KeyRound className="w-4 h-4 text-amber-400" />
+              <span>Alterar senha local de desenvolvimento</span>
+            </div>
+            
+            <p className="text-zinc-400 text-xs leading-relaxed">
+              Para alterar a senha local temporária, gere um novo hash e atualize a configuração de desenvolvimento em <code className="text-zinc-300 font-mono bg-zinc-900 px-1 py-0.5 rounded">src/lib/localAdminAuth.ts</code>. A senha original nunca é gravada em arquivos nem exposta no repositório Git.
+            </p>
+
+            <div className="pt-2 space-y-3">
+              <div className="flex flex-col sm:flex-row gap-2">
+                <input
+                  type="password"
+                  value={newPasswordInput}
+                  onChange={(e) => setNewPasswordInput(e.target.value)}
+                  placeholder="Digite a nova senha desejada para gerar o hash..."
+                  className="flex-1 px-3 py-2 rounded bg-zinc-900 border border-zinc-700 text-xs text-white placeholder:text-zinc-600 focus:outline-none focus:border-red-500"
+                />
+                <button
+                  type="button"
+                  onClick={handleGenerateHash}
+                  className="px-4 py-2 rounded bg-zinc-800 hover:bg-zinc-700 border border-zinc-600 text-white text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer"
+                >
+                  Gerar Hash SHA-256
+                </button>
+              </div>
+
+              {generatedHash && (
+                <div className="p-3 rounded bg-zinc-900/90 border border-zinc-700 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-mono text-zinc-400">Hash SHA-256 gerado:</span>
+                    <button
+                      type="button"
+                      onClick={handleCopyHash}
+                      className="text-xs text-amber-400 hover:text-amber-300 flex items-center gap-1 cursor-pointer font-mono"
+                    >
+                      {hashCopied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                      <span>{hashCopied ? 'Copiado!' : 'Copiar Hash'}</span>
+                    </button>
+                  </div>
+                  <div className="p-2 bg-black rounded font-mono text-[11px] text-amber-400 break-all border border-zinc-800 select-all">
+                    {generatedHash}
+                  </div>
+                  <p className="text-[10px] text-zinc-500 italic">
+                    Substitua o valor da constante <code className="text-zinc-400">LOCAL_DEV_ADMIN_HASH</code> em <code className="text-zinc-400">src/lib/localAdminAuth.ts</code> com este hash.
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
 
     </div>

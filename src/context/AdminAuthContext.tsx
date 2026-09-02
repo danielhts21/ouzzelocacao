@@ -1,12 +1,23 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { AdminUser, AdminRole } from '../types/cms';
+import {
+  isLocalAdminEnabled,
+  validateLocalDevLogin,
+  saveLocalSession,
+  getLocalSession,
+  clearLocalSession
+} from '../lib/localAdminAuth';
+
+export type AuthProviderType = 'local-dev' | 'supabase' | 'none';
 
 interface AdminAuthContextType {
   user: AdminUser | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   isConfigured: boolean;
+  authProvider: AuthProviderType;
+  isLocalDevMode: boolean;
   login: (email: string, password?: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
   hasRole: (requiredRole: AdminRole) => boolean;
@@ -17,8 +28,12 @@ const AdminAuthContext = createContext<AdminAuthContextType | undefined>(undefin
 export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<AdminUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [authProvider, setAuthProvider] = useState<AuthProviderType>('none');
 
-  // Helper to strictly verify user against the admin_users table
+  const isLocalEnabled = isLocalAdminEnabled();
+  const isAvailable = isSupabaseConfigured || isLocalEnabled;
+
+  // Helper to strictly verify user against the Supabase admin_users table
   const verifyAdminUser = useCallback(async (userId: string): Promise<AdminUser | null> => {
     try {
       const { data, error } = await supabase
@@ -55,41 +70,52 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     const initAuth = async () => {
       setIsLoading(true);
 
-      if (!isSupabaseConfigured) {
-        setUser(null);
-        setIsLoading(false);
-        return;
+      // 1. Check Supabase session if configured
+      if (isSupabaseConfigured) {
+        try {
+          const { data: { session } } = await supabase.auth.getSession();
+          if (session?.user) {
+            const verifiedAdmin = await verifyAdminUser(session.user.id);
+            if (verifiedAdmin) {
+              setUser(verifiedAdmin);
+              setAuthProvider('supabase');
+              setIsLoading(false);
+              return;
+            } else {
+              await supabase.auth.signOut();
+            }
+          }
+        } catch (err) {
+          console.warn('Supabase auth session check warning:', err);
+        }
       }
 
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session?.user) {
-          const verifiedAdmin = await verifyAdminUser(session.user.id);
-          if (verifiedAdmin) {
-            setUser(verifiedAdmin);
-          } else {
-            // User has auth session but is not authorized in admin_users -> sign out immediately
-            await supabase.auth.signOut();
-            setUser(null);
-          }
-        } else {
-          setUser(null);
+      // 2. Check local dev session in sessionStorage (development only)
+      if (isLocalAdminEnabled()) {
+        const localUser = getLocalSession();
+        if (localUser) {
+          setUser(localUser);
+          setAuthProvider('local-dev');
+          setIsLoading(false);
+          return;
         }
-      } catch (err) {
-        console.warn('Supabase auth session check error:', err);
-        setUser(null);
-      } finally {
-        setIsLoading(false);
       }
+
+      setUser(null);
+      setAuthProvider('none');
+      setIsLoading(false);
     };
 
     initAuth();
 
-    // Listen to Supabase auth state changes
+    // Supabase auth state listener
     if (isSupabaseConfigured) {
       const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
         if (event === 'SIGNED_OUT' || !session?.user) {
-          setUser(null);
+          if (authProvider === 'supabase') {
+            setUser(null);
+            setAuthProvider('none');
+          }
           return;
         }
 
@@ -97,9 +123,11 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
           const verifiedAdmin = await verifyAdminUser(session.user.id);
           if (verifiedAdmin) {
             setUser(verifiedAdmin);
+            setAuthProvider('supabase');
           } else {
             await supabase.auth.signOut();
             setUser(null);
+            setAuthProvider('none');
           }
         }
       });
@@ -108,61 +136,69 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         subscription.unsubscribe();
       };
     }
-  }, [verifyAdminUser]);
+  }, [verifyAdminUser, authProvider]);
 
   const login = async (email: string, password?: string): Promise<{ success: boolean; error?: string }> => {
     setIsLoading(true);
 
-    if (!isSupabaseConfigured) {
-      setIsLoading(false);
-      return { 
-        success: false, 
-        error: 'CMS não configurado. As variáveis de ambiente VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY não estão configuradas.' 
-      };
-    }
-
     if (!email || !password) {
       setIsLoading(false);
-      return { success: false, error: 'Por favor preencha e-mail e senha.' };
+      return { success: false, error: 'Por favor preencha e-mail e senha de acesso.' };
     }
 
-    try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: email.trim(),
-        password
-      });
+    // 1. Try Supabase Auth if configured
+    if (isSupabaseConfigured) {
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: email.trim(),
+          password
+        });
 
-      if (error) {
-        setIsLoading(false);
-        return { success: false, error: error.message || 'Credenciais inválidas.' };
+        if (!error && data.user) {
+          const verifiedAdmin = await verifyAdminUser(data.user.id);
+          if (verifiedAdmin) {
+            setUser(verifiedAdmin);
+            setAuthProvider('supabase');
+            setIsLoading(false);
+            return { success: true };
+          } else {
+            await supabase.auth.signOut();
+            setIsLoading(false);
+            return { 
+              success: false, 
+              error: 'Usuário não autorizado no perfil administrativo (admin_users).' 
+            };
+          }
+        }
+      } catch (err: any) {
+        console.warn('Supabase auth attempt failed:', err);
       }
+    }
 
-      if (!data.user) {
+    // 2. Try Local Development Auth (strictly when enabled)
+    if (isLocalAdminEnabled()) {
+      const localRes = await validateLocalDevLogin(email, password);
+      if (localRes.success && localRes.user) {
+        saveLocalSession(localRes.user);
+        setUser(localRes.user);
+        setAuthProvider('local-dev');
         setIsLoading(false);
-        return { success: false, error: 'Usuário não autenticado.' };
-      }
-
-      // Mandatory query to admin_users table
-      const verifiedAdmin = await verifyAdminUser(data.user.id);
-
-      if (!verifiedAdmin) {
-        // Immediately revoke session
-        await supabase.auth.signOut();
-        setUser(null);
+        return { success: true };
+      } else {
         setIsLoading(false);
         return { 
           success: false, 
-          error: 'Usuário não autorizado para acessar o painel administrativo. Contate o administrador.' 
+          error: localRes.error || 'Credenciais de desenvolvimento inválidas.' 
         };
       }
-
-      setUser(verifiedAdmin);
-      setIsLoading(false);
-      return { success: true };
-    } catch (err: any) {
-      setIsLoading(false);
-      return { success: false, error: err?.message || 'Falha na autenticação com o servidor.' };
     }
+
+    // 3. Neither provider available (Production without Supabase)
+    setIsLoading(false);
+    return {
+      success: false,
+      error: 'CMS administrativo ainda não configurado para produção.'
+    };
   };
 
   const logout = async () => {
@@ -174,7 +210,9 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         console.warn('Sign out error:', e);
       }
     }
+    clearLocalSession();
     setUser(null);
+    setAuthProvider('none');
     setIsLoading(false);
   };
 
@@ -192,7 +230,9 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         user,
         isAuthenticated: !!user && user.active,
         isLoading,
-        isConfigured: isSupabaseConfigured,
+        isConfigured: isAvailable,
+        authProvider,
+        isLocalDevMode: authProvider === 'local-dev',
         login,
         logout,
         hasRole
@@ -210,7 +250,9 @@ export const useAdminAuth = () => {
       user: null,
       isAuthenticated: false,
       isLoading: false,
-      isConfigured: isSupabaseConfigured,
+      isConfigured: false,
+      authProvider: 'none' as AuthProviderType,
+      isLocalDevMode: false,
       login: async () => ({ success: false, error: 'AdminAuthProvider não encontrado' }),
       logout: async () => {},
       hasRole: () => false

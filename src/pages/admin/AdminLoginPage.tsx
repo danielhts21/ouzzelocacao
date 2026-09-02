@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useAdminAuth } from '../../context/AdminAuthContext';
+import { isLocalAdminEnabled } from '../../lib/localAdminAuth';
 import { Logo } from '../../components/common/Logo';
-import { Lock, Mail, ArrowRight, AlertCircle, Database, ShieldAlert } from 'lucide-react';
+import { Lock, Mail, ArrowRight, AlertCircle, Database, ShieldAlert, Terminal } from 'lucide-react';
 
 interface AdminLoginPageProps {
   onSuccess: () => void;
@@ -9,17 +10,19 @@ interface AdminLoginPageProps {
 }
 
 export const AdminLoginPage: React.FC<AdminLoginPageProps> = ({ onSuccess, onBackToSite }) => {
-  const { login, isLoading, isConfigured } = useAdminAuth();
+  const { login, isLoading, isConfigured, isLocalDevMode } = useAdminAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  const isLocalDevAvailable = isLocalAdminEnabled();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg(null);
 
     if (!email || !password) {
-      setErrorMsg('Preencha o e-mail e a senha cadastrados.');
+      setErrorMsg('Preencha o e-mail e a senha de acesso.');
       return;
     }
 
@@ -32,15 +35,19 @@ export const AdminLoginPage: React.FC<AdminLoginPageProps> = ({ onSuccess, onBac
   };
 
   return (
-    <div className="min-h-screen bg-[#07080B] text-zinc-100 flex flex-col justify-between items-center p-4 sm:p-6 relative overflow-hidden font-sans">
+    <div className="min-h-screen bg-[#07080B] text-zinc-100 flex flex-col justify-between items-center p-4 sm:p-6 relative overflow-hidden font-sans select-none">
       
-      {/* Subtle red background glow */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-red-600/10 rounded-full blur-[140px] pointer-events-none" />
+      {/* Background Gradients & Grid Pattern */}
+      <div className="absolute inset-0 bg-[radial-gradient(#1f2430_1px,transparent_1px)] [background-size:24px_24px] opacity-20 pointer-events-none" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-red-600/10 rounded-full blur-3xl pointer-events-none" />
 
       {/* Top Header */}
       <div className="w-full max-w-6xl flex items-center justify-between z-10">
-        <div className="flex items-center">
-          <Logo size="md" />
+        <div className="flex items-center gap-2">
+          <Logo size="sm" />
+          <span className="text-xs font-mono tracking-widest text-zinc-400 uppercase hidden sm:inline">
+            • CMS Gestão
+          </span>
         </div>
         <button
           onClick={onBackToSite}
@@ -50,7 +57,7 @@ export const AdminLoginPage: React.FC<AdminLoginPageProps> = ({ onSuccess, onBac
         </button>
       </div>
 
-      {/* Login Box */}
+      {/* Center Box */}
       <div className="w-full max-w-md my-auto z-10">
         <div className="bg-[#0E1015] border border-zinc-800/90 rounded-lg p-6 sm:p-8 shadow-2xl space-y-6">
           
@@ -61,19 +68,19 @@ export const AdminLoginPage: React.FC<AdminLoginPageProps> = ({ onSuccess, onBac
               </div>
               <div>
                 <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white uppercase">
-                  CMS não configurado
+                  CMS Não Configurado
                 </h1>
                 <p className="text-xs text-zinc-400 mt-2 leading-relaxed">
-                  A integração de segurança e persistência em banco de dados Supabase não está ativa.
+                  CMS administrativo ainda não configurado para produção.
                 </p>
               </div>
 
               <div className="p-4 rounded-sm bg-zinc-900/90 border border-zinc-800 text-left text-xs space-y-2 text-zinc-300">
-                <p className="font-semibold text-zinc-200">Requisitos para Ativação do Painel:</p>
+                <p className="font-semibold text-zinc-200">Requisitos para Ativação em Produção:</p>
                 <ul className="list-disc list-inside text-zinc-400 space-y-1 text-[11px]">
-                  <li>Definir <code className="text-red-400 font-mono">VITE_SUPABASE_URL</code></li>
-                  <li>Definir <code className="text-red-400 font-mono">VITE_SUPABASE_ANON_KEY</code></li>
-                  <li>Executar as migrações SQL com a tabela <code className="text-zinc-200 font-mono">admin_users</code></li>
+                  <li>Configurar <code className="text-red-400 font-mono">VITE_SUPABASE_URL</code></li>
+                  <li>Configurar <code className="text-red-400 font-mono">VITE_SUPABASE_ANON_KEY</code></li>
+                  <li>Cadastrar credenciais na tabela <code className="text-zinc-200 font-mono">admin_users</code></li>
                 </ul>
               </div>
 
@@ -94,8 +101,15 @@ export const AdminLoginPage: React.FC<AdminLoginPageProps> = ({ onSuccess, onBac
                   Acesso ao Painel CMS
                 </h1>
                 <p className="text-xs text-zinc-400">
-                  Autenticação obrigatória e verificação de perfil administrativo (RLS).
+                  Gerenciamento de conteúdo, catálogo e propostas da Ouzze Tecnologia.
                 </p>
+
+                {isLocalDevAvailable && (
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 mt-2 rounded bg-amber-500/10 border border-amber-500/30 text-[11px] text-amber-400 font-mono">
+                    <Terminal className="w-3.5 h-3.5" />
+                    <span>Ambiente de Desenvolvimento Local</span>
+                  </div>
+                )}
               </div>
 
               {errorMsg && (
@@ -108,7 +122,7 @@ export const AdminLoginPage: React.FC<AdminLoginPageProps> = ({ onSuccess, onBac
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                   <label className="block text-[11px] font-mono uppercase text-zinc-400 mb-1">
-                    E-mail Administrativo
+                    E-mail
                   </label>
                   <div className="relative">
                     <input
@@ -116,8 +130,9 @@ export const AdminLoginPage: React.FC<AdminLoginPageProps> = ({ onSuccess, onBac
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="seu-email@ouzze.com.br"
+                      placeholder="seu-email@dominio.com"
                       className="w-full pl-9 pr-3.5 py-2.5 rounded-sm bg-black border border-zinc-700 text-white text-sm focus:border-red-600 focus-visible:ring-1 focus-visible:ring-red-600 focus:outline-none transition-colors"
+                      autoComplete="username"
                     />
                     <Mail className="w-4 h-4 text-zinc-500 absolute left-3 top-3" />
                   </div>
@@ -125,7 +140,7 @@ export const AdminLoginPage: React.FC<AdminLoginPageProps> = ({ onSuccess, onBac
 
                 <div>
                   <label className="block text-[11px] font-mono uppercase text-zinc-400 mb-1">
-                    Senha de Acesso
+                    Senha
                   </label>
                   <div className="relative">
                     <input
@@ -135,6 +150,7 @@ export const AdminLoginPage: React.FC<AdminLoginPageProps> = ({ onSuccess, onBac
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="••••••••"
                       className="w-full pl-9 pr-3.5 py-2.5 rounded-sm bg-black border border-zinc-700 text-white text-sm focus:border-red-600 focus-visible:ring-1 focus-visible:ring-red-600 focus:outline-none transition-colors"
+                      autoComplete="current-password"
                     />
                     <Lock className="w-4 h-4 text-zinc-500 absolute left-3 top-3" />
                   </div>
@@ -145,7 +161,7 @@ export const AdminLoginPage: React.FC<AdminLoginPageProps> = ({ onSuccess, onBac
                   disabled={isLoading}
                   className="w-full py-3 rounded-sm bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-[0_0_15px_rgba(220,38,38,0.3)] cursor-pointer"
                 >
-                  <span>{isLoading ? 'Verificando credenciais...' : 'Entrar no Painel'}</span>
+                  <span>{isLoading ? 'Verificando...' : 'Entrar'}</span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
               </form>
@@ -155,14 +171,14 @@ export const AdminLoginPage: React.FC<AdminLoginPageProps> = ({ onSuccess, onBac
         </div>
       </div>
 
-      {/* Footer / Compliance */}
+      {/* Footer Info */}
       <div className="w-full max-w-6xl flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-zinc-400 pt-6 z-10">
         <div className="flex items-center gap-2">
           <Database className="w-3.5 h-3.5 text-zinc-400" />
-          <span>Segurança Supabase RLS & Autenticação Baseada em Perfis (admin_users)</span>
+          <span>Ouzze Tecnologia • CMS Multi-Provider (Dev / Supabase)</span>
         </div>
         <div>
-          <span>© {new Date().getFullYear()} Ouzze Tecnologia • CMS Pro</span>
+          <span>© {new Date().getFullYear()} Ouzze Tecnologia • Painel Administrativo</span>
         </div>
       </div>
 
