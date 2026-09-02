@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, ChevronRight, PhoneCall, Sparkles } from 'lucide-react';
-import { siteConfig } from '../../config/siteConfig';
+import { Logo } from './Logo';
+import { useCMS } from '../../context/CMSContext';
 
 interface HeaderProps {
   onOpenProposal: (type?: string) => void;
@@ -15,6 +16,8 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { state } = useCMS();
+  const { navigation, settings } = state;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -68,14 +71,14 @@ export const Header: React.FC<HeaderProps> = ({
     }
   };
 
-  const navItems = [
-    { label: 'Início', href: '#hero' },
-    { label: 'Locação', href: '#locacao' },
-    { label: 'Vendas', href: '#vendas' },
-    { label: 'Serviços', href: '#servicos' },
-    { label: 'Soluções', href: '#solucoes' },
-    { label: 'Sobre', href: '#sobre' },
-    { label: 'Contato', href: '#contato' },
+  const activeNavItems = navigation?.headerItems?.filter(i => i.active) || [
+    { id: '1', label: 'Início', href: '#hero', active: true, order: 1 },
+    { id: '2', label: 'Locação', href: '#locacao', active: true, order: 2 },
+    { id: '3', label: 'Vendas', href: '#locacao', active: true, order: 3 },
+    { id: '4', label: 'Serviços', href: '#servicos', active: true, order: 4 },
+    { id: '5', label: 'Soluções', href: '#segmentos', active: true, order: 5 },
+    { id: '6', label: 'Sobre', href: '#sobre', active: true, order: 6 },
+    { id: '7', label: 'Contato', href: '#contato', active: true, order: 7 }
   ];
 
   return (
@@ -83,36 +86,29 @@ export const Header: React.FC<HeaderProps> = ({
       id="main-header"
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled 
-          ? 'bg-black/80 backdrop-blur-md border-b border-white/10 py-4 shadow-[0_4px_30px_rgba(0,0,0,0.8)]' 
-          : 'bg-black/20 backdrop-blur-sm border-b border-white/5 py-5'
+          ? 'bg-black/85 backdrop-blur-md border-b border-white/10 py-3.5 shadow-[0_4px_30px_rgba(0,0,0,0.8)]' 
+          : 'bg-black/30 backdrop-blur-sm border-b border-white/5 py-4 sm:py-5'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           
-          {/* LOGO */}
+          {/* LOGO (ORIGINAL COM FIDELIDADE RIGOROSA) */}
           <button 
             id="header-logo-btn"
             onClick={() => handleLinkClick('#hero')}
-            className="flex items-center gap-2 text-left group focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:outline-none rounded-sm"
+            className="flex items-center text-left group focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:outline-none rounded-sm transition-transform active:scale-98"
             aria-label="Ir para o início"
           >
-            <div className="flex items-baseline">
-              <span className="text-2xl sm:text-3xl font-black tracking-tighter text-red-600 uppercase italic">
-                Ouzze
-              </span>
-              <span className="ml-1.5 text-2xl sm:text-3xl font-light tracking-tight text-white">
-                Tecnologia
-              </span>
-            </div>
+            <Logo size="md" className="group-hover:opacity-95 transition-opacity" />
           </button>
 
           {/* DESKTOP NAVIGATION */}
-          <nav className="hidden lg:flex items-center gap-6 xl:gap-8 text-sm font-medium tracking-wide text-zinc-400" aria-label="Navegação Principal">
-            {navItems.map((item) => (
+          <nav className="hidden lg:flex items-center gap-6 xl:gap-7 text-sm font-medium tracking-wide text-zinc-300" aria-label="Navegação Principal">
+            {activeNavItems.map((item) => (
               <button
-                key={item.label}
-                id={`nav-link-${item.label.toLowerCase()}`}
+                key={item.id || item.label}
+                id={`nav-link-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
                 onClick={() => handleLinkClick(item.href)}
                 className="hover:text-red-500 transition-colors py-1 cursor-pointer focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:outline-none rounded-sm"
               >
@@ -127,7 +123,7 @@ export const Header: React.FC<HeaderProps> = ({
               className={`py-1 flex items-center gap-1.5 transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:outline-none rounded-sm ${
                 activePath === '/educacao'
                   ? 'text-red-500 font-bold'
-                  : 'hover:text-red-500 text-zinc-400'
+                  : 'hover:text-red-500 text-zinc-300'
               }`}
             >
               <span className="w-1.5 h-1.5 rounded-full bg-red-600 neon-dot" />
@@ -140,9 +136,9 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               id="header-proposal-btn"
               onClick={() => onOpenProposal('geral')}
-              className="bg-red-600 hover:bg-red-700 text-white px-6 py-2.5 rounded-sm text-xs font-bold uppercase tracking-widest transition-all cursor-pointer neon-glow-btn active:scale-95 flex items-center gap-2 focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none"
+              className="bg-red-600 hover:bg-red-700 text-white px-5 py-2.5 rounded-sm text-xs font-bold uppercase tracking-widest transition-all cursor-pointer neon-glow-btn active:scale-95 flex items-center gap-2 focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none"
             >
-              <span>Solicitar Proposta</span>
+              <span>{navigation?.ctaButtonText || 'Solicitar Proposta'}</span>
             </button>
           </div>
 
@@ -174,10 +170,10 @@ export const Header: React.FC<HeaderProps> = ({
       {mobileMenuOpen && (
         <div className="lg:hidden bg-black/95 border-b border-white/10 px-4 pt-3 pb-6 animate-in slide-in-from-top-4 duration-200">
           <div className="flex flex-col space-y-1">
-            {navItems.map((item) => (
+            {activeNavItems.map((item) => (
               <button
-                key={item.label}
-                id={`mobile-nav-${item.label.toLowerCase()}`}
+                key={item.id || item.label}
+                id={`mobile-nav-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
                 onClick={() => handleLinkClick(item.href)}
                 className="w-full text-left px-4 py-3 text-sm font-medium tracking-wide text-zinc-300 hover:text-red-500 hover:bg-zinc-900/50 rounded-sm transition-colors flex items-center justify-between"
               >
@@ -206,20 +202,22 @@ export const Header: React.FC<HeaderProps> = ({
                   setMobileMenuOpen(false);
                   onOpenProposal('geral');
                 }}
-                className="w-full py-3 px-4 rounded-sm bg-red-600 hover:bg-red-700 text-white font-bold uppercase tracking-widest text-center text-xs shadow-sm"
+                className="w-full py-3 px-4 rounded-sm bg-red-600 hover:bg-red-700 text-white font-bold uppercase tracking-widest text-center text-xs shadow-sm cursor-pointer"
               >
-                Solicitar Proposta
+                {navigation?.ctaButtonText || 'Solicitar Proposta'}
               </button>
               
-              <a
-                href={`https://wa.me/${siteConfig.whatsapp.phone}?text=${encodeURIComponent(siteConfig.whatsapp.defaultMessage)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full py-2.5 px-4 rounded-sm bg-zinc-900 hover:bg-zinc-800 text-zinc-200 text-xs font-semibold text-center flex items-center justify-center gap-2 border border-white/10"
-              >
-                <PhoneCall className="w-4 h-4 text-emerald-400" />
-                <span>WhatsApp: {siteConfig.whatsapp.formattedPhone}</span>
-              </a>
+              {settings?.whatsapp?.phone && (
+                <a
+                  href={`https://wa.me/${settings.whatsapp.phone}?text=${encodeURIComponent(settings.whatsapp.defaultMessage || 'Olá')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-2.5 px-4 rounded-sm bg-zinc-900 hover:bg-zinc-800 text-zinc-200 text-xs font-semibold text-center flex items-center justify-center gap-2 border border-white/10"
+                >
+                  <PhoneCall className="w-4 h-4 text-emerald-400" />
+                  <span>WhatsApp: {settings.whatsapp.formattedPhone || settings.whatsapp.phone}</span>
+                </a>
+              )}
             </div>
           </div>
         </div>

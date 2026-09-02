@@ -13,12 +13,16 @@ import {
   Sparkles
 } from 'lucide-react';
 import { SERVICES_LIST } from '../../data/siteData';
+import { useCMS } from '../../context/CMSContext';
 
 interface ServicesSectionProps {
   onOpenProposal: (serviceName: string) => void;
 }
 
 export const ServicesSection: React.FC<ServicesSectionProps> = ({ onOpenProposal }) => {
+  const { state } = useCMS();
+  const servicesList = state.services && state.services.length > 0 ? state.services : SERVICES_LIST;
+
   const getServiceIcon = (iconName: string) => {
     switch (iconName) {
       case 'Headphones':
@@ -65,7 +69,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onOpenProposal
 
         {/* Services Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {SERVICES_LIST.map((service, idx) => (
+          {servicesList.map((service, idx) => (
             <motion.div
               key={service.id}
               initial={{ opacity: 0, y: 20 }}

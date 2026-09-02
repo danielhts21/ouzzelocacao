@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { Phone, MessageSquare, X } from 'lucide-react';
-import { siteConfig } from '../../config/siteConfig';
+import { useCMS } from '../../context/CMSContext';
 
 export const WhatsAppButton: React.FC = () => {
   const [showTooltip, setShowTooltip] = useState(false);
+  const { state } = useCMS();
+  const { settings } = state;
 
-  const whatsappUrl = `https://wa.me/${siteConfig.whatsapp.phone}?text=${encodeURIComponent(
-    siteConfig.whatsapp.defaultMessage
-  )}`;
+  const whatsappPhone = settings?.whatsapp?.phone || '5511999999999';
+  const defaultMessage = settings?.whatsapp?.defaultMessage || 'Olá! Gostaria de mais informações sobre locação e venda de equipamentos da Ouzze Tecnologia.';
+
+  const whatsappUrl = `https://wa.me/${whatsappPhone}?text=${encodeURIComponent(defaultMessage)}`;
 
   return (
     <div className="fixed bottom-6 right-6 z-50 flex items-center group">

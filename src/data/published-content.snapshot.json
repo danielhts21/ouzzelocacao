@@ -1,0 +1,58 @@
+{
+  "version": "1.0.0",
+  "generatedAt": "2026-09-02T05:00:00.000Z",
+  "brandName": "OUZZE TECNOLOGIA",
+  "published": true,
+  "settings": {
+    "brandName": "OUZZE TECNOLOGIA",
+    "shortName": "Ouzze",
+    "tagline": "Tecnologia que impulsiona o seu negócio.",
+    "slogan": "Locação, venda e serviços de tecnologia em uma única empresa.",
+    "metaDescription": "Soluções corporativas em locação de computadores, notebooks e impressoras, venda de hardware e serviços de TI para empresas.",
+    "logoUrl": "/logo.svg",
+    "faviconUrl": "/logo.svg",
+    "logoOriginalMeta": {
+      "originalName": "logo.svg",
+      "fileSize": 4500,
+      "dimensions": { "width": 760, "height": 300 },
+      "mimeType": "image/svg+xml",
+      "uploadedAt": "2026-09-02T04:40:00.000Z",
+      "url": "/logo.svg",
+      "sha256": "8f7a94b5e87178d2273e843e936746cfcb6127b404d09339e08398aef72c8427"
+    },
+    "whatsapp": {
+      "phone": "5511999999999",
+      "formattedPhone": "",
+      "defaultMessage": "Olá, vim do site da Ouzze Tecnologia e gostaria de informações.",
+      "salesMessage": "Olá! Gostaria de falar com um especialista sobre soluções da Ouzze.",
+      "educationMessage": "Olá! Gostaria de atendimento especializado para o segmento de Educação.",
+      "autoOpenAfterForm": true
+    },
+    "contact": {
+      "email": "",
+      "salesEmail": "",
+      "phone": "",
+      "address": "",
+      "city": "São Paulo",
+      "state": "SP",
+      "cep": "",
+      "businessHours": "Segunda a Sexta, das 08h às 18h"
+    },
+    "socials": {
+      "whatsapp": "https://wa.me/5511999999999"
+    },
+    "seo": {
+      "domain": "https://ouzze.com.br",
+      "titleTemplate": "%s | Ouzze Tecnologia",
+      "defaultKeywords": ["locação de computadores", "aluguel de notebooks", "TI corporativa", "outsourcing de impressão", "suporte de TI"],
+      "ogImage": "",
+      "canonicalDomain": "https://ouzze.com.br",
+      "robotsIndex": true,
+      "cookieConsentEnabled": false
+    },
+    "legal": {
+      "cnpj": "",
+      "companyLegalName": "OUZZE TECNOLOGIA"
+    }
+  }
+}

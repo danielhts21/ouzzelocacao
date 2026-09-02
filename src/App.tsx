@@ -1,4 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { CMSProvider, useCMS } from './context/CMSContext';
+import { AdminAuthProvider } from './context/AdminAuthContext';
+import { ThemeTokensProvider } from './components/common/ThemeTokensProvider';
+import { AnnouncementBar } from './components/common/AnnouncementBar';
 import { Header } from './components/common/Header';
 import { Footer } from './components/common/Footer';
 import { WhatsAppButton } from './components/common/WhatsAppButton';
@@ -16,18 +20,28 @@ import { CommercialCTA } from './components/home/CommercialCTA';
 import { ContactFormSection } from './components/home/ContactFormSection';
 
 import { EducationLandingPage } from './pages/EducationLandingPage';
+import { PrivacyPolicyPage } from './pages/public/PrivacyPolicyPage';
+import { AdminPage } from './pages/admin/AdminPage';
+import { LivePreviewIframe } from './components/admin/LivePreviewIframe';
 
-export default function App() {
+function MainAppContent() {
+  const { state, isPreviewMode, setIsPreviewMode } = useCMS();
   const [currentPath, setCurrentPath] = useState<string>('/');
   const [isProposalModalOpen, setIsProposalModalOpen] = useState(false);
   const [proposalInitialType, setProposalInitialType] = useState<string>('geral');
 
-  // Handle browser back/forward and initial path
+  // Sync route from URL or hash
   useEffect(() => {
     const syncPath = () => {
       const path = window.location.pathname;
-      if (path === '/educacao' || path === '/escolas') {
+      const hash = window.location.hash;
+      
+      if (path === '/admin' || hash === '#admin') {
+        setCurrentPath('/admin');
+      } else if (path === '/educacao' || path === '/escolas' || hash === '#educacao') {
         setCurrentPath('/educacao');
+      } else if (path === '/privacidade' || hash === '#privacidade') {
+        setCurrentPath('/privacidade');
       } else {
         setCurrentPath('/');
       }
@@ -35,36 +49,40 @@ export default function App() {
 
     syncPath();
     window.addEventListener('popstate', syncPath);
-    return () => window.removeEventListener('popstate', syncPath);
+    window.addEventListener('hashchange', syncPath);
+    return () => {
+      window.removeEventListener('popstate', syncPath);
+      window.removeEventListener('hashchange', syncPath);
+    };
   }, []);
 
   // Dynamic SEO metadata updates
   useEffect(() => {
-    if (currentPath === '/educacao') {
-      document.title = 'Ouzze Tecnologia | Soluções de TI para Educação e Instituições de Ensino';
+    if (currentPath === '/admin') {
+      document.title = 'Painel CMS Administrativo | Ouzze Tecnologia';
+    } else if (currentPath === '/educacao') {
+      document.title = state.settings.seo?.title || 'Ouzze Tecnologia | Soluções de TI para Educação e Instituições de Ensino';
       const metaDesc = document.querySelector('meta[name="description"]');
       if (metaDesc) {
-        metaDesc.setAttribute('content', 'Locação e implantação de laboratórios de informática, notebooks pedagógicos e infraestrutura de TI para colégios, faculdades e polos educacionais.');
+        metaDesc.setAttribute('content', state.settings.seo?.description || 'Locação e implantação de laboratórios de informática, notebooks pedagógicos e infraestrutura de TI para colégios e faculdades.');
       }
+    } else if (currentPath === '/privacidade') {
+      document.title = 'Política de Privacidade & LGPD | Ouzze Tecnologia';
     } else {
-      document.title = 'Ouzze Tecnologia | Locação, Venda e Serviços de TI';
+      document.title = state.settings.brandName 
+        ? `${state.settings.brandName} | Locação, Venda e Serviços de TI`
+        : 'Ouzze Tecnologia | Locação, Venda e Serviços de TI';
       const metaDesc = document.querySelector('meta[name="description"]');
       if (metaDesc) {
-        metaDesc.setAttribute('content', 'Soluções corporativas em locação de computadores, notebooks e impressoras, venda de hardware e serviços de TI para empresas.');
+        metaDesc.setAttribute('content', state.settings.seo?.description || 'Soluções corporativas em locação de computadores, notebooks e impressoras, venda de hardware e serviços de TI para empresas.');
       }
     }
-  }, [currentPath]);
+  }, [currentPath, state.settings]);
 
   const handleNavigate = (path: string) => {
-    if (path === '/educacao' || path === '/escolas') {
-      window.history.pushState({}, '', '/educacao');
-      setCurrentPath('/educacao');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      window.history.pushState({}, '', '/');
-      setCurrentPath('/');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+    window.history.pushState({}, '', path);
+    setCurrentPath(path);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleOpenProposal = (type: string = 'geral') => {
@@ -76,9 +94,17 @@ export default function App() {
     setIsProposalModalOpen(false);
   };
 
-  return (
+  // If in Admin panel
+  if (currentPath === '/admin') {
+    return <AdminPage onBackToSite={() => handleNavigate('/')} />;
+  }
+
+  const renderPublicContent = () => (
     <div className="min-h-screen bg-[#0A0B0E] text-slate-100 flex flex-col selection:bg-red-600 selection:text-white font-sans">
       
+      {/* Announcement Bar */}
+      <AnnouncementBar />
+
       {/* Header */}
       <Header
         activePath={currentPath}
@@ -93,6 +119,8 @@ export default function App() {
             onBackToHome={() => handleNavigate('/')}
             onOpenProposal={handleOpenProposal}
           />
+        ) : currentPath === '/privacidade' ? (
+          <PrivacyPolicyPage onBack={() => handleNavigate('/')} />
         ) : (
           <>
             {/* 1. Hero Principal com Animação do Computador */}
@@ -155,4 +183,30 @@ export default function App() {
 
     </div>
   );
+
+  return (
+    <>
+      {renderPublicContent()}
+
+      {/* Live Preview Modal Frame (if triggered from admin) */}
+      {isPreviewMode && (
+        <LivePreviewIframe onClose={() => setIsPreviewMode(false)}>
+          {renderPublicContent()}
+        </LivePreviewIframe>
+      )}
+    </>
+  );
 }
+
+export default function App() {
+  return (
+    <AdminAuthProvider>
+      <CMSProvider>
+        <ThemeTokensProvider>
+          <MainAppContent />
+        </ThemeTokensProvider>
+      </CMSProvider>
+    </AdminAuthProvider>
+  );
+}
+

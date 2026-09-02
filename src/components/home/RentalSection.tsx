@@ -15,12 +15,15 @@ import {
   Sparkles
 } from 'lucide-react';
 import { RENTAL_EQUIPMENT } from '../../data/siteData';
+import { useCMS } from '../../context/CMSContext';
 
 interface RentalSectionProps {
   onOpenProposal: (equipmentName: string) => void;
 }
 
 export const RentalSection: React.FC<RentalSectionProps> = ({ onOpenProposal }) => {
+  const { state } = useCMS();
+  const equipmentList = state.equipment && state.equipment.length > 0 ? state.equipment : RENTAL_EQUIPMENT;
   const [activeFilter, setActiveFilter] = useState<string>('todos');
 
   const categories = [
@@ -34,8 +37,8 @@ export const RentalSection: React.FC<RentalSectionProps> = ({ onOpenProposal }) 
   ];
 
   const filteredEquipment = activeFilter === 'todos' 
-    ? RENTAL_EQUIPMENT 
-    : RENTAL_EQUIPMENT.filter(item => item.category === activeFilter);
+    ? equipmentList 
+    : equipmentList.filter(item => item.category === activeFilter);
 
   const getEquipIcon = (iconName: string) => {
     switch (iconName) {

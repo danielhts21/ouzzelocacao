@@ -3,23 +3,31 @@ import {
   ArrowUp, 
   Linkedin, 
   Instagram, 
+  Facebook,
+  Youtube,
   Phone, 
   Mail, 
   MapPin, 
   ShieldCheck,
   ChevronRight
 } from 'lucide-react';
-import { siteConfig } from '../../config/siteConfig';
+import { Logo } from './Logo';
+import { useCMS } from '../../context/CMSContext';
 
 interface FooterProps {
   onNavigateToEducation?: () => void;
   onOpenProposal?: (type?: string) => void;
+  onNavigate?: (path: string) => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({ 
   onNavigateToEducation,
-  onOpenProposal 
+  onOpenProposal,
+  onNavigate
 }) => {
+  const { state } = useCMS();
+  const { settings, navigation } = state;
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -31,6 +39,21 @@ export const Footer: React.FC<FooterProps> = ({
     }
   };
 
+  const handleLinkClick = (href: string) => {
+    if (href.startsWith('/')) {
+      if (onNavigate) {
+        onNavigate(href);
+      } else {
+        window.location.pathname = href;
+      }
+      return;
+    }
+    const cleanId = href.replace(/^#/, '');
+    scrollToSection(cleanId);
+  };
+
+  const activeSocials = Object.entries(settings.socials || {}).filter(([_, url]) => Boolean(url && typeof url === 'string' && url.trim()));
+
   return (
     <footer className="bg-black text-zinc-400 border-t border-white/10 relative z-10 pt-16 pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -40,59 +63,83 @@ export const Footer: React.FC<FooterProps> = ({
           
           {/* Col 1: Brand & Bio (4 cols) */}
           <div className="lg:col-span-4 space-y-4">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-sm bg-red-600 flex items-center justify-center text-white font-mono font-bold text-base shadow-sm">
-                O
-              </div>
-              <div className="flex items-baseline">
-                <span className="text-xl font-bold tracking-tight text-red-600">
-                  OUZZE
-                </span>
-                <span className="ml-1.5 text-xs font-bold tracking-widest uppercase text-white">
-                  TECNOLOGIA
-                </span>
-              </div>
+            <div className="flex items-center">
+              <Logo size="lg" />
             </div>
 
             <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed max-w-sm">
-              Soluções completas em locação de computadores e notebooks, vendas consultivas de hardware corporativo e suporte de TI de alta disponibilidade para empresas e instituições de ensino.
+              {settings.metaDescription || 'Soluções completas em locação de computadores e notebooks, vendas consultivas de hardware corporativo e suporte de TI de alta disponibilidade para empresas e instituições de ensino.'}
             </p>
 
-            {/* Social Icons */}
-            <div className="flex items-center gap-3 pt-2">
-              <a
-                id="footer-social-linkedin"
-                href={siteConfig.socials.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="LinkedIn da Ouzze Tecnologia"
-                className="w-9 h-9 rounded-sm bg-zinc-900 border border-white/10 hover:border-red-600/50 flex items-center justify-center text-zinc-300 hover:text-white transition-colors"
-              >
-                <Linkedin className="w-4 h-4" />
-              </a>
+            {/* Social Icons (Only render non-empty) */}
+            {activeSocials.length > 0 && (
+              <div className="flex items-center gap-3 pt-2">
+                {settings.socials?.linkedin && (
+                  <a
+                    id="footer-social-linkedin"
+                    href={settings.socials.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="LinkedIn da Ouzze Tecnologia"
+                    className="w-9 h-9 rounded-sm bg-zinc-900 border border-white/10 hover:border-red-600/50 flex items-center justify-center text-zinc-300 hover:text-white transition-colors"
+                  >
+                    <Linkedin className="w-4 h-4" />
+                  </a>
+                )}
 
-              <a
-                id="footer-social-instagram"
-                href={siteConfig.socials.instagram}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Instagram da Ouzze Tecnologia"
-                className="w-9 h-9 rounded-sm bg-zinc-900 border border-white/10 hover:border-red-600/50 flex items-center justify-center text-zinc-300 hover:text-white transition-colors"
-              >
-                <Instagram className="w-4 h-4" />
-              </a>
+                {settings.socials?.instagram && (
+                  <a
+                    id="footer-social-instagram"
+                    href={settings.socials.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Instagram da Ouzze Tecnologia"
+                    className="w-9 h-9 rounded-sm bg-zinc-900 border border-white/10 hover:border-red-600/50 flex items-center justify-center text-zinc-300 hover:text-white transition-colors"
+                  >
+                    <Instagram className="w-4 h-4" />
+                  </a>
+                )}
 
-              <a
-                id="footer-social-whatsapp"
-                href={siteConfig.socials.whatsapp}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="WhatsApp Corporativo"
-                className="w-9 h-9 rounded-sm bg-zinc-900 border border-white/10 hover:border-red-600/50 flex items-center justify-center text-zinc-300 hover:text-white transition-colors"
-              >
-                <Phone className="w-4 h-4 text-emerald-400" />
-              </a>
-            </div>
+                {settings.socials?.facebook && (
+                  <a
+                    id="footer-social-facebook"
+                    href={settings.socials.facebook}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Facebook da Ouzze Tecnologia"
+                    className="w-9 h-9 rounded-sm bg-zinc-900 border border-white/10 hover:border-red-600/50 flex items-center justify-center text-zinc-300 hover:text-white transition-colors"
+                  >
+                    <Facebook className="w-4 h-4" />
+                  </a>
+                )}
+
+                {settings.socials?.youtube && (
+                  <a
+                    id="footer-social-youtube"
+                    href={settings.socials.youtube}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="YouTube da Ouzze Tecnologia"
+                    className="w-9 h-9 rounded-sm bg-zinc-900 border border-white/10 hover:border-red-600/50 flex items-center justify-center text-zinc-300 hover:text-white transition-colors"
+                  >
+                    <Youtube className="w-4 h-4" />
+                  </a>
+                )}
+
+                {settings.whatsapp?.phone && (
+                  <a
+                    id="footer-social-whatsapp"
+                    href={`https://wa.me/${settings.whatsapp.phone}?text=${encodeURIComponent(settings.whatsapp.defaultMessage || '')}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="WhatsApp Corporativo"
+                    className="w-9 h-9 rounded-sm bg-zinc-900 border border-white/10 hover:border-red-600/50 flex items-center justify-center text-zinc-300 hover:text-white transition-colors"
+                  >
+                    <Phone className="w-4 h-4 text-emerald-400" />
+                  </a>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Col 2: Soluções (3 cols) */}
@@ -161,7 +208,7 @@ export const Footer: React.FC<FooterProps> = ({
               </li>
               <li>
                 <button
-                  onClick={() => scrollToSection('solucoes')}
+                  onClick={() => scrollToSection('segmentos')}
                   className="hover:text-red-500 transition-colors text-left cursor-pointer"
                 >
                   Empresas & Escritórios
@@ -169,7 +216,7 @@ export const Footer: React.FC<FooterProps> = ({
               </li>
               <li>
                 <button
-                  onClick={() => scrollToSection('solucoes')}
+                  onClick={() => scrollToSection('segmentos')}
                   className="hover:text-red-500 transition-colors text-left cursor-pointer"
                 >
                   Saúde, Clínicas & Hospitais
@@ -177,7 +224,7 @@ export const Footer: React.FC<FooterProps> = ({
               </li>
               <li>
                 <button
-                  onClick={() => scrollToSection('solucoes')}
+                  onClick={() => scrollToSection('segmentos')}
                   className="hover:text-red-500 transition-colors text-left cursor-pointer"
                 >
                   Eventos & Feiras Temporárias
@@ -185,7 +232,7 @@ export const Footer: React.FC<FooterProps> = ({
               </li>
               <li>
                 <button
-                  onClick={() => scrollToSection('solucoes')}
+                  onClick={() => scrollToSection('segmentos')}
                   className="hover:text-red-500 transition-colors text-left cursor-pointer"
                 >
                   Setor Público & Licitações
@@ -232,6 +279,14 @@ export const Footer: React.FC<FooterProps> = ({
                   Solicitar Proposta
                 </button>
               </li>
+              <li>
+                <button
+                  onClick={() => handleLinkClick('/politica-de-privacidade')}
+                  className="hover:text-red-500 transition-colors text-left text-zinc-400 text-xs cursor-pointer"
+                >
+                  Privacidade
+                </button>
+              </li>
             </ul>
           </div>
 
@@ -240,9 +295,19 @@ export const Footer: React.FC<FooterProps> = ({
         {/* Bottom Bar: Copyright & Compliance */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-400">
           <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left">
-            <span>© {new Date().getFullYear()} {siteConfig.legal.companyLegalName}. Todos os direitos reservados.</span>
-            <span className="hidden sm:inline">•</span>
-            <span>CNPJ: {siteConfig.legal.cnpj}</span>
+            <span>© {new Date().getFullYear()} {settings.legal?.companyLegalName || 'OUZZE TECNOLOGIA'}. Todos os direitos reservados.</span>
+            {settings.legal?.cnpj && (
+              <>
+                <span className="hidden sm:inline">•</span>
+                <span>CNPJ: {settings.legal.cnpj}</span>
+              </>
+            )}
+            {settings.contact?.address && (
+              <>
+                <span className="hidden sm:inline">•</span>
+                <span>{settings.contact.address}, {settings.contact.city} - {settings.contact.state}</span>
+              </>
+            )}
           </div>
 
           <div className="flex items-center gap-4">

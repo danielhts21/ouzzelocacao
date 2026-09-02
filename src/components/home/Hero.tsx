@@ -3,21 +3,30 @@ import { motion, useScroll, useTransform, useReducedMotion } from 'motion/react'
 import { 
   ArrowRight, 
   FileText, 
-  ShieldCheck, 
-  Sparkles, 
-  Check, 
-  Layers, 
-  Headphones, 
-  RotateCw,
   ChevronRight
 } from 'lucide-react';
 import { ComputerAssemblyAnimation } from './ComputerAssemblyAnimation';
+import { useCMS } from '../../context/CMSContext';
 
 interface HeroProps {
   onOpenProposal: (type?: string) => void;
 }
 
 export const Hero: React.FC<HeroProps> = ({ onOpenProposal }) => {
+  const { state } = useCMS();
+  const heroSection = state.sections.find(s => s.type === 'hero' && s.pageSlug === '/');
+  
+  const badgeText = heroSection?.content?.badge || 'Soluções Corporativas em Tecnologia';
+  const title = heroSection?.content?.title || 'Tecnologia que impulsiona o seu negócio.';
+  const subtitle = heroSection?.content?.subtitle || 'Locação, venda e serviços de tecnologia para empresas e instituições. Soluções completas para manter sua infraestrutura atualizada, segura e disponível.';
+  const primaryCtaText = heroSection?.content?.primaryCtaText || 'Solicitar Proposta';
+  const secondaryCtaText = heroSection?.content?.secondaryCtaText || 'Conhecer Soluções';
+  const trustPoints: string[] = heroSection?.content?.trustPoints || [
+    'Sem imobilizar capital',
+    'Suporte especializado',
+    'Equipamentos corporativos'
+  ];
+
   const containerRef = useRef<HTMLElement>(null);
   const shouldReduceMotion = useReducedMotion();
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -110,20 +119,26 @@ export const Hero: React.FC<HeroProps> = ({ onOpenProposal }) => {
               className="inline-flex items-center gap-2 px-3.5 py-1.5 border border-red-600/40 bg-red-950/30 text-red-500 text-[10px] font-bold uppercase tracking-widest rounded-sm shadow-[0_0_15px_rgba(220,38,38,0.2)]"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-red-600 neon-dot" />
-              <span>Soluções Corporativas em Tecnologia</span>
+              <span>{badgeText}</span>
             </motion.div>
 
-            {/* 2. Main Premium Headline (Enters with Blur & TranslateY) */}
+            {/* 2. Main Premium Headline */}
             <motion.h1 
               initial={{ opacity: 0, y: 20, filter: 'blur(6px)' }}
               animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
               transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
               className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-[1.08]"
             >
-              Tecnologia que <span className="text-red-600 relative inline-block">
-                impulsiona
-                <span className="absolute -bottom-1 left-0 w-full h-[2px] bg-gradient-to-r from-red-600 via-red-500 to-red-600 rounded-full neon-line-subtle" />
-              </span> o seu negócio.
+              {title.includes('impulsiona') ? (
+                <>
+                  Tecnologia que <span className="text-red-600 relative inline-block">
+                    impulsiona
+                    <span className="absolute -bottom-1 left-0 w-full h-[2px] bg-gradient-to-r from-red-600 via-red-500 to-red-600 rounded-full neon-line-subtle" />
+                  </span> {title.replace(/.*impulsiona\s*/i, '') || 'o seu negócio.'}
+                </>
+              ) : (
+                title
+              )}
             </motion.h1>
 
             {/* 3. Executive Subtitle */}
@@ -133,7 +148,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenProposal }) => {
               transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
               className="text-base sm:text-lg text-zinc-300 max-w-xl leading-relaxed font-normal"
             >
-              Locação, venda e serviços de tecnologia para empresas e instituições. Soluções completas para manter sua infraestrutura atualizada, segura e disponível.
+              {subtitle}
             </motion.p>
 
             {/* 4. Action Buttons (Premium Micro-interactions) */}
@@ -150,7 +165,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenProposal }) => {
                 className="relative group bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-sm text-xs sm:text-sm font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer flex items-center justify-center gap-2.5 neon-glow-btn active:scale-98 hover:scale-[1.02]"
               >
                 <FileText className="w-4 h-4 text-white/90" />
-                <span>Solicitar Proposta</span>
+                <span>{primaryCtaText}</span>
                 <ChevronRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
               </button>
 
@@ -160,7 +175,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenProposal }) => {
                 onClick={() => scrollToSection('pilares')}
                 className="border border-white/20 hover:border-red-600/50 hover:shadow-[0_0_15px_rgba(220,38,38,0.2)] bg-zinc-900/60 hover:bg-zinc-900 text-white px-8 py-4 rounded-sm text-xs sm:text-sm font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 group active:scale-98"
               >
-                <span>Conhecer Soluções</span>
+                <span>{secondaryCtaText}</span>
                 <ArrowRight className="w-4 h-4 text-zinc-400 group-hover:text-red-500 transition-all duration-200 group-hover:translate-x-1" />
               </button>
             </motion.div>
@@ -172,26 +187,14 @@ export const Hero: React.FC<HeroProps> = ({ onOpenProposal }) => {
               transition={{ duration: 0.8, delay: 0.6 }}
               className="pt-6 border-t border-white/10 grid grid-cols-2 sm:grid-cols-3 gap-4 w-full"
             >
-              <div className="flex items-center gap-2.5">
-                <div className="w-2 h-2 rounded-full bg-red-600 neon-dot" />
-                <span className="text-xs sm:text-sm font-medium text-zinc-300">
-                  Sem imobilizar capital
-                </span>
-              </div>
-
-              <div className="flex items-center gap-2.5">
-                <div className="w-2 h-2 rounded-full bg-red-600 neon-dot" />
-                <span className="text-xs sm:text-sm font-medium text-zinc-300">
-                  Suporte especializado
-                </span>
-              </div>
-
-              <div className="flex items-center gap-2.5 col-span-2 sm:col-span-1">
-                <div className="w-2 h-2 rounded-full bg-red-600 neon-dot" />
-                <span className="text-xs sm:text-sm font-medium text-zinc-300">
-                  Equipamentos corporativos
-                </span>
-              </div>
+              {trustPoints.map((point, idx) => (
+                <div key={idx} className={`flex items-center gap-2.5 ${idx === 2 ? 'col-span-2 sm:col-span-1' : ''}`}>
+                  <div className="w-2 h-2 rounded-full bg-red-600 neon-dot" />
+                  <span className="text-xs sm:text-sm font-medium text-zinc-300">
+                    {point}
+                  </span>
+                </div>
+              ))}
             </motion.div>
           </motion.div>
 

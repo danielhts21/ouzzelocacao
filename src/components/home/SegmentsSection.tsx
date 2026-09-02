@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { SEGMENTS_DATA } from '../../data/siteData';
 import { SegmentItem } from '../../types';
+import { useCMS } from '../../context/CMSContext';
 
 interface SegmentsSectionProps {
   onNavigateToEducation: () => void;
@@ -25,6 +26,8 @@ export const SegmentsSection: React.FC<SegmentsSectionProps> = ({
   onNavigateToEducation, 
   onOpenProposal 
 }) => {
+  const { state } = useCMS();
+  const segmentsList = state.segments && state.segments.length > 0 ? state.segments : SEGMENTS_DATA;
   const [selectedSegment, setSelectedSegment] = useState<SegmentItem | null>(null);
 
   const getSegmentIcon = (iconName: string) => {
@@ -92,7 +95,7 @@ export const SegmentsSection: React.FC<SegmentsSectionProps> = ({
 
         {/* Bento Grid Layout */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {SEGMENTS_DATA.map((segment, idx) => {
+          {segmentsList.map((segment, idx) => {
             const isFeaturedEducation = segment.id === 'educacao';
 
             return (

@@ -8,7 +8,7 @@ import {
   MessageSquare
 } from 'lucide-react';
 import { ProposalFormData } from '../../types';
-import { siteConfig } from '../../config/siteConfig';
+import { useCMS } from '../../context/CMSContext';
 
 interface ContactFormSectionProps {
   initialSolution?: string;
@@ -19,6 +19,7 @@ export const ContactFormSection: React.FC<ContactFormSectionProps> = ({
   initialSolution = 'Locação',
   onSuccess
 }) => {
+  const { state, submitLead } = useCMS();
   const [formData, setFormData] = useState<ProposalFormData>({
     name: '',
     company: '',
@@ -32,6 +33,7 @@ export const ContactFormSection: React.FC<ContactFormSectionProps> = ({
   });
 
   const [hasSubmitted, setHasSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const brazilianStates = [
     'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 
@@ -40,7 +42,7 @@ export const ContactFormSection: React.FC<ContactFormSectionProps> = ({
   ];
 
   const buildWhatsAppMessage = () => {
-    return `*Solicitação de Proposta - Ouzze Tecnologia*\n\n` +
+    return `*Solicitação de Proposta - ${state.settings.brandName || 'Ouzze Tecnologia'}*\n\n` +
       `*Nome:* ${formData.name}\n` +
       `*Empresa:* ${formData.company}\n` +
       (formData.cnpj ? `*CNPJ:* ${formData.cnpj}\n` : '') +
@@ -53,11 +55,21 @@ export const ContactFormSection: React.FC<ContactFormSectionProps> = ({
 
   const getWhatsAppUrl = () => {
     const text = buildWhatsAppMessage();
-    return `https://wa.me/${siteConfig.whatsapp.phone}?text=${encodeURIComponent(text)}`;
+    const phone = state.settings.whatsapp.phone || '5511999999999';
+    return `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    try {
+      await submitLead(formData, 'contact_form', '/');
+    } catch (err) {
+      console.warn('Lead submission notice:', err);
+    } finally {
+      setIsSubmitting(false);
+    }
+
     const url = getWhatsAppUrl();
     window.open(url, '_blank');
     setHasSubmitted(true);
@@ -116,7 +128,7 @@ export const ContactFormSection: React.FC<ContactFormSectionProps> = ({
             <div className="pt-2">
               <p className="text-xs text-zinc-400 mb-2">Prefere contato direto via WhatsApp?</p>
               <a
-                href={`https://wa.me/${siteConfig.whatsapp.phone}?text=${encodeURIComponent(siteConfig.whatsapp.defaultMessage)}`}
+                href={`https://wa.me/${state.settings.whatsapp.phone}?text=${encodeURIComponent(state.settings.whatsapp.defaultMessage || 'Olá')}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-5 py-3 rounded-sm bg-zinc-900 hover:bg-zinc-800 border border-white/10 hover:border-emerald-500/40 text-emerald-400 text-xs font-bold uppercase tracking-wider transition-all focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:outline-none"
