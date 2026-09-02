@@ -52,7 +52,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
   onExitAdmin,
   children
 }) => {
-  const { user, logout, isMockAuth } = useAdminAuth();
+  const { user, logout } = useAdminAuth();
   const {
     state,
     isDraftModified,

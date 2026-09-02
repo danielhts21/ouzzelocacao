@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { AdminUser, AdminRole } from '../types/cms';
 
@@ -6,102 +6,99 @@ interface AdminAuthContextType {
   user: AdminUser | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  isConfigured: boolean;
   login: (email: string, password?: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
   hasRole: (requiredRole: AdminRole) => boolean;
-  isMockAuth: boolean;
 }
 
 const AdminAuthContext = createContext<AdminAuthContextType | undefined>(undefined);
 
-const LOCAL_ADMIN_KEY = 'ouzze_cms_admin_session';
-
 export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<AdminUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isMockAuth, setIsMockAuth] = useState(!isSupabaseConfigured);
+
+  // Helper to strictly verify user against the admin_users table
+  const verifyAdminUser = useCallback(async (userId: string): Promise<AdminUser | null> => {
+    try {
+      const { data, error } = await supabase
+        .from('admin_users')
+        .select('id, user_id, name, email, role, active, created_at')
+        .eq('user_id', userId)
+        .maybeSingle();
+
+      if (error || !data) {
+        console.warn('Admin user verification failed or user not registered:', error?.message);
+        return null;
+      }
+
+      if (!data.active) {
+        console.warn('Admin user is deactivated:', data.email);
+        return null;
+      }
+
+      return {
+        id: data.id,
+        email: data.email,
+        name: data.name,
+        role: data.role as AdminRole,
+        active: data.active,
+        createdAt: data.created_at
+      };
+    } catch (err) {
+      console.error('Error querying admin_users table:', err);
+      return null;
+    }
+  }, []);
 
   useEffect(() => {
     const initAuth = async () => {
       setIsLoading(true);
 
-      if (isSupabaseConfigured) {
-        try {
-          const { data: { session } } = await supabase.auth.getSession();
-          if (session?.user) {
-            // Check admin_users table
-            const { data: adminData } = await supabase
-              .from('admin_users')
-              .select('*')
-              .eq('user_id', session.user.id)
-              .single();
-
-            if (adminData && adminData.active) {
-              setUser({
-                id: adminData.id,
-                email: adminData.email,
-                name: adminData.name,
-                role: adminData.role as AdminRole,
-                active: adminData.active,
-                createdAt: adminData.created_at
-              });
-              setIsMockAuth(false);
-              setIsLoading(false);
-              return;
-            } else {
-              // Fallback to basic session role if record not yet synced
-              setUser({
-                id: session.user.id,
-                email: session.user.email || 'admin@ouzze.com.br',
-                name: session.user.user_metadata?.name || 'Administrador Ouzze',
-                role: 'owner',
-                active: true,
-                createdAt: session.user.created_at
-              });
-              setIsMockAuth(false);
-              setIsLoading(false);
-              return;
-            }
-          }
-        } catch (err) {
-          console.warn('Supabase auth check error:', err);
-        }
+      if (!isSupabaseConfigured) {
+        setUser(null);
+        setIsLoading(false);
+        return;
       }
 
-      // Check local storage session for fallback / local admin mode
-      const savedSession = localStorage.getItem(LOCAL_ADMIN_KEY);
-      if (savedSession) {
-        try {
-          const parsed = JSON.parse(savedSession);
-          if (parsed && parsed.email) {
-            setUser(parsed);
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) {
+          const verifiedAdmin = await verifyAdminUser(session.user.id);
+          if (verifiedAdmin) {
+            setUser(verifiedAdmin);
+          } else {
+            // User has auth session but is not authorized in admin_users -> sign out immediately
+            await supabase.auth.signOut();
+            setUser(null);
           }
-        } catch (e) {
-          localStorage.removeItem(LOCAL_ADMIN_KEY);
+        } else {
+          setUser(null);
         }
+      } catch (err) {
+        console.warn('Supabase auth session check error:', err);
+        setUser(null);
+      } finally {
+        setIsLoading(false);
       }
-
-      setIsLoading(false);
     };
 
     initAuth();
 
-    // Listen to Supabase auth changes if configured
+    // Listen to Supabase auth state changes
     if (isSupabaseConfigured) {
-      const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+        if (event === 'SIGNED_OUT' || !session?.user) {
+          setUser(null);
+          return;
+        }
+
         if (session?.user) {
-          setUser({
-            id: session.user.id,
-            email: session.user.email || 'admin@ouzze.com.br',
-            name: session.user.user_metadata?.name || 'Administrador Ouzze',
-            role: 'owner',
-            active: true,
-            createdAt: session.user.created_at
-          });
-          setIsMockAuth(false);
-        } else {
-          const savedSession = localStorage.getItem(LOCAL_ADMIN_KEY);
-          if (!savedSession) {
+          const verifiedAdmin = await verifyAdminUser(session.user.id);
+          if (verifiedAdmin) {
+            setUser(verifiedAdmin);
+          } else {
+            await supabase.auth.signOut();
             setUser(null);
           }
         }
@@ -111,64 +108,61 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         subscription.unsubscribe();
       };
     }
-  }, []);
+  }, [verifyAdminUser]);
 
   const login = async (email: string, password?: string): Promise<{ success: boolean; error?: string }> => {
     setIsLoading(true);
 
-    if (isSupabaseConfigured && password) {
-      try {
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email,
-          password
-        });
-
-        if (error) {
-          setIsLoading(false);
-          return { success: false, error: error.message };
-        }
-
-        if (data.user) {
-          const adminObj: AdminUser = {
-            id: data.user.id,
-            email: data.user.email || email,
-            name: data.user.user_metadata?.name || 'Administrador Ouzze',
-            role: 'owner',
-            active: true,
-            createdAt: data.user.created_at
-          };
-          setUser(adminObj);
-          setIsMockAuth(false);
-          setIsLoading(false);
-          return { success: true };
-        }
-      } catch (err: any) {
-        setIsLoading(false);
-        return { success: false, error: err?.message || 'Falha na autenticação' };
-      }
-    }
-
-    // Local / Demonstration mode (e.g. initial setup)
-    // Validate email format
-    if (!email || !email.includes('@')) {
+    if (!isSupabaseConfigured) {
       setIsLoading(false);
-      return { success: false, error: 'Por favor insira um e-mail corporativo válido.' };
+      return { 
+        success: false, 
+        error: 'CMS não configurado. As variáveis de ambiente VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY não estão configuradas.' 
+      };
     }
 
-    const mockAdmin: AdminUser = {
-      id: 'local-owner-001',
-      email,
-      name: email.split('@')[0].toUpperCase(),
-      role: 'owner',
-      active: true,
-      createdAt: new Date().toISOString()
-    };
+    if (!email || !password) {
+      setIsLoading(false);
+      return { success: false, error: 'Por favor preencha e-mail e senha.' };
+    }
 
-    localStorage.setItem(LOCAL_ADMIN_KEY, JSON.stringify(mockAdmin));
-    setUser(mockAdmin);
-    setIsMockAuth(true);
-    setIsLoading(false);
-    return { success: true };
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password
+      });
+
+      if (error) {
+        setIsLoading(false);
+        return { success: false, error: error.message || 'Credenciais inválidas.' };
+      }
+
+      if (!data.user) {
+        setIsLoading(false);
+        return { success: false, error: 'Usuário não autenticado.' };
+      }
+
+      // Mandatory query to admin_users table
+      const verifiedAdmin = await verifyAdminUser(data.user.id);
+
+      if (!verifiedAdmin) {
+        // Immediately revoke session
+        await supabase.auth.signOut();
+        setUser(null);
+        setIsLoading(false);
+        return { 
+          success: false, 
+          error: 'Usuário não autorizado para acessar o painel administrativo. Contate o administrador.' 
+        };
+      }
+
+      setUser(verifiedAdmin);
+      setIsLoading(false);
+      return { success: true };
+    } catch (err: any) {
+      setIsLoading(false);
+      return { success: false, error: err?.message || 'Falha na autenticação com o servidor.' };
+    }
   };
 
   const logout = async () => {
@@ -180,13 +174,12 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         console.warn('Sign out error:', e);
       }
     }
-    localStorage.removeItem(LOCAL_ADMIN_KEY);
     setUser(null);
     setIsLoading(false);
   };
 
   const hasRole = (requiredRole: AdminRole): boolean => {
-    if (!user) return false;
+    if (!user || !user.active) return false;
     if (user.role === 'owner') return true;
     if (user.role === 'admin' && (requiredRole === 'admin' || requiredRole === 'editor')) return true;
     if (user.role === 'editor' && requiredRole === 'editor') return true;
@@ -197,12 +190,12 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     <AdminAuthContext.Provider
       value={{
         user,
-        isAuthenticated: !!user,
+        isAuthenticated: !!user && user.active,
         isLoading,
+        isConfigured: isSupabaseConfigured,
         login,
         logout,
-        hasRole,
-        isMockAuth
+        hasRole
       }}
     >
       {children}
@@ -217,10 +210,10 @@ export const useAdminAuth = () => {
       user: null,
       isAuthenticated: false,
       isLoading: false,
+      isConfigured: isSupabaseConfigured,
       login: async () => ({ success: false, error: 'AdminAuthProvider não encontrado' }),
       logout: async () => {},
-      hasRole: () => false,
-      isMockAuth: true
+      hasRole: () => false
     };
   }
   return context;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { CMSProvider, useCMS } from './context/CMSContext';
 import { AdminAuthProvider } from './context/AdminAuthContext';
 import { ThemeTokensProvider } from './components/common/ThemeTokensProvider';
@@ -21,8 +21,10 @@ import { ContactFormSection } from './components/home/ContactFormSection';
 
 import { EducationLandingPage } from './pages/EducationLandingPage';
 import { PrivacyPolicyPage } from './pages/public/PrivacyPolicyPage';
-import { AdminPage } from './pages/admin/AdminPage';
 import { LivePreviewIframe } from './components/admin/LivePreviewIframe';
+
+// Code splitting / Lazy Loading of the entire Admin Panel
+const AdminPage = lazy(() => import('./pages/admin/AdminPage').then(m => ({ default: m.AdminPage })));
 
 function MainAppContent() {
   const { state, isPreviewMode, setIsPreviewMode } = useCMS();
@@ -36,7 +38,7 @@ function MainAppContent() {
       const path = window.location.pathname;
       const hash = window.location.hash;
       
-      if (path === '/admin' || hash === '#admin') {
+      if (path.startsWith('/admin') || hash.startsWith('#admin')) {
         setCurrentPath('/admin');
       } else if (path === '/educacao' || path === '/escolas' || hash === '#educacao') {
         setCurrentPath('/educacao');
@@ -58,7 +60,7 @@ function MainAppContent() {
 
   // Dynamic SEO metadata updates
   useEffect(() => {
-    if (currentPath === '/admin') {
+    if (currentPath.startsWith('/admin')) {
       document.title = 'Painel CMS Administrativo | Ouzze Tecnologia';
     } else if (currentPath === '/educacao') {
       document.title = state.settings.seo?.title || 'Ouzze Tecnologia | Soluções de TI para Educação e Instituições de Ensino';
@@ -95,8 +97,21 @@ function MainAppContent() {
   };
 
   // If in Admin panel
-  if (currentPath === '/admin') {
-    return <AdminPage onBackToSite={() => handleNavigate('/')} />;
+  if (currentPath.startsWith('/admin')) {
+    return (
+      <Suspense
+        fallback={
+          <div className="min-h-screen bg-[#07080B] flex items-center justify-center text-zinc-400">
+            <div className="flex flex-col items-center gap-3">
+              <div className="w-8 h-8 border-2 border-red-600 border-t-transparent rounded-full animate-spin" />
+              <span className="text-xs font-mono uppercase tracking-wider">Carregando Módulo Administrativo...</span>
+            </div>
+          </div>
+        }
+      >
+        <AdminPage onBackToSite={() => handleNavigate('/')} />
+      </Suspense>
+    );
   }
 
   const renderPublicContent = () => (

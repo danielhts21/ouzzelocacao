@@ -162,28 +162,19 @@ const getInitialState = (): CMSState => ({
 export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user } = useAdminAuth();
   
-  const [publishedState, setPublishedState] = useState<CMSState>(() => {
-    const saved = localStorage.getItem(LOCAL_STORAGE_PUBLISHED_KEY);
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        return { ...getInitialState(), ...parsed };
-      } catch (e) {
-        console.error('Error parsing published local storage:', e);
-      }
-    }
-    return getInitialState();
-  });
+  // Public fallback begins with compiled state, not relying on admin localStorage
+  const [publishedState, setPublishedState] = useState<CMSState>(() => getInitialState());
 
+  // Draft state initialized from local working copy for administrators
   const [draftState, setDraftState] = useState<CMSState>(() => {
-    const saved = localStorage.getItem(LOCAL_STORAGE_DRAFT_KEY);
-    if (saved) {
-      try {
+    try {
+      const saved = localStorage.getItem(LOCAL_STORAGE_DRAFT_KEY);
+      if (saved) {
         const parsed = JSON.parse(saved);
         return { ...getInitialState(), ...parsed };
-      } catch (e) {
-        console.error('Error parsing draft local storage:', e);
       }
+    } catch (e) {
+      console.error('Error parsing draft local storage:', e);
     }
     return getInitialState();
   });
@@ -196,7 +187,7 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [lastSavedAt, setLastSavedAt] = useState<string | null>(null);
   const [lastPublishedAt, setLastPublishedAt] = useState<string | null>(null);
 
-  // Load published data from Supabase if configured, with graceful fallback
+  // Load published data from Supabase if configured, with compiled graceful fallback
   useEffect(() => {
     const fetchFromSupabase = async () => {
       if (!isSupabaseConfigured) {
@@ -206,23 +197,286 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
       try {
         setIsLoading(true);
-        // Test connection with a lightweight fetch
-        const { data: settingsData, error } = await supabase
-          .from('site_settings')
-          .select('*')
-          .limit(1)
-          .single();
 
-        if (error && error.code !== 'PGRST116') {
-          console.warn('Supabase not fully seeded or schema pending:', error.message);
-          setIsSupabaseOnline(false);
-        } else if (settingsData) {
+        // Fetch primary tables in parallel
+        const [
+          settingsRes,
+          brandRes,
+          pagesRes,
+          sectionsRes,
+          segmentsRes,
+          equipmentRes,
+          servicesRes,
+          mediaRes,
+          downloadsRes,
+          announcementsRes,
+          faqsRes
+        ] = await Promise.allSettled([
+          supabase.from('site_settings').select('*').limit(1).maybeSingle(),
+          supabase.from('brand_design_tokens').select('*').limit(1).maybeSingle(),
+          supabase.from('pages').select('*').order('name'),
+          supabase.from('page_sections').select('*').order('order'),
+          supabase.from('segments').select('*').order('order'),
+          supabase.from('equipment_items').select('*').order('order'),
+          supabase.from('services').select('*').order('order'),
+          supabase.from('media_assets').select('*').order('created_at', { ascending: false }),
+          supabase.from('material_downloads').select('*').order('order'),
+          supabase.from('announcements').select('*').order('created_at', { ascending: false }),
+          supabase.from('faqs').select('*').order('order')
+        ]);
+
+        const newState: Partial<CMSState> = {};
+        let hasAnyData = false;
+
+        if (settingsRes.status === 'fulfilled' && settingsRes.value.data) {
+          const d = settingsRes.value.data;
+          newState.settings = {
+            brandName: d.brand_name || DEFAULT_SITE_SETTINGS.brandName,
+            shortName: d.short_name || DEFAULT_SITE_SETTINGS.shortName,
+            tagline: d.tagline || DEFAULT_SITE_SETTINGS.tagline,
+            slogan: d.slogan || DEFAULT_SITE_SETTINGS.slogan,
+            metaDescription: d.meta_description || DEFAULT_SITE_SETTINGS.metaDescription,
+            logoUrl: d.logo_url || DEFAULT_SITE_SETTINGS.logoUrl,
+            logoDarkUrl: d.logo_dark_url || DEFAULT_SITE_SETTINGS.logoDarkUrl,
+            logoMobileUrl: d.logo_mobile_url || DEFAULT_SITE_SETTINGS.logoMobileUrl,
+            logoOriginalMeta: d.logo_original_meta || DEFAULT_SITE_SETTINGS.logoOriginalMeta,
+            logoContainerStyle: d.logo_container_style || DEFAULT_SITE_SETTINGS.logoContainerStyle,
+            faviconUrl: d.favicon_url || DEFAULT_SITE_SETTINGS.faviconUrl,
+            whatsapp: d.whatsapp || DEFAULT_SITE_SETTINGS.whatsapp,
+            contact: d.contact || DEFAULT_SITE_SETTINGS.contact,
+            socials: d.socials || DEFAULT_SITE_SETTINGS.socials,
+            seo: d.seo || DEFAULT_SITE_SETTINGS.seo,
+            legal: d.legal || DEFAULT_SITE_SETTINGS.legal,
+            maintenance: d.maintenance || DEFAULT_SITE_SETTINGS.maintenance
+          };
+          hasAnyData = true;
+        }
+
+        if (brandRes.status === 'fulfilled' && brandRes.value.data) {
+          const d = brandRes.value.data;
+          newState.brandTokens = {
+            preset: d.preset || DEFAULT_BRAND_TOKENS.preset,
+            colors: d.colors || DEFAULT_BRAND_TOKENS.colors,
+            neon: d.neon || DEFAULT_BRAND_TOKENS.neon,
+            typography: d.typography || DEFAULT_BRAND_TOKENS.typography,
+            style: d.style || DEFAULT_BRAND_TOKENS.style,
+            motion: d.motion || DEFAULT_BRAND_TOKENS.motion
+          };
+          hasAnyData = true;
+        }
+
+        if (pagesRes.status === 'fulfilled' && pagesRes.value.data && pagesRes.value.data.length > 0) {
+          newState.pages = pagesRes.value.data.map(p => ({
+            id: p.id,
+            slug: p.slug,
+            name: p.name,
+            seoTitle: p.seo_title,
+            seoDescription: p.seo_description,
+            ogImage: p.og_image,
+            status: p.status,
+            isSystem: p.is_system,
+            sectionsOrder: p.sections_order || [],
+            updatedAt: p.updated_at,
+            updatedBy: p.updated_by
+          }));
+          hasAnyData = true;
+        }
+
+        if (sectionsRes.status === 'fulfilled' && sectionsRes.value.data && sectionsRes.value.data.length > 0) {
+          newState.sections = sectionsRes.value.data.map(s => ({
+            id: s.id,
+            pageSlug: s.page_slug,
+            type: s.type,
+            title: s.title,
+            subtitle: s.subtitle,
+            description: s.description,
+            active: s.active,
+            order: s.order,
+            content: s.content || {},
+            styles: s.styles || {}
+          }));
+          hasAnyData = true;
+        }
+
+        if (segmentsRes.status === 'fulfilled' && segmentsRes.value.data && segmentsRes.value.data.length > 0) {
+          newState.segments = segmentsRes.value.data.map(seg => ({
+            id: seg.id,
+            title: seg.title,
+            subtitle: seg.subtitle,
+            description: seg.description,
+            keyBenefits: seg.key_benefits || [],
+            slug: seg.slug,
+            iconName: seg.icon_name || 'Layers',
+            statsHighlight: seg.stats_highlight,
+            isFeatured: seg.is_featured,
+            active: seg.active,
+            order: seg.order
+          }));
+          hasAnyData = true;
+        }
+
+        if (equipmentRes.status === 'fulfilled' && equipmentRes.value.data && equipmentRes.value.data.length > 0) {
+          newState.equipment = equipmentRes.value.data.map(eq => ({
+            id: eq.id,
+            name: eq.name,
+            category: eq.category,
+            categoryLabel: eq.category_label,
+            shortDesc: eq.short_desc,
+            specs: eq.specs || [],
+            recommendedFor: eq.recommended_for,
+            iconName: eq.icon_name || 'Monitor',
+            badge: eq.badge,
+            forRental: eq.for_rental,
+            forSale: eq.for_sale,
+            active: eq.active,
+            order: eq.order
+          }));
+          hasAnyData = true;
+        }
+
+        if (servicesRes.status === 'fulfilled' && servicesRes.value.data && servicesRes.value.data.length > 0) {
+          newState.services = servicesRes.value.data.map(srv => ({
+            id: srv.id,
+            title: srv.title,
+            category: srv.category,
+            description: srv.description,
+            features: srv.features || [],
+            sla: srv.sla,
+            iconName: srv.icon_name || 'ShieldCheck',
+            active: srv.active,
+            order: srv.order
+          }));
+          hasAnyData = true;
+        }
+
+        if (mediaRes.status === 'fulfilled' && mediaRes.value.data && mediaRes.value.data.length > 0) {
+          newState.mediaAssets = mediaRes.value.data.map(m => ({
+            id: m.id,
+            name: m.name,
+            originalName: m.original_name,
+            url: m.url,
+            fileType: m.file_type,
+            size: m.size,
+            dimensions: m.dimensions,
+            altText: m.alt_text,
+            isDecorative: m.is_decorative,
+            tags: m.tags || [],
+            usageLocations: m.usage_locations || [],
+            createdAt: m.created_at
+          }));
+          hasAnyData = true;
+        }
+
+        if (downloadsRes.status === 'fulfilled' && downloadsRes.value.data && downloadsRes.value.data.length > 0) {
+          newState.downloads = downloadsRes.value.data.map(d => ({
+            id: d.id,
+            title: d.title,
+            description: d.description,
+            fileUrl: d.file_url,
+            fileName: d.file_name,
+            fileSize: d.file_size,
+            coverUrl: d.cover_url,
+            segment: d.segment,
+            buttonText: d.button_text,
+            active: d.active,
+            order: d.order
+          }));
+          hasAnyData = true;
+        }
+
+        if (announcementsRes.status === 'fulfilled' && announcementsRes.value.data && announcementsRes.value.data.length > 0) {
+          newState.announcements = announcementsRes.value.data.map(a => ({
+            id: a.id,
+            text: a.text,
+            link: a.link,
+            linkText: a.link_text,
+            bgColor: a.bg_color,
+            textColor: a.text_color,
+            active: a.active,
+            startDate: a.start_date,
+            endDate: a.end_date
+          }));
+          hasAnyData = true;
+        }
+
+        if (faqsRes.status === 'fulfilled' && faqsRes.value.data && faqsRes.value.data.length > 0) {
+          newState.faqs = faqsRes.value.data.map(f => ({
+            id: f.id,
+            question: f.question,
+            answer: f.answer,
+            category: f.category,
+            active: f.active,
+            order: f.order
+          }));
+          hasAnyData = true;
+        }
+
+        // If user is authenticated, also try to fetch admin-only tables
+        if (user && user.active) {
+          try {
+            const [leadsRes, revsRes, logsRes] = await Promise.allSettled([
+              supabase.from('leads').select('*').order('created_at', { ascending: false }),
+              supabase.from('content_revisions').select('*').order('created_at', { ascending: false }).limit(30),
+              supabase.from('audit_logs').select('*').order('timestamp', { ascending: false }).limit(100)
+            ]);
+
+            if (leadsRes.status === 'fulfilled' && leadsRes.value.data) {
+              newState.leads = leadsRes.value.data.map(l => ({
+                id: l.id,
+                name: l.name,
+                company: l.company,
+                cnpj: l.cnpj,
+                city: l.city,
+                state: l.state,
+                phone: l.phone,
+                email: l.email,
+                solutionType: l.solution_type,
+                segment: l.segment,
+                estimatedQuantity: l.estimated_quantity,
+                message: l.message,
+                source: l.source,
+                page: l.page,
+                status: l.status,
+                adminNotes: l.admin_notes || [],
+                createdAt: l.created_at
+              }));
+            }
+
+            if (revsRes.status === 'fulfilled' && revsRes.value.data) {
+              newState.revisions = revsRes.value.data.map(r => ({
+                id: r.id,
+                version: r.version,
+                entityType: r.entity_type,
+                entityId: r.entity_id,
+                snapshot: r.snapshot,
+                description: r.description,
+                createdBy: r.created_by,
+                createdAt: r.created_at
+              }));
+            }
+
+            if (logsRes.status === 'fulfilled' && logsRes.value.data) {
+              newState.auditLogs = logsRes.value.data.map(al => ({
+                id: al.id,
+                action: al.action,
+                entityType: al.entity_type,
+                entityId: al.entity_id,
+                details: al.details,
+                userEmail: al.user_email,
+                timestamp: al.timestamp
+              }));
+            }
+          } catch (adminErr) {
+            console.warn('Admin tables fetch non-critical warning:', adminErr);
+          }
+        }
+
+        if (hasAnyData) {
           setIsSupabaseOnline(true);
-          // Sync live state from Supabase
-          // (In a full prod environment, all tables are fetched or subscribed to)
+          setPublishedState(prev => ({ ...prev, ...newState }));
         }
       } catch (err) {
-        console.warn('Supabase fetch failed, relying on local snapshot:', err);
+        console.warn('Supabase fetch failed, relying on compiled snapshot:', err);
         setIsSupabaseOnline(false);
       } finally {
         setIsLoading(false);
@@ -230,7 +484,7 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     };
 
     fetchFromSupabase();
-  }, []);
+  }, [user]);
 
   // Save draft state to localStorage debounce
   useEffect(() => {
@@ -708,9 +962,12 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         revisions: [newRevision, ...(publishedState.revisions || []).slice(0, 29)]
       };
 
-      // If Supabase is online, publish to Supabase tables
-      if (isSupabaseConfigured) {
+      // If Supabase is online and user is authorized, publish to Supabase tables
+      if (isSupabaseConfigured && user && user.active) {
         try {
+          const nowIso = new Date().toISOString();
+
+          // 1. Settings
           await supabase.from('site_settings').upsert({
             id: 'primary',
             brand_name: draftState.settings.brandName,
@@ -720,6 +977,7 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             meta_description: draftState.settings.metaDescription,
             logo_url: draftState.settings.logoUrl,
             logo_dark_url: draftState.settings.logoDarkUrl,
+            logo_mobile_url: draftState.settings.logoMobileUrl,
             logo_original_meta: draftState.settings.logoOriginalMeta,
             logo_container_style: draftState.settings.logoContainerStyle,
             favicon_url: draftState.settings.faviconUrl,
@@ -729,9 +987,10 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             seo: draftState.settings.seo,
             legal: draftState.settings.legal,
             maintenance: draftState.settings.maintenance,
-            updated_at: new Date().toISOString()
+            updated_at: nowIso
           });
 
+          // 2. Brand tokens
           await supabase.from('brand_design_tokens').upsert({
             id: 'primary',
             preset: draftState.brandTokens.preset,
@@ -740,15 +999,202 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             typography: draftState.brandTokens.typography,
             style: draftState.brandTokens.style,
             motion: draftState.brandTokens.motion,
-            updated_at: new Date().toISOString()
+            updated_at: nowIso
+          });
+
+          // 3. Pages
+          if (draftState.pages && draftState.pages.length > 0) {
+            await supabase.from('pages').upsert(
+              draftState.pages.map(p => ({
+                id: p.id,
+                slug: p.slug,
+                name: p.name,
+                seo_title: p.seoTitle,
+                seo_description: p.seoDescription,
+                og_image: p.ogImage,
+                status: p.status,
+                is_system: p.isSystem,
+                sections_order: p.sectionsOrder,
+                updated_at: nowIso,
+                updated_by: user.email
+              }))
+            );
+          }
+
+          // 4. Sections
+          if (draftState.sections && draftState.sections.length > 0) {
+            await supabase.from('page_sections').upsert(
+              draftState.sections.map(s => ({
+                id: s.id,
+                page_slug: s.pageSlug,
+                type: s.type,
+                title: s.title,
+                subtitle: s.subtitle,
+                description: s.description,
+                active: s.active,
+                order: s.order,
+                content: s.content,
+                styles: s.styles,
+                updated_at: nowIso
+              }))
+            );
+          }
+
+          // 5. Segments
+          if (draftState.segments && draftState.segments.length > 0) {
+            await supabase.from('segments').upsert(
+              draftState.segments.map(seg => ({
+                id: seg.id,
+                title: seg.title,
+                subtitle: seg.subtitle,
+                description: seg.description,
+                key_benefits: seg.keyBenefits,
+                slug: seg.slug,
+                icon_name: seg.iconName,
+                stats_highlight: seg.statsHighlight,
+                is_featured: seg.isFeatured,
+                active: seg.active,
+                order: seg.order,
+                updated_at: nowIso
+              }))
+            );
+          }
+
+          // 6. Equipment
+          if (draftState.equipment && draftState.equipment.length > 0) {
+            await supabase.from('equipment_items').upsert(
+              draftState.equipment.map(eq => ({
+                id: eq.id,
+                name: eq.name,
+                category: eq.category,
+                category_label: eq.categoryLabel,
+                short_desc: eq.shortDesc,
+                specs: eq.specs,
+                recommended_for: eq.recommendedFor,
+                icon_name: eq.iconName,
+                badge: eq.badge,
+                for_rental: eq.forRental,
+                for_sale: eq.forSale,
+                active: eq.active,
+                order: eq.order,
+                updated_at: nowIso
+              }))
+            );
+          }
+
+          // 7. Services
+          if (draftState.services && draftState.services.length > 0) {
+            await supabase.from('services').upsert(
+              draftState.services.map(srv => ({
+                id: srv.id,
+                title: srv.title,
+                category: srv.category,
+                description: srv.description,
+                features: srv.features,
+                sla: srv.sla,
+                icon_name: srv.iconName,
+                active: srv.active,
+                order: srv.order,
+                updated_at: nowIso
+              }))
+            );
+          }
+
+          // 8. Downloads
+          if (draftState.downloads && draftState.downloads.length > 0) {
+            await supabase.from('material_downloads').upsert(
+              draftState.downloads.map(d => ({
+                id: d.id,
+                title: d.title,
+                description: d.description,
+                file_url: d.fileUrl,
+                file_name: d.fileName,
+                file_size: d.fileSize,
+                cover_url: d.coverUrl,
+                segment: d.segment,
+                button_text: d.buttonText,
+                active: d.active,
+                order: d.order,
+                updated_at: nowIso
+              }))
+            );
+          }
+
+          // 9. Announcements
+          if (draftState.announcements && draftState.announcements.length > 0) {
+            await supabase.from('announcements').upsert(
+              draftState.announcements.map(a => ({
+                id: a.id,
+                text: a.text,
+                link: a.link,
+                link_text: a.linkText,
+                bg_color: a.bgColor,
+                text_color: a.textColor,
+                active: a.active,
+                start_date: a.startDate,
+                end_date: a.endDate,
+                updated_at: nowIso
+              }))
+            );
+          }
+
+          // 10. FAQs
+          if (draftState.faqs && draftState.faqs.length > 0) {
+            await supabase.from('faqs').upsert(
+              draftState.faqs.map(f => ({
+                id: f.id,
+                question: f.question,
+                answer: f.answer,
+                category: f.category,
+                active: f.active,
+                order: f.order,
+                updated_at: nowIso
+              }))
+            );
+          }
+
+          // 11. Media Assets
+          if (draftState.mediaAssets && draftState.mediaAssets.length > 0) {
+            await supabase.from('media_assets').upsert(
+              draftState.mediaAssets.map(m => ({
+                id: m.id,
+                name: m.name,
+                original_name: m.originalName,
+                url: m.url,
+                file_type: m.fileType,
+                size: m.size,
+                dimensions: m.dimensions,
+                alt_text: m.altText,
+                is_decorative: m.isDecorative,
+                tags: m.tags,
+                usage_locations: m.usageLocations
+              }))
+            );
+          }
+
+          // 12. Content Revisions
+          await supabase.from('content_revisions').insert({
+            entity_type: 'FULL_SITE',
+            entity_id: 'primary',
+            snapshot: draftState,
+            description,
+            created_by: user.email
+          });
+
+          // 13. Audit Log
+          await supabase.from('audit_logs').insert({
+            action: 'PUBLISH',
+            entity_type: 'Site',
+            entity_id: 'primary',
+            details: description,
+            user_email: user.email,
+            timestamp: nowIso
           });
         } catch (err) {
-          console.warn('Supabase publish partial sync:', err);
+          console.warn('Supabase publish sync error:', err);
         }
       }
 
-      // Persist to local published storage
-      localStorage.setItem(LOCAL_STORAGE_PUBLISHED_KEY, JSON.stringify(newPublishedState));
       setPublishedState(newPublishedState);
       setIsDraftModified(false);
       setLastPublishedAt(new Date().toLocaleTimeString());

@@ -267,45 +267,215 @@ ALTER TABLE public.faqs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.content_revisions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.audit_logs ENABLE ROW LEVEL SECURITY;
 
--- Regras Públicas de Leitura (Visitantes anônimos só leem conteúdo publicado)
-CREATE POLICY "Public Read Settings" ON public.site_settings FOR SELECT USING (true);
-CREATE POLICY "Public Read Brand Tokens" ON public.brand_design_tokens FOR SELECT USING (true);
-CREATE POLICY "Public Read Published Pages" ON public.pages FOR SELECT USING (status = 'PUBLISHED');
-CREATE POLICY "Public Read Active Sections" ON public.page_sections FOR SELECT USING (active = true);
-CREATE POLICY "Public Read Active Segments" ON public.segments FOR SELECT USING (active = true);
-CREATE POLICY "Public Read Active Equipment" ON public.equipment_items FOR SELECT USING (active = true);
-CREATE POLICY "Public Read Active Services" ON public.services FOR SELECT USING (active = true);
-CREATE POLICY "Public Read Navigation" ON public.navigation_items FOR SELECT USING (active = true);
-CREATE POLICY "Public Read Media" ON public.media_assets FOR SELECT USING (true);
-CREATE POLICY "Public Read Downloads" ON public.material_downloads FOR SELECT USING (active = true);
-CREATE POLICY "Public Read Announcements" ON public.announcements FOR SELECT USING (active = true);
-CREATE POLICY "Public Read FAQs" ON public.faqs FOR SELECT USING (active = true);
+-- Funções Auxiliares Seguras de Verificação de Perfil Administrativo
+CREATE OR REPLACE FUNCTION public.is_admin()
+RETURNS BOOLEAN
+LANGUAGE sql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT EXISTS (
+    SELECT 1 FROM public.admin_users
+    WHERE user_id = auth.uid() AND active = true
+  );
+$$;
 
--- Inserção de Leads pública (Visitantes podem criar leads, mas NUNCA listar)
-CREATE POLICY "Public Insert Leads" ON public.leads FOR INSERT WITH CHECK (true);
+CREATE OR REPLACE FUNCTION public.is_owner()
+RETURNS BOOLEAN
+LANGUAGE sql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT EXISTS (
+    SELECT 1 FROM public.admin_users
+    WHERE user_id = auth.uid() AND role = 'owner' AND active = true
+  );
+$$;
 
--- Administradores autenticados têm acesso total
-CREATE POLICY "Admin Full Access Settings" ON public.site_settings FOR ALL TO authenticated USING (true);
-CREATE POLICY "Admin Full Access Brand Tokens" ON public.brand_design_tokens FOR ALL TO authenticated USING (true);
-CREATE POLICY "Admin Full Access Pages" ON public.pages FOR ALL TO authenticated USING (true);
-CREATE POLICY "Admin Full Access Sections" ON public.page_sections FOR ALL TO authenticated USING (true);
-CREATE POLICY "Admin Full Access Segments" ON public.segments FOR ALL TO authenticated USING (true);
-CREATE POLICY "Admin Full Access Equipment" ON public.equipment_items FOR ALL TO authenticated USING (true);
-CREATE POLICY "Admin Full Access Services" ON public.services FOR ALL TO authenticated USING (true);
-CREATE POLICY "Admin Full Access Navigation" ON public.navigation_items FOR ALL TO authenticated USING (true);
-CREATE POLICY "Admin Full Access Media" ON public.media_assets FOR ALL TO authenticated USING (true);
-CREATE POLICY "Admin Full Access Downloads" ON public.material_downloads FOR ALL TO authenticated USING (true);
-CREATE POLICY "Admin Full Access Announcements" ON public.announcements FOR ALL TO authenticated USING (true);
-CREATE POLICY "Admin Full Access FAQs" ON public.faqs FOR ALL TO authenticated USING (true);
-CREATE POLICY "Admin Full Access Leads" ON public.leads FOR ALL TO authenticated USING (true);
-CREATE POLICY "Admin Full Access Users" ON public.admin_users FOR ALL TO authenticated USING (true);
-CREATE POLICY "Admin Full Access Revisions" ON public.content_revisions FOR ALL TO authenticated USING (true);
-CREATE POLICY "Admin Full Access Audit" ON public.audit_logs FOR ALL TO authenticated USING (true);
+-- 1. Regras para admin_users:
+-- Administradores ativos podem visualizar a equipe; apenas 'owner' pode criar, alterar permissões ou desativar usuários.
+CREATE POLICY "Admin View Users" ON public.admin_users
+  FOR SELECT TO authenticated
+  USING (public.is_admin());
+
+CREATE POLICY "Owner Manage Users" ON public.admin_users
+  FOR ALL TO authenticated
+  USING (public.is_owner())
+  WITH CHECK (public.is_owner());
+
+-- 2. Regras Públicas de Leitura (Visitantes anônimos só leem conteúdo publicado e ativo)
+CREATE POLICY "Public Read Settings" ON public.site_settings
+  FOR SELECT USING (true);
+
+CREATE POLICY "Public Read Brand Tokens" ON public.brand_design_tokens
+  FOR SELECT USING (true);
+
+CREATE POLICY "Public Read Published Pages" ON public.pages
+  FOR SELECT USING (status = 'PUBLISHED');
+
+CREATE POLICY "Public Read Active Sections of Published Pages" ON public.page_sections
+  FOR SELECT USING (
+    active = true AND
+    EXISTS (
+      SELECT 1 FROM public.pages
+      WHERE pages.slug = page_sections.page_slug AND pages.status = 'PUBLISHED'
+    )
+  );
+
+CREATE POLICY "Public Read Active Segments" ON public.segments
+  FOR SELECT USING (active = true);
+
+CREATE POLICY "Public Read Active Equipment" ON public.equipment_items
+  FOR SELECT USING (active = true);
+
+CREATE POLICY "Public Read Active Services" ON public.services
+  FOR SELECT USING (active = true);
+
+CREATE POLICY "Public Read Navigation" ON public.navigation_items
+  FOR SELECT USING (active = true);
+
+CREATE POLICY "Public Read Media" ON public.media_assets
+  FOR SELECT USING (true);
+
+CREATE POLICY "Public Read Downloads" ON public.material_downloads
+  FOR SELECT USING (active = true);
+
+CREATE POLICY "Public Read Announcements" ON public.announcements
+  FOR SELECT USING (active = true);
+
+CREATE POLICY "Public Read FAQs" ON public.faqs
+  FOR SELECT USING (active = true);
+
+-- 3. Inserção de Leads:
+-- Visitantes anônimos podem APENAS inserir novos leads; NUNCA ler, atualizar ou excluir.
+CREATE POLICY "Public Insert Leads" ON public.leads
+  FOR INSERT TO anon, authenticated
+  WITH CHECK (true);
+
+-- Administradores autorizados gerenciam leads
+CREATE POLICY "Admin Select Leads" ON public.leads
+  FOR SELECT TO authenticated
+  USING (public.is_admin());
+
+CREATE POLICY "Admin Update Leads" ON public.leads
+  FOR UPDATE TO authenticated
+  USING (public.is_admin())
+  WITH CHECK (public.is_admin());
+
+CREATE POLICY "Admin Delete Leads" ON public.leads
+  FOR DELETE TO authenticated
+  USING (public.is_admin());
+
+-- 4. Operações Administrativas (Todas exigem is_admin())
+CREATE POLICY "Admin Full Access Settings" ON public.site_settings
+  FOR ALL TO authenticated
+  USING (public.is_admin())
+  WITH CHECK (public.is_admin());
+
+CREATE POLICY "Admin Full Access Brand Tokens" ON public.brand_design_tokens
+  FOR ALL TO authenticated
+  USING (public.is_admin())
+  WITH CHECK (public.is_admin());
+
+CREATE POLICY "Admin Full Access Pages" ON public.pages
+  FOR ALL TO authenticated
+  USING (public.is_admin())
+  WITH CHECK (public.is_admin());
+
+CREATE POLICY "Admin Full Access Sections" ON public.page_sections
+  FOR ALL TO authenticated
+  USING (public.is_admin())
+  WITH CHECK (public.is_admin());
+
+CREATE POLICY "Admin Full Access Segments" ON public.segments
+  FOR ALL TO authenticated
+  USING (public.is_admin())
+  WITH CHECK (public.is_admin());
+
+CREATE POLICY "Admin Full Access Equipment" ON public.equipment_items
+  FOR ALL TO authenticated
+  USING (public.is_admin())
+  WITH CHECK (public.is_admin());
+
+CREATE POLICY "Admin Full Access Services" ON public.services
+  FOR ALL TO authenticated
+  USING (public.is_admin())
+  WITH CHECK (public.is_admin());
+
+CREATE POLICY "Admin Full Access Navigation" ON public.navigation_items
+  FOR ALL TO authenticated
+  USING (public.is_admin())
+  WITH CHECK (public.is_admin());
+
+CREATE POLICY "Admin Full Access Media" ON public.media_assets
+  FOR ALL TO authenticated
+  USING (public.is_admin())
+  WITH CHECK (public.is_admin());
+
+CREATE POLICY "Admin Full Access Downloads" ON public.material_downloads
+  FOR ALL TO authenticated
+  USING (public.is_admin())
+  WITH CHECK (public.is_admin());
+
+CREATE POLICY "Admin Full Access Announcements" ON public.announcements
+  FOR ALL TO authenticated
+  USING (public.is_admin())
+  WITH CHECK (public.is_admin());
+
+CREATE POLICY "Admin Full Access FAQs" ON public.faqs
+  FOR ALL TO authenticated
+  USING (public.is_admin())
+  WITH CHECK (public.is_admin());
+
+CREATE POLICY "Admin Full Access Revisions" ON public.content_revisions
+  FOR ALL TO authenticated
+  USING (public.is_admin())
+  WITH CHECK (public.is_admin());
+
+CREATE POLICY "Admin Full Access Audit" ON public.audit_logs
+  FOR ALL TO authenticated
+  USING (public.is_admin())
+  WITH CHECK (public.is_admin());
 
 -- ==============================================================================
--- STORAGE BUCKETS
+-- STORAGE BUCKETS & POLICIES
 -- ==============================================================================
--- Os seguintes buckets devem ser criados no Supabase Storage:
--- 1. 'public-media' (Public: true)
--- 2. 'brand-originals' (Public: true)
--- 3. 'documents' (Public: true)
+
+-- Criar Buckets se não existirem
+INSERT INTO storage.buckets (id, name, public)
+VALUES 
+  ('public-media', 'public-media', true),
+  ('brand-originals', 'brand-originals', true),
+  ('documents', 'documents', true)
+ON CONFLICT (id) DO UPDATE SET public = EXCLUDED.public;
+
+-- Leitura pública de mídias e marcas
+CREATE POLICY "Public Read Storage Public Media" ON storage.objects
+  FOR SELECT
+  USING (bucket_id IN ('public-media', 'brand-originals', 'documents'));
+
+-- Administradores autorizados têm permissão para upload, atualização e exclusão
+CREATE POLICY "Admin Upload Storage" ON storage.objects
+  FOR INSERT TO authenticated
+  WITH CHECK (
+    bucket_id IN ('public-media', 'brand-originals', 'documents') AND
+    public.is_admin()
+  );
+
+CREATE POLICY "Admin Update Storage" ON storage.objects
+  FOR UPDATE TO authenticated
+  USING (
+    bucket_id IN ('public-media', 'brand-originals', 'documents') AND
+    public.is_admin()
+  )
+  WITH CHECK (
+    bucket_id IN ('public-media', 'brand-originals', 'documents') AND
+    public.is_admin()
+  );
+
+CREATE POLICY "Admin Delete Storage" ON storage.objects
+  FOR DELETE TO authenticated
+  USING (
+    bucket_id IN ('public-media', 'brand-originals', 'documents') AND
+    public.is_admin()
+  );
