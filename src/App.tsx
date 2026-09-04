@@ -20,6 +20,9 @@ import { CommercialCTA } from './components/home/CommercialCTA';
 import { ContactFormSection } from './components/home/ContactFormSection';
 
 import { EducationLandingPage } from './pages/EducationLandingPage';
+import { SalesLandingPage } from './pages/SalesLandingPage';
+import { ServicesLandingPage } from './pages/ServicesLandingPage';
+import { RentalLandingPage } from './pages/RentalLandingPage';
 import { PrivacyPolicyPage } from './pages/public/PrivacyPolicyPage';
 import { LivePreviewIframe } from './components/admin/LivePreviewIframe';
 
@@ -42,6 +45,12 @@ function MainAppContent() {
         setCurrentPath('/admin');
       } else if (path === '/educacao' || path === '/escolas' || hash === '#educacao') {
         setCurrentPath('/educacao');
+      } else if (path === '/vendas' || hash === '#vendas' || hash === '#venda') {
+        setCurrentPath('/vendas');
+      } else if (path === '/servicos' || hash === '#servicos-page' || hash === '#servico') {
+        setCurrentPath('/servicos');
+      } else if (path === '/locacao' || hash === '#locacao-page' || hash === '#locacoes') {
+        setCurrentPath('/locacao');
       } else if (path === '/privacidade' || hash === '#privacidade') {
         setCurrentPath('/privacidade');
       } else {
@@ -67,6 +76,24 @@ function MainAppContent() {
       const metaDesc = document.querySelector('meta[name="description"]');
       if (metaDesc) {
         metaDesc.setAttribute('content', state.settings.seo?.description || 'Locação e implantação de laboratórios de informática, notebooks pedagógicos e infraestrutura de TI para colégios e faculdades.');
+      }
+    } else if (currentPath === '/vendas') {
+      document.title = 'Venda de Hardware Corporativo, Workstations & Redes | Ouzze Tecnologia';
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) {
+        metaDesc.setAttribute('content', 'Venda de computadores, notebooks corporativos, servidores e redes para empresas com nota fiscal, faturamento PJ e garantia de até 36 meses.');
+      }
+    } else if (currentPath === '/servicos') {
+      document.title = 'Serviços de TI, Suporte Técnico & Helpdesk Empresarial | Ouzze Tecnologia';
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) {
+        metaDesc.setAttribute('content', 'Terceirização de TI, suporte helpdesk remoto e presencial, manutenção preventiva e cabeamento de redes com SLA garantido.');
+      }
+    } else if (currentPath === '/locacao') {
+      document.title = 'Locação de Computadores, Notebooks & TI Corporativa | Ouzze Tecnologia';
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) {
+        metaDesc.setAttribute('content', 'Locação corporativa de computadores, notebooks e infraestrutura com manutenção e troca expressa inclusas no contrato.');
       }
     } else if (currentPath === '/privacidade') {
       document.title = 'Política de Privacidade & LGPD | Ouzze Tecnologia';
@@ -134,6 +161,21 @@ function MainAppContent() {
             onBackToHome={() => handleNavigate('/')}
             onOpenProposal={handleOpenProposal}
           />
+        ) : currentPath === '/vendas' ? (
+          <SalesLandingPage
+            onBackToHome={() => handleNavigate('/')}
+            onOpenProposal={handleOpenProposal}
+          />
+        ) : currentPath === '/servicos' ? (
+          <ServicesLandingPage
+            onBackToHome={() => handleNavigate('/')}
+            onOpenProposal={handleOpenProposal}
+          />
+        ) : currentPath === '/locacao' ? (
+          <RentalLandingPage
+            onBackToHome={() => handleNavigate('/')}
+            onOpenProposal={handleOpenProposal}
+          />
         ) : currentPath === '/privacidade' ? (
           <PrivacyPolicyPage onBack={() => handleNavigate('/')} />
         ) : (
@@ -144,8 +186,16 @@ function MainAppContent() {
             {/* 2. Seção 3 Pilares: Ouzze Locação, Vendas e Serviços */}
             <PillarsSection 
               onSelectPillar={(pillarId) => {
-                const el = document.getElementById(pillarId);
-                if (el) el.scrollIntoView({ behavior: 'smooth' });
+                if (pillarId === 'locacao') {
+                  handleNavigate('/locacao');
+                } else if (pillarId === 'vendas') {
+                  handleNavigate('/vendas');
+                } else if (pillarId === 'servicos') {
+                  handleNavigate('/servicos');
+                } else {
+                  const el = document.getElementById(pillarId);
+                  if (el) el.scrollIntoView({ behavior: 'smooth' });
+                }
               }}
               onOpenProposal={handleOpenProposal} 
             />
@@ -182,6 +232,7 @@ function MainAppContent() {
 
       {/* Footer */}
       <Footer 
+        onNavigate={handleNavigate}
         onNavigateToEducation={() => handleNavigate('/educacao')}
         onOpenProposal={handleOpenProposal}
       />

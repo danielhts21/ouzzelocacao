@@ -87,7 +87,7 @@ export const EducationLandingPage: React.FC<EducationLandingPageProps> = ({
     <div className="min-h-screen bg-black text-white pt-24 pb-20">
       
       {/* Top Breadcrumb / Return */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8 flex flex-wrap items-center justify-between gap-4">
         <button
           id="btn-back-home"
           onClick={onBackToHome}
@@ -96,6 +96,18 @@ export const EducationLandingPage: React.FC<EducationLandingPageProps> = ({
           <ArrowLeft className="w-4 h-4" />
           <span>Voltar para a página inicial</span>
         </button>
+
+        <nav aria-label="Navegação Estrutural" className="text-xs font-mono text-zinc-400 flex items-center gap-2">
+          <button onClick={onBackToHome} className="hover:text-zinc-200 transition-colors cursor-pointer">
+            Início
+          </button>
+          <span>/</span>
+          <button onClick={onBackToHome} className="hover:text-zinc-200 transition-colors cursor-pointer">
+            Segmentos
+          </button>
+          <span>/</span>
+          <span className="text-red-500 font-bold">Educação</span>
+        </nav>
       </div>
 
       {/* Hero Section - Educação */}

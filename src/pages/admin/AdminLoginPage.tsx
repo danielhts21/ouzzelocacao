@@ -168,6 +168,36 @@ export const AdminLoginPage: React.FC<AdminLoginPageProps> = ({ onSuccess, onBac
             </>
           )}
 
+          {/* Diagnóstico SOMENTE em DEV - removido no build de produção */}
+          {import.meta.env.DEV && (
+            <div className="p-3 rounded bg-zinc-950/80 border border-zinc-800/90 text-[11px] font-mono space-y-1.5">
+              <div className="text-zinc-400 font-bold uppercase tracking-wider text-[10px] flex items-center gap-1.5 pb-1 border-b border-zinc-800">
+                <Terminal className="w-3.5 h-3.5 text-amber-400" />
+                <span>Diagnóstico de Ambiente</span>
+              </div>
+              <div className="flex items-center justify-between text-zinc-400">
+                <span>DEV:</span>
+                <span className="text-zinc-200">{String(Boolean(import.meta.env.DEV))}</span>
+              </div>
+              <div className="flex items-center justify-between text-zinc-400">
+                <span>PROD:</span>
+                <span className="text-zinc-200">{String(Boolean(import.meta.env.PROD))}</span>
+              </div>
+              <div className="flex items-center justify-between text-zinc-400">
+                <span>Hostname:</span>
+                <span className="text-zinc-200 truncate max-w-[220px]" title={typeof window !== 'undefined' ? window.location.hostname : ''}>
+                  {typeof window !== 'undefined' ? window.location.hostname : ''}
+                </span>
+              </div>
+              <div className="flex items-center justify-between text-zinc-400">
+                <span>Local Admin Enabled:</span>
+                <span className={isLocalDevAvailable ? 'text-emerald-400 font-bold' : 'text-red-400 font-bold'}>
+                  {String(isLocalDevAvailable)}
+                </span>
+              </div>
+            </div>
+          )}
+
         </div>
       </div>
 

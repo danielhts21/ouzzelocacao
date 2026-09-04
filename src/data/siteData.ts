@@ -391,4 +391,256 @@ export const EDUCATION_PAGE_DATA = {
   ]
 };
 
+export const SALES_PAGE_DATA = {
+  hero: {
+    badge: 'Ouzze Venda de Hardware Corporativo',
+    title: 'Venda de equipamentos de TI com procedência, garantia e faturamento PJ.',
+    subtitle: 'Workstations, computadores, notebooks corporativos e servidores para expandir seu parque tecnológico.',
+    description: 'Atendemos empresas, indústrias e escritórios com hardware corporativo de alta durabilidade, nota fiscal integral, faturamento no boleto faturado para PJ e consultoria para dimensionamento de lote.',
+  },
+  categories: [
+    {
+      id: 'desktops',
+      title: 'Desktops & Workstations Empresariais',
+      desc: 'Computadores de alta durabilidade, gabinetes industriais, fontes 80 Plus e placas gráficas dedicadas para engenharia, arquitetura, design e finanças.',
+      specs: [
+        'Processadores Intel Core i5/i7/i9 e Xeon / AMD Ryzen Pro',
+        'Memórias DDR4/DDR5 com ECC opcional',
+        'SSDs NVMe de alto IOPS com criptografia de hardware',
+        'Suporte nativo a múltiplos monitores'
+      ],
+      icon: 'Monitor',
+      badge: 'Alta Performance'
+    },
+    {
+      id: 'notebooks',
+      title: 'Notebooks Corporativos & Ultrabooks',
+      desc: 'Portáteis de classe empresarial (ThinkPad, Latitude, ProBook) com teclado ergonômico, resistência mecânica contra impactos e leitor biométrico.',
+      specs: [
+        'Chassi reforçado em fibra de carbono ou magnésio',
+        'Autonomia de bateria prolongada e recarga rápida',
+        'Telas foscas antirreflexo Full HD/2K',
+        'Garantia corporativa com reposição ágil'
+      ],
+      icon: 'Laptop',
+      badge: 'Mobilidade B2B'
+    },
+    {
+      id: 'servidores',
+      title: 'Servidores & Armazenamento em Rede',
+      desc: 'Servidores em torre ou formato rack de 1U a 4U, storages NAS para contingência de dados e fontes redundantes hot-swap.',
+      specs: [
+        'Controladoras RAID por hardware com bateria de cache',
+        'Discos SAS/Enterprise e SSDs para leitura intensa',
+        'Gerenciamento remoto out-of-band (iDRAC / iLO)',
+        'Fontes redundantes bivolt automáticas'
+      ],
+      icon: 'Server',
+      badge: 'Alta Disponibilidade'
+    },
+    {
+      id: 'monitores',
+      title: 'Monitores Profissionais & Ergonomia',
+      desc: 'Telas ergonômicas certificadas para NR-17, com regulagem de altura e tecnologia de conforto visual contra fadiga ocular.',
+      specs: [
+        'Painéis IPS de 24", 27" e 34" Ultrawide',
+        'Hub USB integrado e portas HDMI/DisplayPort/Type-C',
+        'Base pivot com regulagem de altura e inclinação',
+        'Baixo consumo energético com certificação Energy Star'
+      ],
+      icon: 'Tv',
+      badge: 'Ergonomia NR-17'
+    },
+    {
+      id: 'redes',
+      title: 'Switches, Roteadores & Racks',
+      desc: 'Infraestrutura completa de rede para matriz e filiais, garantindo estabilidade de tráfego, PoE para câmeras/APs e nobreaks senoidais.',
+      specs: [
+        'Switches Gigabit e 10G gerenciáveis L2/L3',
+        'Access Points corporativos Wi-Fi 6 de alta densidade',
+        'Racks organizadores de 6U a 44U padrão 19 polegadas',
+        'Nobreaks senoidais com gerenciamento SNMP'
+      ],
+      icon: 'Network',
+      badge: 'Infraestrutura'
+    },
+    {
+      id: 'impressao',
+      title: 'Impressoras & Multifuncionais Laser',
+      desc: 'Equipamentos de alta tiragem para faturamento, logística, escritórios e expedição com baixo custo de impressão.',
+      specs: [
+        'Tecnologia laser monocromática e colorida',
+        'Alimentador automático de documentos (ADF) duplex',
+        'Conexão em rede cabeada e Wi-Fi corporativo',
+        'Alta capacidade de bandeja de entrada'
+      ],
+      icon: 'Printer',
+      badge: 'Alta Tiragem'
+    }
+  ],
+  differentials: [
+    'Faturamento faturado no boleto bancário direto para Pessoa Jurídica (28/35/42 dias)',
+    'Garantia de 12 a 36 meses com atendimento prioritário e reposição ágil de peças',
+    'Equipamentos entregues testados em bancada com sistema operacional homologado',
+    'Procedência comprovada com Nota Fiscal integral e rastreabilidade por número de série',
+    'Condições especiais para compra de lotes homogêneos e renovação de parque',
+    'Consultoria técnica pré-venda para evitar compras superdimensionadas ou incompatíveis'
+  ],
+  steps: [
+    {
+      number: '01',
+      title: 'Diagnóstico e Dimensionamento',
+      desc: 'Entendemos a aplicação do hardware na sua empresa e definimos a melhor configuração custo-benefício.'
+    },
+    {
+      number: '02',
+      title: 'Proposta Comercial PJ',
+      desc: 'Apresentamos cotação com opções de pagamento flexíveis faturadas para sua Pessoa Jurídica.'
+    },
+    {
+      number: '03',
+      title: 'Testes & Padronização em Bancada',
+      desc: 'Configuramos os equipamentos, executamos testes de estresse e aplicamos a imagem do sistema desejado.'
+    },
+    {
+      number: '04',
+      title: 'Entrega Técnica & Garantia',
+      desc: 'Envio seguro com nota fiscal eletrônica e suporte de garantia ativado imediatamente.'
+    }
+  ]
+};
+
+export const SERVICES_PAGE_DATA = {
+  hero: {
+    badge: 'Ouzze Serviços & Suporte Técnico de TI',
+    title: 'Terceirização de TI e suporte especializado para sua empresa nunca parar.',
+    subtitle: 'Helpdesk remoto ágil, manutenção preventiva/corretiva, visitas técnicas presenciais e engenharia de redes.',
+    description: 'Elimine gargalos operacionais e proteja a continuidade do seu negócio. Contratos de suporte corporativo sob medida com SLA garantido, técnicos certificados e atendimento multicanal.',
+  },
+  services: [
+    {
+      id: 'helpdesk-remoto',
+      title: 'Helpdesk Remoto (Níveis 1 e 2)',
+      desc: 'Central de atendimento ágil para resolução rápida de lentidões, configuração de e-mails corporativos, impressoras em rede, softwares e dúvidas de colaboradores sem deslocamento.',
+      sla: 'Atendimento inicial em até 15 minutos para chamados prioritários',
+      features: [
+        'Abertura descomplicada via WhatsApp corporativo e portal',
+        'Taxa de resolução no primeiro contato superior a 85%',
+        'Instalação e homologação remota de softwares corporativos',
+        'Configuração de VPN segura e ferramentas para trabalho híbrido'
+      ],
+      icon: 'Headphones'
+    },
+    {
+      id: 'field-service',
+      title: 'Suporte Presencial (Field Service)',
+      desc: 'Visitas técnicas programadas ou emergenciais com profissionais qualificados para troca física de peças, formatação no local, organização de postos de trabalho e vistorias.',
+      sla: 'Visitas periódicas de rotina ou atendimento presencial emergencial',
+      features: [
+        'Técnicos alocados em dias fixos ou conforme chamado',
+        'Diagnóstico e substituição de hardware físico no local',
+        'Organização e padronização ergonômica de cabeamento de mesas',
+        'Acompanhamento técnico presencial em auditorias de TI'
+      ],
+      icon: 'UserCheck'
+    },
+    {
+      id: 'manutencao-preventiva',
+      title: 'Manutenção Preventiva de Parque',
+      desc: 'Inspeções e intervenções regulares para limpeza interna contra poeira, renovação de composto térmico, verificação da integridade de memórias e discos SSD/HD.',
+      sla: 'Ciclos periódicos mensais ou trimestrais programados',
+      features: [
+        'Prolonga em até 40% a vida útil das estações de trabalho',
+        'Elimina paradas não planejadas e superaquecimento',
+        'Identificação antecipada de componentes próximos ao desgaste',
+        'Emissão de relatório técnico de integridade a cada rodada'
+      ],
+      icon: 'ShieldCheck'
+    },
+    {
+      id: 'manutencao-corretiva',
+      title: 'Manutenção Corretiva & Laboratório Especializado',
+      desc: 'Bancada técnica completa equipada para conserto avançado de placas-mãe, fontes de alimentação, substituição de telas de notebooks e recuperação física.',
+      sla: 'Diagnóstico técnico estruturado com orçamento transparente',
+      features: [
+        'Reparo especializado em circuitos de alimentação e VRM',
+        'Recuperação de carcaças, dobradiças e portas USB/HDMI',
+        'Substituição por peças homologadas com garantia formal',
+        'Emissão de laudo pericial para seguradoras ou inventário'
+      ],
+      icon: 'Wrench'
+    },
+    {
+      id: 'redes-cabeamento',
+      title: 'Cabeamento Estruturado & Redes Wi-Fi',
+      desc: 'Projetos e execução de cabeamento de dados Cat6/Cat6A, fusão de fibra óptica, organização e certificação de racks, roteadores de borda e Wi-Fi sem pontos cegos.',
+      sla: 'Projetos certificados com documentação completa',
+      features: [
+        'Certificação de pontos de rede com entrega de relatório',
+        'Organização e identificação visual de racks de servidores',
+        'Wi-Fi corporativo de alta densidade com rede de visitantes isolada',
+        'Configuração de firewalls, switches gerenciáveis e regras de acesso'
+      ],
+      icon: 'Network'
+    },
+    {
+      id: 'backup-seguranca',
+      title: 'Gestão de Ativos, Backup & Segurança',
+      desc: 'Padronização do parque computacional, aplicação de políticas de segurança, rotinas automatizadas de backup em nuvem (regra 3-2-1) e antivírus gerenciado.',
+      sla: 'Monitoramento contínuo da integridade dos dados',
+      features: [
+        'Rotinas de cópias de segurança criptografadas em nuvem',
+        'Clonagem rápida de imagens para integração imediata de novos funcionários',
+        'Controle de privilégios de usuário e bloqueio de dispositivos USB',
+        'Adequação básica da infraestrutura às boas práticas da LGPD'
+      ],
+      icon: 'Cpu'
+    }
+  ],
+  contractModels: [
+    {
+      id: 'gestao-completa',
+      title: 'Contrato de TI Completo (MSP)',
+      desc: 'Gestão contínua com chamados ilimitados, visitas preventivas, monitoramento proativo e SLA garantido. Ideal para empresas a partir de 5 computadores.',
+      badge: 'Mais Escolhido'
+    },
+    {
+      id: 'banco-horas',
+      title: 'Banco de Horas Pré-Pago',
+      desc: 'Pacote flexível de horas técnicas para suporte remoto ou presencial sem mensalidade fixa. Ideal para empresas com demandas sazonais.',
+      badge: 'Flexibilidade'
+    },
+    {
+      id: 'projetos-avulsos',
+      title: 'Projetos Especiais & Implantação',
+      desc: 'Contratação pontual para mudança de sede, implantação de cabeamento estruturado, auditoria de segurança ou padronização de parque computacional.',
+      badge: 'Pontual / Sob Medida'
+    }
+  ],
+  differentials: [
+    'Economia de até 40% em relação aos custos de manter um departamento próprio interno',
+    'Central ágil de chamados com múltiplos canais (WhatsApp corporativo e chamados)',
+    'Equipe multidisciplinar especializada em hardware, servidores e redes corporativas',
+    'Atendimento preventivo focado em evitar interrupções que prejudiquem as vendas',
+    'Relatórios periódicos de chamados e saúde das estações para a diretoria'
+  ]
+};
+
+export const RENTAL_PAGE_DATA = {
+  hero: {
+    badge: 'Ouzze Locação Corporativa de TI',
+    title: 'Locação de computadores, notebooks e infraestrutura para sua empresa.',
+    subtitle: 'Parque computacional moderno com suporte técnico, manutenção e substituição expressa inclusos no contrato.',
+    description: 'Converta investimentos pesados de compra (CAPEX) em despesas operacionais 100% dedutíveis no IRPJ/CSLL (OPEX). Conte com equipamentos de última geração, zero custo imprevisto de manutenção e suporte contínuo.',
+  },
+  benefits: [
+    'Preservação total de fluxo de caixa e capital de giro',
+    '100% das parcelas dedutíveis como despesa operacional (Lucro Real)',
+    'Manutenção preventiva e corretiva inclusas em todo o período',
+    'Substituição ágil de máquinas com defeito sem parar sua equipe',
+    'Atualização periódica do parque computacional a cada ciclo contratual',
+    'Equipamentos entregues padronizados e prontos para uso imediato'
+  ]
+};
+
 

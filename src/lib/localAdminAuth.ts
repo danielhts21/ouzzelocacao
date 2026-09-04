@@ -25,31 +25,23 @@ export interface LocalAdminSessionData {
 
 /**
  * Verifica se o modo de administrador local está habilitado.
- * OBRIGATÓRIO: Desabilitado em produção (import.meta.env.PROD === true)
- * e restrito a hostnames de desenvolvimento.
+ * OBRIGATÓRIO: Desabilitado em produção (import.meta.env.PROD === true).
+ * Em desenvolvimento (import.meta.env.DEV === true), habilitado independentemente do hostname.
  */
 export function isLocalAdminEnabled(): boolean {
   if (typeof window === 'undefined') return false;
 
-  const isDev = Boolean(import.meta.env.DEV);
-  const isProd = Boolean(import.meta.env.PROD);
-
   // Bloqueio rigoroso em produção
-  if (!isDev || isProd) {
+  if (Boolean(import.meta.env.PROD)) {
     return false;
   }
 
-  const hostname = window.location.hostname;
-  
-  // Permitido somente em localhost, 127.0.0.1, IPv6 loopback ou containers de desenvolvimento local
-  const isLocalHost = 
-    hostname === 'localhost' || 
-    hostname === '127.0.0.1' || 
-    hostname === '[::1]' ||
-    hostname === '0.0.0.0' ||
-    (isDev && (hostname.includes('localhost') || hostname.includes('ais-dev-')));
+  // Permitido em desenvolvimento
+  if (Boolean(import.meta.env.DEV)) {
+    return true;
+  }
 
-  return isLocalHost;
+  return false;
 }
 
 /**

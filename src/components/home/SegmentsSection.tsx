@@ -57,9 +57,11 @@ export const SegmentsSection: React.FC<SegmentsSectionProps> = ({
 
   return (
     <section 
-      id="solucoes" 
+      id="segmentos" 
       className="py-20 bg-zinc-900/40 relative border-b border-white/10 overflow-hidden"
     >
+      {/* Anchor de compatibilidade para #solucoes */}
+      <div id="solucoes" className="absolute -top-20 pointer-events-none" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Header */}

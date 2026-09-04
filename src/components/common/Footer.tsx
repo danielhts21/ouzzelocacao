@@ -150,7 +150,7 @@ export const Footer: React.FC<FooterProps> = ({
             <ul className="space-y-2 text-xs sm:text-sm">
               <li>
                 <button
-                  onClick={() => scrollToSection('locacao')}
+                  onClick={() => onNavigate ? onNavigate('/locacao') : scrollToSection('locacao')}
                   className="hover:text-red-500 transition-colors text-left cursor-pointer"
                 >
                   Ouzze Locação de Equipamentos
@@ -158,7 +158,7 @@ export const Footer: React.FC<FooterProps> = ({
               </li>
               <li>
                 <button
-                  onClick={() => scrollToSection('vendas')}
+                  onClick={() => onNavigate ? onNavigate('/vendas') : scrollToSection('vendas')}
                   className="hover:text-red-500 transition-colors text-left cursor-pointer"
                 >
                   Ouzze Venda de Hardware
@@ -166,7 +166,7 @@ export const Footer: React.FC<FooterProps> = ({
               </li>
               <li>
                 <button
-                  onClick={() => scrollToSection('servicos')}
+                  onClick={() => onNavigate ? onNavigate('/servicos') : scrollToSection('servicos')}
                   className="hover:text-red-500 transition-colors text-left cursor-pointer"
                 >
                   Ouzze Serviços & Field Service
@@ -174,7 +174,7 @@ export const Footer: React.FC<FooterProps> = ({
               </li>
               <li>
                 <button
-                  onClick={() => scrollToSection('locacao')}
+                  onClick={() => onNavigate ? onNavigate('/locacao') : scrollToSection('locacao')}
                   className="hover:text-red-500 transition-colors text-left cursor-pointer"
                 >
                   Outsourcing de Impressoras
@@ -182,7 +182,7 @@ export const Footer: React.FC<FooterProps> = ({
               </li>
               <li>
                 <button
-                  onClick={() => scrollToSection('servicos')}
+                  onClick={() => onNavigate ? onNavigate('/servicos') : scrollToSection('servicos')}
                   className="hover:text-red-500 transition-colors text-left cursor-pointer"
                 >
                   Infraestrutura de Redes & Wi-Fi

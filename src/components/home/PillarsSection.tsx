@@ -124,7 +124,7 @@ export const PillarsSection: React.FC<PillarsSectionProps> = ({
               <div className="pt-4 border-t border-white/10 space-y-3">
                 <button
                   id={`pillar-btn-${pillar.id}`}
-                  onClick={() => scrollToTarget(pillar.targetSection)}
+                  onClick={() => onSelectPillar(pillar.id)}
                   className="w-full py-3.5 px-4 rounded-sm bg-zinc-800 hover:bg-red-600 text-white font-bold uppercase tracking-wider text-xs transition-all duration-200 flex items-center justify-center gap-2 border border-white/10 hover:border-red-600 cursor-pointer shadow-sm hover:shadow-[0_0_18px_rgba(220,38,38,0.4)] active:scale-98 group/btn"
                 >
                   <span>{pillar.ctaText}</span>

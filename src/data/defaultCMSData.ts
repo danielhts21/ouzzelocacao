@@ -158,20 +158,20 @@ export const DEFAULT_BRAND_TOKENS: BrandDesignTokens = {
 
 export const DEFAULT_NAVIGATION: NavigationConfig = {
   headerItems: [
-    { id: 'nav-pilares', label: 'Soluções', href: '#pilares', active: true, order: 1 },
-    { id: 'nav-sobre', label: 'Sobre', href: '#sobre', active: true, order: 2 },
-    { id: 'nav-segmentos', label: 'Segmentos', href: '#segmentos', active: true, order: 3 },
-    { id: 'nav-locacao', label: 'Locação', href: '#locacao', active: true, order: 4 },
-    { id: 'nav-servicos', label: 'Serviços', href: '#servicos', active: true, order: 5 },
-    { id: 'nav-como-funciona', label: 'Como Funciona', href: '#como-funciona', active: true, order: 6 },
+    { id: 'nav-inicio', label: 'Início', href: '#hero', active: true, order: 1 },
+    { id: 'nav-locacao', label: 'Locação', href: '/locacao', active: true, order: 2 },
+    { id: 'nav-vendas', label: 'Vendas', href: '/vendas', active: true, order: 3 },
+    { id: 'nav-servicos', label: 'Serviços', href: '/servicos', active: true, order: 4 },
+    { id: 'nav-segmentos', label: 'Segmentos', href: '#segmentos', active: true, order: 5 },
+    { id: 'nav-sobre', label: 'Sobre', href: '#sobre', active: true, order: 6 },
     { id: 'nav-contato', label: 'Contato', href: '#contato', active: true, order: 7 }
   ],
   footerItems: [
-    { id: 'ft-locacao', label: 'Locação de Equipamentos', href: '#locacao', active: true, order: 1 },
-    { id: 'ft-vendas', label: 'Venda de Hardware', href: '#locacao', active: true, order: 2 },
-    { id: 'ft-servicos', label: 'Serviços de TI & Suporte', href: '#servicos', active: true, order: 3 },
+    { id: 'ft-locacao', label: 'Locação de Equipamentos', href: '/locacao', active: true, order: 1 },
+    { id: 'ft-vendas', label: 'Venda de Hardware', href: '/vendas', active: true, order: 2 },
+    { id: 'ft-servicos', label: 'Serviços de TI & Suporte', href: '/servicos', active: true, order: 3 },
     { id: 'ft-educacao', label: 'Soluções para Educação', href: '/educacao', active: true, order: 4 },
-    { id: 'ft-privacidade', label: 'Política de Privacidade', href: '/politica-de-privacidade', active: true, order: 5 }
+    { id: 'ft-privacidade', label: 'Política de Privacidade', href: '/privacidade', active: true, order: 5 }
   ],
   ctaButtonText: 'Solicitar Proposta',
   ctaButtonAction: 'open_modal'
@@ -507,6 +507,42 @@ export const DEFAULT_PAGES: Page[] = [
     status: 'PUBLISHED',
     isSystem: true,
     sectionsOrder: DEFAULT_HOME_SECTIONS.map(s => s.id),
+    updatedAt: '2026-09-02T05:00:00.000Z',
+    updatedBy: 'admin@ouzze.com.br'
+  },
+  {
+    id: 'page-locacao',
+    slug: '/locacao',
+    name: 'Locação de Equipamentos',
+    seoTitle: 'Ouzze Tecnologia | Locação de Computadores, Notebooks & TI Corporativa',
+    seoDescription: 'Locação corporativa de computadores, notebooks e infraestrutura com manutenção e substituição ágil inclusas no contrato.',
+    status: 'PUBLISHED',
+    isSystem: true,
+    sectionsOrder: [],
+    updatedAt: '2026-09-02T05:00:00.000Z',
+    updatedBy: 'admin@ouzze.com.br'
+  },
+  {
+    id: 'page-vendas',
+    slug: '/vendas',
+    name: 'Venda Corporativa',
+    seoTitle: 'Ouzze Tecnologia | Venda de Hardware Corporativo, Workstations & Redes',
+    seoDescription: 'Venda de computadores, notebooks corporativos, servidores e redes para empresas com nota fiscal, faturamento PJ e garantia de até 36 meses.',
+    status: 'PUBLISHED',
+    isSystem: true,
+    sectionsOrder: [],
+    updatedAt: '2026-09-02T05:00:00.000Z',
+    updatedBy: 'admin@ouzze.com.br'
+  },
+  {
+    id: 'page-servicos',
+    slug: '/servicos',
+    name: 'Serviços & Suporte de TI',
+    seoTitle: 'Ouzze Tecnologia | Serviços de TI, Suporte Técnico & Helpdesk Empresarial',
+    seoDescription: 'Terceirização de TI, suporte helpdesk remoto e presencial, manutenção preventiva e cabeamento de redes com SLA garantido.',
+    status: 'PUBLISHED',
+    isSystem: true,
+    sectionsOrder: [],
     updatedAt: '2026-09-02T05:00:00.000Z',
     updatedBy: 'admin@ouzze.com.br'
   },
