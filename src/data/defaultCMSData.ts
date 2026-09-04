@@ -497,6 +497,385 @@ export const DEFAULT_EDUCATION_SECTIONS: PageSection[] = [
   }
 ];
 
+export const DEFAULT_RENTAL_SECTIONS: PageSection[] = [
+  {
+    id: 'sec-rental-hero',
+    pageSlug: '/locacao',
+    type: 'hero',
+    title: 'Locação Corporativa de TI: Desempenho e Flexibilidade para sua Empresa',
+    subtitle: 'Computadores, notebooks, impressoras gerenciadas e infraestrutura com manutenção inclusa e substituição ágil.',
+    description: 'Transforme investimentos pesados de capital (CAPEX) em despesas operacionais dedutíveis (OPEX). Parque sempre atualizado e produtividade ininterrupta.',
+    active: true,
+    order: 1,
+    content: {
+      badge: 'Ouzze Locação & Outsourcing',
+      ctaPrimaryText: 'Solicitar Proposta de Locação',
+      ctaSecondaryText: 'Ver Equipamentos'
+    },
+    styles: {
+      background: 'dark',
+      paddingTop: 'lg',
+      paddingBottom: 'lg',
+      alignment: 'center',
+      maxWidth: '7xl',
+      animation: 'fadeUp',
+      parallax: true,
+      visibility: { desktop: true, tablet: true, mobile: true }
+    }
+  },
+  {
+    id: 'sec-rental-equipment',
+    pageSlug: '/locacao',
+    type: 'rental',
+    title: 'Catálogo de Equipamentos Corporativos para Locação',
+    subtitle: 'Modelos homologados das marcas líderes de tecnologia',
+    description: 'Máquinas configuradas para alta durabilidade, desempenho empresarial e suporte total.',
+    active: true,
+    order: 2,
+    content: {},
+    styles: {
+      background: 'dark',
+      paddingTop: 'lg',
+      paddingBottom: 'lg',
+      alignment: 'left',
+      maxWidth: '7xl',
+      animation: 'fadeUp',
+      parallax: false,
+      visibility: { desktop: true, tablet: true, mobile: true }
+    }
+  },
+  {
+    id: 'sec-rental-benefits',
+    pageSlug: '/locacao',
+    type: 'benefits',
+    title: 'Por que alugar equipamentos com a Ouzze?',
+    subtitle: 'Vantagens Estratégicas para o seu Negócio',
+    description: 'Substituição rápida, zero preocupação com desvalorização de ativos e dedução no IRPJ.',
+    active: true,
+    order: 3,
+    content: {},
+    styles: {
+      background: 'surface',
+      paddingTop: 'lg',
+      paddingBottom: 'lg',
+      alignment: 'left',
+      maxWidth: '7xl',
+      animation: 'fadeUp',
+      parallax: false,
+      visibility: { desktop: true, tablet: true, mobile: true }
+    }
+  },
+  {
+    id: 'sec-rental-howitworks',
+    pageSlug: '/locacao',
+    type: 'howItWorks',
+    title: 'Processo Simplificado de Locação',
+    subtitle: 'Do pedido à entrega em 5 passos',
+    description: 'Agilidade logística e atendimento consultivo sem burocracia desnecessária.',
+    active: true,
+    order: 4,
+    content: {},
+    styles: {
+      background: 'dark',
+      paddingTop: 'lg',
+      paddingBottom: 'lg',
+      alignment: 'left',
+      maxWidth: '7xl',
+      animation: 'fadeUp',
+      parallax: false,
+      visibility: { desktop: true, tablet: true, mobile: true }
+    }
+  },
+  {
+    id: 'sec-rental-faq',
+    pageSlug: '/locacao',
+    type: 'faq',
+    title: 'Dúvidas Frequentes sobre Locação Corporativa',
+    badge: 'FAQ Locação',
+    active: true,
+    order: 5,
+    content: {},
+    styles: {
+      background: 'surface',
+      paddingTop: 'md',
+      paddingBottom: 'md',
+      alignment: 'center',
+      maxWidth: '5xl',
+      animation: 'fadeUp',
+      parallax: false,
+      visibility: { desktop: true, tablet: true, mobile: true }
+    }
+  },
+  {
+    id: 'sec-rental-cta',
+    pageSlug: '/locacao',
+    type: 'cta',
+    title: 'Precisa equipar sua equipe com tecnologia de ponta?',
+    subtitle: 'Orçamento Rápido e Consultoria Sem Compromisso',
+    description: 'Fale com nossos consultores de locação e receba uma análise comparativa de custos para sua frota.',
+    active: true,
+    order: 6,
+    content: {
+      buttonText: 'Pedir Proposta de Locação',
+      badge: 'Atendimento Corporativo'
+    },
+    styles: {
+      background: 'gradient',
+      paddingTop: 'lg',
+      paddingBottom: 'lg',
+      alignment: 'center',
+      maxWidth: '6xl',
+      animation: 'scale',
+      parallax: false,
+      visibility: { desktop: true, tablet: true, mobile: true }
+    }
+  }
+];
+
+export const DEFAULT_SALES_SECTIONS: PageSection[] = [
+  {
+    id: 'sec-sales-hero',
+    pageSlug: '/vendas',
+    type: 'hero',
+    title: 'Venda Corporativa de Hardware & Infraestrutura de TI',
+    subtitle: 'Notebooks corporativos, desktops de alta performance, servidores e equipamentos de rede com faturamento PJ e garantia estendida.',
+    description: 'Parcerias com as maiores fabricantes mundiais para fornecimento de lotes com preços exclusivos, faturamento flexível e suporte técnico.',
+    active: true,
+    order: 1,
+    content: {
+      badge: 'Ouzze Venda Corporativa',
+      ctaPrimaryText: 'Cotar Lote Corporativo',
+      ctaSecondaryText: 'Ver Linhas de Hardware'
+    },
+    styles: {
+      background: 'dark',
+      paddingTop: 'lg',
+      paddingBottom: 'lg',
+      alignment: 'center',
+      maxWidth: '7xl',
+      animation: 'fadeUp',
+      parallax: true,
+      visibility: { desktop: true, tablet: true, mobile: true }
+    }
+  },
+  {
+    id: 'sec-sales-catalog',
+    pageSlug: '/vendas',
+    type: 'sales',
+    title: 'Aquisição Estratégica de TI para Empresas',
+    subtitle: 'Linhas Homologadas para o Ambiente Corporativo',
+    description: 'Trabalhamos com equipamentos novos, garantia oficial do fabricante e entrega expressa.',
+    active: true,
+    order: 2,
+    badge: 'Hardware Empresarial',
+    content: {},
+    styles: {
+      background: 'dark',
+      paddingTop: 'lg',
+      paddingBottom: 'lg',
+      alignment: 'left',
+      maxWidth: '7xl',
+      animation: 'fadeUp',
+      parallax: false,
+      visibility: { desktop: true, tablet: true, mobile: true }
+    }
+  },
+  {
+    id: 'sec-sales-differentials',
+    pageSlug: '/vendas',
+    type: 'custom_cards',
+    title: 'Diferenciais Exclusivos para Clientes PJ',
+    subtitle: 'Segurança, flexibilidade tributária e agilidade de entrega',
+    description: 'Condições comerciais projetadas para atender departamentos de compras, finanças e TI.',
+    active: true,
+    order: 3,
+    badge: 'Condições Corporativas',
+    content: {
+      cards: [
+        { title: 'Faturamento PJ com Prazos', desc: 'Opções de boleto bancário a prazo para 30/60/90 dias mediante análise cadastral.', badge: 'Financiamento' },
+        { title: 'Garantia Direta do Fabricante', desc: 'Até 36 meses de suporte on-site com peças originais e atendimento no local.', badge: 'Garantia' },
+        { title: 'Customização de Imagem', desc: 'Máquinas entregues pré-configuradas com os softwares e políticas da sua empresa.', badge: 'Setup Rápido' }
+      ]
+    },
+    styles: {
+      background: 'surface',
+      paddingTop: 'lg',
+      paddingBottom: 'lg',
+      alignment: 'left',
+      maxWidth: '7xl',
+      animation: 'fadeUp',
+      parallax: false,
+      visibility: { desktop: true, tablet: true, mobile: true }
+    }
+  },
+  {
+    id: 'sec-sales-faq',
+    pageSlug: '/vendas',
+    type: 'faq',
+    title: 'Dúvidas Frequentes sobre Venda Corporativa',
+    badge: 'FAQ Vendas',
+    active: true,
+    order: 4,
+    content: {},
+    styles: {
+      background: 'surface',
+      paddingTop: 'md',
+      paddingBottom: 'md',
+      alignment: 'center',
+      maxWidth: '5xl',
+      animation: 'fadeUp',
+      parallax: false,
+      visibility: { desktop: true, tablet: true, mobile: true }
+    }
+  },
+  {
+    id: 'sec-sales-cta',
+    pageSlug: '/vendas',
+    type: 'cta',
+    title: 'Planejando renovar ou expandir sua infraestrutura de TI?',
+    subtitle: 'Cotação de Lotes com Condições Especiais',
+    description: 'Envie sua lista de especificações ou fale com nossos especialistas para montar a melhor configuração.',
+    active: true,
+    order: 5,
+    content: {
+      buttonText: 'Solicitar Cotação de Lote',
+      badge: 'Venda Consultiva'
+    },
+    styles: {
+      background: 'gradient',
+      paddingTop: 'lg',
+      paddingBottom: 'lg',
+      alignment: 'center',
+      maxWidth: '6xl',
+      animation: 'scale',
+      parallax: false,
+      visibility: { desktop: true, tablet: true, mobile: true }
+    }
+  }
+];
+
+export const DEFAULT_SERVICES_SECTIONS: PageSection[] = [
+  {
+    id: 'sec-services-hero',
+    pageSlug: '/servicos',
+    type: 'hero',
+    title: 'Serviços de TI, Suporte Técnico & Gestão de Infraestrutura',
+    subtitle: 'Helpdesk especializado, atendimento presencial, cabeamento estruturado e manutenção preventiva para sua empresa.',
+    description: 'Garanta disponibilidade máxima e segurança operacional com um time técnico completo cuidando da sua TI.',
+    active: true,
+    order: 1,
+    content: {
+      badge: 'Ouzze Serviços Especializados',
+      ctaPrimaryText: 'Falar com Consultor Técnico',
+      ctaSecondaryText: 'Ver Portfólio de Serviços'
+    },
+    styles: {
+      background: 'dark',
+      paddingTop: 'lg',
+      paddingBottom: 'lg',
+      alignment: 'center',
+      maxWidth: '7xl',
+      animation: 'fadeUp',
+      parallax: true,
+      visibility: { desktop: true, tablet: true, mobile: true }
+    }
+  },
+  {
+    id: 'sec-services-list',
+    pageSlug: '/servicos',
+    type: 'services',
+    title: 'Portfólio Completo de Serviços de TI',
+    subtitle: 'Soluções Integradas para Ambientes Corporativos',
+    description: 'Do suporte básico à gestão de servidores e implementação de redes corporativas de alto padrão.',
+    active: true,
+    order: 2,
+    badge: 'Nossos Serviços',
+    content: {},
+    styles: {
+      background: 'dark',
+      paddingTop: 'lg',
+      paddingBottom: 'lg',
+      alignment: 'left',
+      maxWidth: '7xl',
+      animation: 'fadeUp',
+      parallax: false,
+      visibility: { desktop: true, tablet: true, mobile: true }
+    }
+  },
+  {
+    id: 'sec-services-cards',
+    pageSlug: '/servicos',
+    type: 'custom_cards',
+    title: 'Como Garantimos a Continuidade do seu Negócio',
+    subtitle: 'Padrão Rigoroso de SLA e Qualidade de Atendimento',
+    description: 'Processos claros e métricas de desempenho para garantir que nenhum problema tecnológico atrase sua equipe.',
+    active: true,
+    order: 3,
+    badge: 'Metodologia & SLA',
+    content: {
+      cards: [
+        { title: 'SLA de Resposta Rápida', desc: 'Chamados classificados por gravidade com início imediato de resolução.', badge: 'SLA Garantido' },
+        { title: 'Profissionais Certificados', desc: 'Equipe especializada nas principais plataformas de hardware e redes.', badge: 'Engenharia' },
+        { title: 'Atendimento Híbrido Flexível', desc: 'Resolução remota imediata e presença técnica on-site quando exigido.', badge: 'Presença' }
+      ]
+    },
+    styles: {
+      background: 'surface',
+      paddingTop: 'lg',
+      paddingBottom: 'lg',
+      alignment: 'left',
+      maxWidth: '7xl',
+      animation: 'fadeUp',
+      parallax: false,
+      visibility: { desktop: true, tablet: true, mobile: true }
+    }
+  },
+  {
+    id: 'sec-services-faq',
+    pageSlug: '/servicos',
+    type: 'faq',
+    title: 'Dúvidas Frequentes sobre Serviços e Suporte de TI',
+    badge: 'FAQ Serviços',
+    active: true,
+    order: 4,
+    content: {},
+    styles: {
+      background: 'surface',
+      paddingTop: 'md',
+      paddingBottom: 'md',
+      alignment: 'center',
+      maxWidth: '5xl',
+      animation: 'fadeUp',
+      parallax: false,
+      visibility: { desktop: true, tablet: true, mobile: true }
+    }
+  },
+  {
+    id: 'sec-services-cta',
+    pageSlug: '/servicos',
+    type: 'cta',
+    title: 'Sua empresa precisa de um suporte de TI profissional?',
+    subtitle: 'Diagnóstico Preliminar Sem Custo',
+    description: 'Agende uma conversa técnica com nossos especialistas para mapear as necessidades da sua infraestrutura.',
+    active: true,
+    order: 5,
+    content: {
+      buttonText: 'Solicitar Diagnóstico de TI',
+      badge: 'Suporte Corporativo'
+    },
+    styles: {
+      background: 'gradient',
+      paddingTop: 'lg',
+      paddingBottom: 'lg',
+      alignment: 'center',
+      maxWidth: '6xl',
+      animation: 'scale',
+      parallax: false,
+      visibility: { desktop: true, tablet: true, mobile: true }
+    }
+  }
+];
+
 export const DEFAULT_PAGES: Page[] = [
   {
     id: 'page-home',
@@ -518,7 +897,7 @@ export const DEFAULT_PAGES: Page[] = [
     seoDescription: 'Locação corporativa de computadores, notebooks e infraestrutura com manutenção e substituição ágil inclusas no contrato.',
     status: 'PUBLISHED',
     isSystem: true,
-    sectionsOrder: [],
+    sectionsOrder: DEFAULT_RENTAL_SECTIONS.map(s => s.id),
     updatedAt: '2026-09-02T05:00:00.000Z',
     updatedBy: 'admin@ouzze.com.br'
   },
@@ -530,7 +909,7 @@ export const DEFAULT_PAGES: Page[] = [
     seoDescription: 'Venda de computadores, notebooks corporativos, servidores e redes para empresas com nota fiscal, faturamento PJ e garantia de até 36 meses.',
     status: 'PUBLISHED',
     isSystem: true,
-    sectionsOrder: [],
+    sectionsOrder: DEFAULT_SALES_SECTIONS.map(s => s.id),
     updatedAt: '2026-09-02T05:00:00.000Z',
     updatedBy: 'admin@ouzze.com.br'
   },
@@ -542,7 +921,7 @@ export const DEFAULT_PAGES: Page[] = [
     seoDescription: 'Terceirização de TI, suporte helpdesk remoto e presencial, manutenção preventiva e cabeamento de redes com SLA garantido.',
     status: 'PUBLISHED',
     isSystem: true,
-    sectionsOrder: [],
+    sectionsOrder: DEFAULT_SERVICES_SECTIONS.map(s => s.id),
     updatedAt: '2026-09-02T05:00:00.000Z',
     updatedBy: 'admin@ouzze.com.br'
   },

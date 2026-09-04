@@ -309,6 +309,7 @@ export const Header: React.FC<HeaderProps> = ({
               }
 
               const isActive = (item.href === '/' && activePath === '/') || 
+                (item.href === '#hero' && activePath === '/') ||
                 (item.href !== '/' && item.href !== '#hero' && activePath === item.href);
 
               return (
@@ -439,6 +440,7 @@ export const Header: React.FC<HeaderProps> = ({
               }
 
               const isActive = (item.href === '/' && activePath === '/') || 
+                (item.href === '#hero' && activePath === '/') ||
                 (item.href !== '/' && item.href !== '#hero' && activePath === item.href);
 
               return (

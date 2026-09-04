@@ -10,12 +10,23 @@ import {
   Zap,
   Server
 } from 'lucide-react';
+import { useCMS } from '../../context/CMSContext';
+import { PageSection } from '../../types/cms';
 
 interface AboutSectionProps {
+  section?: PageSection;
   onOpenProposal: (type?: string) => void;
 }
 
-export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenProposal }) => {
+export const AboutSection: React.FC<AboutSectionProps> = ({ section, onOpenProposal }) => {
+  const { state } = useCMS();
+  const brandName = state.settings.brandName || 'Ouzze Tecnologia';
+
+  const badge = section?.badge || 'Institucional Ouzze';
+  const title = section?.title || 'Tecnologia é ferramenta. Resultado é o objetivo.';
+  const subtitle = section?.subtitle || '';
+  const description = section?.description || '';
+
   return (
     <section 
       id="sobre" 
@@ -33,23 +44,30 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenProposal }) =>
             className="lg:col-span-7 space-y-6"
           >
             <div className="inline-block px-3 py-1 border border-red-600/30 bg-red-600/10 text-red-500 text-[10px] font-bold uppercase tracking-widest rounded-sm">
-              Institucional Ouzze
+              {badge}
             </div>
 
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white tracking-tight leading-[1.15]">
-              Tecnologia é ferramenta. <br />
-              <span className="text-red-600">
-                Resultado é o objetivo.
-              </span>
+              {title}
             </h2>
 
+            {subtitle && (
+              <p className="text-red-500 font-semibold text-lg">{subtitle}</p>
+            )}
+
             <div className="space-y-4 text-zinc-300 text-base sm:text-lg leading-relaxed">
-              <p>
-                Na <strong className="text-white">Ouzze Tecnologia</strong>, unimos equipamentos de alta performance, serviços especializados e suporte consultivo para criar soluções completas que simplificam a operação das empresas.
-              </p>
-              <p className="text-zinc-400 text-sm sm:text-base">
-                Seja através da <strong className="text-zinc-200">locação flexível</strong>, da <strong className="text-zinc-200">aquisição estratégica de equipamentos</strong> ou do <strong className="text-zinc-200">suporte técnico proativo</strong>, nosso compromisso é permitir que sua liderança e equipe foquem no crescimento do negócio enquanto nós cuidamos de toda a infraestrutura de TI.
-              </p>
+              {description ? (
+                <p>{description}</p>
+              ) : (
+                <>
+                  <p>
+                    Na <strong className="text-white">{brandName}</strong>, unimos equipamentos de alta performance, serviços especializados e suporte consultivo para criar soluções completas que simplificam a operação das empresas.
+                  </p>
+                  <p className="text-zinc-400 text-sm sm:text-base">
+                    Seja através da <strong className="text-zinc-200">locação flexível</strong>, da <strong className="text-zinc-200">aquisição estratégica de equipamentos</strong> ou do <strong className="text-zinc-200">suporte técnico proativo</strong>, nosso compromisso é permitir que sua liderança e equipe foquem no crescimento do negócio enquanto nós cuidamos de toda a infraestrutura de TI.
+                  </p>
+                </>
+              )}
             </div>
 
             {/* Core Values / Operational Commitments */}

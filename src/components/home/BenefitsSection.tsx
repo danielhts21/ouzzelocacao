@@ -10,8 +10,17 @@ import {
   Sparkles
 } from 'lucide-react';
 import { BENEFITS_DATA } from '../../data/siteData';
+import { PageSection } from '../../types/cms';
 
-export const BenefitsSection: React.FC = () => {
+interface BenefitsSectionProps {
+  section?: PageSection;
+}
+
+export const BenefitsSection: React.FC<BenefitsSectionProps> = ({ section }) => {
+  const badge = section?.badge || 'Vantagens Competitivas';
+  const title = section?.title || 'Por que escolher a Ouzze Tecnologia?';
+  const description = section?.description || section?.subtitle || 'Combinamos inteligência de gestão, agilidade operacional e excelência em engenharia para transformar o modo como sua empresa consome tecnologia.';
+
   const getBenefitIcon = (iconName: string) => {
     switch (iconName) {
       case 'Layers':
@@ -39,18 +48,15 @@ export const BenefitsSection: React.FC = () => {
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
           <div className="inline-block px-3 py-1 border border-red-600/30 bg-red-600/10 text-red-500 text-[10px] font-bold uppercase tracking-widest rounded-sm">
-            Vantagens Competitivas
+            {badge}
           </div>
           
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">
-            Por que escolher a <br className="hidden sm:block" />
-            <span className="text-red-600">
-              Ouzze Tecnologia?
-            </span>
+            {title}
           </h2>
 
           <p className="text-zinc-400 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
-            Combinamos inteligência de gestão, agilidade operacional e excelência em engenharia para transformar o modo como sua empresa consome tecnologia.
+            {description}
           </p>
         </div>
 

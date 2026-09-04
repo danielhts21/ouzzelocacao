@@ -8,23 +8,9 @@ import { Footer } from './components/common/Footer';
 import { WhatsAppButton } from './components/common/WhatsAppButton';
 import { ProposalModal } from './components/common/ProposalModal';
 
-import { Hero } from './components/home/Hero';
-import { PillarsSection } from './components/home/PillarsSection';
-import { AboutSection } from './components/home/AboutSection';
-import { SegmentsSection } from './components/home/SegmentsSection';
-import { RentalSection } from './components/home/RentalSection';
-import { ServicesSection } from './components/home/ServicesSection';
-import { BenefitsSection } from './components/home/BenefitsSection';
-import { HowItWorksSection } from './components/home/HowItWorksSection';
-import { CommercialCTA } from './components/home/CommercialCTA';
-import { ContactFormSection } from './components/home/ContactFormSection';
-
-import { EducationLandingPage } from './pages/EducationLandingPage';
-import { SalesLandingPage } from './pages/SalesLandingPage';
-import { ServicesLandingPage } from './pages/ServicesLandingPage';
-import { RentalLandingPage } from './pages/RentalLandingPage';
 import { PrivacyPolicyPage } from './pages/public/PrivacyPolicyPage';
 import { LivePreviewIframe } from './components/admin/LivePreviewIframe';
+import { DynamicPage } from './components/dynamic/DynamicPage';
 
 // Code splitting / Lazy Loading of the entire Admin Panel
 const AdminPage = lazy(() => import('./pages/admin/AdminPage').then(m => ({ default: m.AdminPage })));
@@ -53,8 +39,23 @@ function MainAppContent() {
         setCurrentPath('/locacao');
       } else if (path === '/privacidade' || hash === '#privacidade') {
         setCurrentPath('/privacidade');
+      } else if (hash && hash.startsWith('#/')) {
+        setCurrentPath(hash.slice(1));
+      } else if (path && path !== '/') {
+        setCurrentPath(path);
       } else {
         setCurrentPath('/');
+      }
+
+      // Smooth scroll if anchor hash is present
+      if (hash && !hash.startsWith('#admin') && !hash.startsWith('#/')) {
+        const targetId = hash.replace('#', '');
+        setTimeout(() => {
+          const el = document.getElementById(targetId);
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 150);
       }
     };
 
@@ -109,6 +110,15 @@ function MainAppContent() {
   }, [currentPath, state.settings]);
 
   const handleNavigate = (path: string) => {
+    if (path.startsWith('/#') || (path.startsWith('#') && currentPath === '/')) {
+      const targetId = path.replace('/#', '').replace('#', '');
+      const el = document.getElementById(targetId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+        window.history.pushState({}, '', path);
+        return;
+      }
+    }
     window.history.pushState({}, '', path);
     setCurrentPath(path);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -156,77 +166,14 @@ function MainAppContent() {
 
       {/* Main Content Area */}
       <main className="flex-1">
-        {currentPath === '/educacao' ? (
-          <EducationLandingPage
-            onBackToHome={() => handleNavigate('/')}
-            onOpenProposal={handleOpenProposal}
-          />
-        ) : currentPath === '/vendas' ? (
-          <SalesLandingPage
-            onBackToHome={() => handleNavigate('/')}
-            onOpenProposal={handleOpenProposal}
-          />
-        ) : currentPath === '/servicos' ? (
-          <ServicesLandingPage
-            onBackToHome={() => handleNavigate('/')}
-            onOpenProposal={handleOpenProposal}
-          />
-        ) : currentPath === '/locacao' ? (
-          <RentalLandingPage
-            onBackToHome={() => handleNavigate('/')}
-            onOpenProposal={handleOpenProposal}
-          />
-        ) : currentPath === '/privacidade' ? (
+        {currentPath === '/privacidade' || currentPath === '/politica-de-privacidade' ? (
           <PrivacyPolicyPage onBack={() => handleNavigate('/')} />
         ) : (
-          <>
-            {/* 1. Hero Principal com Animação do Computador */}
-            <Hero onOpenProposal={handleOpenProposal} />
-
-            {/* 2. Seção 3 Pilares: Ouzze Locação, Vendas e Serviços */}
-            <PillarsSection 
-              onSelectPillar={(pillarId) => {
-                if (pillarId === 'locacao') {
-                  handleNavigate('/locacao');
-                } else if (pillarId === 'vendas') {
-                  handleNavigate('/vendas');
-                } else if (pillarId === 'servicos') {
-                  handleNavigate('/servicos');
-                } else {
-                  const el = document.getElementById(pillarId);
-                  if (el) el.scrollIntoView({ behavior: 'smooth' });
-                }
-              }}
-              onOpenProposal={handleOpenProposal} 
-            />
-
-            {/* 3. Seção Sobre a Ouzze */}
-            <AboutSection onOpenProposal={handleOpenProposal} />
-
-            {/* 4. Soluções por Segmento (com link para Educação) */}
-            <SegmentsSection 
-              onNavigateToEducation={() => handleNavigate('/educacao')}
-              onOpenProposal={handleOpenProposal}
-            />
-
-            {/* 5. Seção Locação (Equipamentos B2B) */}
-            <RentalSection onOpenProposal={handleOpenProposal} />
-
-            {/* 6. Seção Serviços & Suporte */}
-            <ServicesSection onOpenProposal={handleOpenProposal} />
-
-            {/* 7. Benefícios: Por que escolher a Ouzze? */}
-            <BenefitsSection />
-
-            {/* 8. Como Funciona (Linha do Tempo em 5 Passos) */}
-            <HowItWorksSection />
-
-            {/* 9. Chamada Comercial de Alto Impacto */}
-            <CommercialCTA onOpenProposal={handleOpenProposal} />
-
-            {/* 10. Formulário Profissional de Contato / Proposta */}
-            <ContactFormSection initialSolution="Locação" />
-          </>
+          <DynamicPage
+            pageSlug={currentPath}
+            onOpenProposal={handleOpenProposal}
+            onNavigate={handleNavigate}
+          />
         )}
       </main>
 

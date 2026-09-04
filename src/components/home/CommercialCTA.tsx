@@ -1,13 +1,24 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { FileText, PhoneCall, ArrowRight, Sparkles } from 'lucide-react';
-import { siteConfig } from '../../config/siteConfig';
+import { useCMS } from '../../context/CMSContext';
+import { PageSection } from '../../types/cms';
 
 interface CommercialCTAProps {
+  section?: PageSection;
   onOpenProposal: (type?: string) => void;
 }
 
-export const CommercialCTA: React.FC<CommercialCTAProps> = ({ onOpenProposal }) => {
+export const CommercialCTA: React.FC<CommercialCTAProps> = ({ section, onOpenProposal }) => {
+  const { state } = useCMS();
+  const phone = state.settings.whatsapp?.phone || '5511999999999';
+  const salesMessage = state.settings.whatsapp?.salesMessage || 'Olá! Gostaria de falar com um especialista sobre soluções corporativas da Ouzze.';
+
+  const badge = section?.badge || 'Atendimento Consultivo Corporativo';
+  const title = section?.title || 'Sua empresa precisa de tecnologia. Nós cuidamos do resto.';
+  const description = section?.description || section?.subtitle || 'Fale com nossa equipe e encontre a melhor solução em locação, venda ou serviços de tecnologia com retorno financeiro imediato e zero dor de cabeça.';
+  const buttonText = section?.content?.buttonText || 'Solicitar proposta';
+
   return (
     <section className="py-20 bg-zinc-900/40 relative overflow-hidden border-b border-white/10">
       {/* Subtle Ambient Red Neon Spotlight */}
@@ -27,18 +38,15 @@ export const CommercialCTA: React.FC<CommercialCTAProps> = ({ onOpenProposal }) 
 
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 border border-red-600/30 bg-red-950/30 text-red-500 text-[10px] font-bold uppercase tracking-widest rounded-sm shadow-[0_0_12px_rgba(220,38,38,0.15)]">
             <span className="w-1.5 h-1.5 rounded-full bg-red-600 neon-dot" />
-            <span>Atendimento Consultivo Corporativo</span>
+            <span>{badge}</span>
           </div>
 
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight leading-tight">
-            Sua empresa precisa de tecnologia. <br />
-            <span className="text-red-600">
-              Nós cuidamos do resto.
-            </span>
+            {title}
           </h2>
 
           <p className="text-base sm:text-lg text-zinc-300 max-w-2xl mx-auto leading-relaxed">
-            Fale com nossa equipe e encontre a melhor solução em locação, venda ou serviços de tecnologia com retorno financeiro imediato e zero dor de cabeça.
+            {description}
           </p>
 
           <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -48,13 +56,13 @@ export const CommercialCTA: React.FC<CommercialCTAProps> = ({ onOpenProposal }) 
               className="w-full sm:w-auto px-8 py-4 rounded-sm bg-red-600 hover:bg-red-700 text-white font-bold text-xs uppercase tracking-wider neon-glow-btn transition-all duration-200 active:scale-98 flex items-center justify-center gap-2 group cursor-pointer"
             >
               <FileText className="w-4 h-4 text-red-200" />
-              <span>Solicitar proposta</span>
+              <span>{buttonText}</span>
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
             </button>
 
             <a
               id="cta-whatsapp-specialist-btn"
-              href={`https://wa.me/${siteConfig.whatsapp.phone}?text=${encodeURIComponent(siteConfig.whatsapp.salesMessage)}`}
+              href={`https://wa.me/${phone}?text=${encodeURIComponent(salesMessage)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto px-8 py-4 rounded-sm bg-zinc-800 hover:bg-zinc-700 hover:border-red-600/30 text-white font-bold text-xs uppercase tracking-wider border border-white/10 transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer shadow-sm"

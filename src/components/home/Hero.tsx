@@ -7,20 +7,22 @@ import {
 } from 'lucide-react';
 import { ComputerAssemblyAnimation } from './ComputerAssemblyAnimation';
 import { useCMS } from '../../context/CMSContext';
+import { PageSection } from '../../types/cms';
 
 interface HeroProps {
+  section?: PageSection;
   onOpenProposal: (type?: string) => void;
 }
 
-export const Hero: React.FC<HeroProps> = ({ onOpenProposal }) => {
+export const Hero: React.FC<HeroProps> = ({ section, onOpenProposal }) => {
   const { state } = useCMS();
-  const heroSection = state.sections.find(s => s.type === 'hero' && s.pageSlug === '/');
+  const heroSection = section || state.sections.find(s => s.type === 'hero' && s.pageSlug === '/');
   
-  const badgeText = heroSection?.content?.badge || 'Soluções Corporativas em Tecnologia';
-  const title = heroSection?.content?.title || 'Tecnologia que impulsiona o seu negócio.';
-  const subtitle = heroSection?.content?.subtitle || 'Locação, venda e serviços de tecnologia para empresas e instituições. Soluções completas para manter sua infraestrutura atualizada, segura e disponível.';
-  const primaryCtaText = heroSection?.content?.primaryCtaText || 'Solicitar Proposta';
-  const secondaryCtaText = heroSection?.content?.secondaryCtaText || 'Conhecer Soluções';
+  const badgeText = heroSection?.badge || heroSection?.content?.badge || 'Soluções Corporativas em Tecnologia';
+  const title = heroSection?.title || heroSection?.content?.title || 'Tecnologia que impulsiona o seu negócio.';
+  const subtitle = heroSection?.subtitle || heroSection?.content?.subtitle || heroSection?.description || 'Locação, venda e serviços de tecnologia para empresas e instituições. Soluções completas para manter sua infraestrutura atualizada, segura e disponível.';
+  const primaryCtaText = heroSection?.content?.ctaPrimaryText || heroSection?.content?.primaryCtaText || 'Solicitar Proposta';
+  const secondaryCtaText = heroSection?.content?.ctaSecondaryText || heroSection?.content?.secondaryCtaText || 'Conhecer Soluções';
   const trustPoints: string[] = heroSection?.content?.trustPoints || [
     'Sem imobilizar capital',
     'Suporte especializado',

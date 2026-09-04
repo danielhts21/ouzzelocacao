@@ -33,9 +33,12 @@ export const Footer: React.FC<FooterProps> = ({
   };
 
   const scrollToSection = (id: string) => {
-    const el = document.getElementById(id);
+    const cleanId = id.replace(/^#/, '');
+    const el = document.getElementById(cleanId);
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
+    } else if (onNavigate) {
+      onNavigate(`/#${cleanId}`);
     }
   };
 

@@ -12,16 +12,23 @@ import {
   Zap
 } from 'lucide-react';
 import { PILLARS_DATA } from '../../data/siteData';
+import { PageSection } from '../../types/cms';
 
 interface PillarsSectionProps {
+  section?: PageSection;
   onSelectPillar: (pillarId: string) => void;
   onOpenProposal: (solutionType: string) => void;
 }
 
 export const PillarsSection: React.FC<PillarsSectionProps> = ({ 
+  section,
   onSelectPillar, 
   onOpenProposal 
 }) => {
+  const badge = section?.badge || 'Soluções Integradas';
+  const title = section?.title || 'Uma empresa. Todas as soluções em tecnologia.';
+  const description = section?.description || section?.subtitle || 'Locação, venda e serviços integrados para simplificar a gestão de TI da sua empresa.';
+
   const getPillarIcon = (id: string) => {
     switch (id) {
       case 'locacao':
@@ -55,18 +62,15 @@ export const PillarsSection: React.FC<PillarsSectionProps> = ({
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
           <div className="inline-block px-3 py-1 border border-red-600/30 bg-red-600/10 text-red-500 text-[10px] font-bold uppercase tracking-widest rounded-sm">
-            Soluções Integradas
+            {badge}
           </div>
           
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white tracking-tight">
-            Uma empresa. <br className="hidden sm:block" />
-            <span className="text-red-600">
-              Todas as soluções
-            </span> em tecnologia.
+            {title}
           </h2>
 
           <p className="text-zinc-400 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
-            Locação, venda e serviços integrados para simplificar a gestão de TI da sua empresa.
+            {description}
           </p>
         </div>
 

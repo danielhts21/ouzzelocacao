@@ -37,6 +37,7 @@ export interface ServiceItem {
 
 export interface SegmentItem {
   id: string;
+  name?: string;
   title: string;
   subtitle: string;
   description: string;
@@ -44,6 +45,16 @@ export interface SegmentItem {
   slug: string;
   iconName: string;
   statsHighlight?: string;
+  badge?: string;
+  dedicatedPageUrl?: string;
+  hasDedicatedPage?: boolean;
+  whatsappMessage?: string;
+  ctaText?: string;
+  seoTitle?: string;
+  seoDescription?: string;
+  featured?: boolean;
+  order?: number;
+  active?: boolean;
 }
 
 export interface StepItem {

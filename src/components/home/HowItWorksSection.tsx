@@ -10,8 +10,18 @@ import {
   Sparkles
 } from 'lucide-react';
 import { HOW_IT_WORKS_STEPS } from '../../data/siteData';
+import { PageSection } from '../../types/cms';
 
-export const HowItWorksSection: React.FC = () => {
+interface HowItWorksSectionProps {
+  section?: PageSection;
+  onOpenProposal?: (type?: string) => void;
+}
+
+export const HowItWorksSection: React.FC<HowItWorksSectionProps> = ({ section }) => {
+  const badge = section?.badge || 'Metodologia & SLA';
+  const title = section?.title || 'Como funciona a experiência Ouzze';
+  const description = section?.description || section?.subtitle || 'Um processo estruturado em 5 etapas para garantir implantação rápida, zero atrito para seus colaboradores e total controle de custos.';
+
   const getStepIcon = (idx: number) => {
     switch (idx) {
       case 0:
@@ -39,18 +49,15 @@ export const HowItWorksSection: React.FC = () => {
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
           <div className="inline-block px-3 py-1 border border-red-600/30 bg-red-600/10 text-red-500 text-[10px] font-bold uppercase tracking-widest rounded-sm">
-            Metodologia & SLA
+            {badge}
           </div>
           
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">
-            Como funciona a <br className="hidden sm:block" />
-            <span className="text-red-600">
-              experiência Ouzze
-            </span>
+            {title}
           </h2>
 
           <p className="text-zinc-400 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
-            Um processo estruturado em 5 etapas para garantir implantação rápida, zero atrito para seus colaboradores e total controle de custos.
+            {description}
           </p>
         </div>
 

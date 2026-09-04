@@ -14,14 +14,20 @@ import {
 } from 'lucide-react';
 import { SERVICES_LIST } from '../../data/siteData';
 import { useCMS } from '../../context/CMSContext';
+import { PageSection } from '../../types/cms';
 
 interface ServicesSectionProps {
+  section?: PageSection;
   onOpenProposal: (serviceName: string) => void;
 }
 
-export const ServicesSection: React.FC<ServicesSectionProps> = ({ onOpenProposal }) => {
+export const ServicesSection: React.FC<ServicesSectionProps> = ({ section, onOpenProposal }) => {
   const { state } = useCMS();
   const servicesList = state.services && state.services.length > 0 ? state.services : SERVICES_LIST;
+
+  const badge = section?.badge || 'Ouzze Serviços & Suporte';
+  const title = section?.title || 'Sua operação funcionando. Sempre.';
+  const description = section?.description || section?.subtitle || 'Gestão, suporte técnico especializado e manutenção para garantir continuidade operacional.';
 
   const getServiceIcon = (iconName: string) => {
     switch (iconName) {
@@ -52,18 +58,15 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onOpenProposal
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
           <div className="inline-block px-3 py-1 border border-red-600/30 bg-red-600/10 text-red-500 text-[10px] font-bold uppercase tracking-widest rounded-sm">
-            Ouzze Serviços & Suporte
+            {badge}
           </div>
           
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">
-            Sua operação funcionando. <br className="hidden sm:block" />
-            <span className="text-red-600">
-              Sempre.
-            </span>
+            {title}
           </h2>
 
           <p className="text-zinc-400 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
-            Gestão, suporte técnico especializado e manutenção para garantir continuidade operacional.
+            {description}
           </p>
         </div>
 

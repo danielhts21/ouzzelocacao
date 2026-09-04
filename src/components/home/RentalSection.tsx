@@ -16,15 +16,21 @@ import {
 } from 'lucide-react';
 import { RENTAL_EQUIPMENT } from '../../data/siteData';
 import { useCMS } from '../../context/CMSContext';
+import { PageSection } from '../../types/cms';
 
 interface RentalSectionProps {
+  section?: PageSection;
   onOpenProposal: (equipmentName: string) => void;
 }
 
-export const RentalSection: React.FC<RentalSectionProps> = ({ onOpenProposal }) => {
+export const RentalSection: React.FC<RentalSectionProps> = ({ section, onOpenProposal }) => {
   const { state } = useCMS();
   const equipmentList = state.equipment && state.equipment.length > 0 ? state.equipment : RENTAL_EQUIPMENT;
   const [activeFilter, setActiveFilter] = useState<string>('todos');
+
+  const badge = section?.badge || 'Ouzze Locação Corporativa';
+  const title = section?.title || 'Tecnologia sem imobilizar capital.';
+  const description = section?.description || section?.subtitle || 'Equipamentos modernos, contratos flexíveis e suporte técnico completo para manter sua equipe produtiva.';
 
   const categories = [
     { id: 'todos', label: 'Todos os Equipamentos' },
@@ -69,18 +75,15 @@ export const RentalSection: React.FC<RentalSectionProps> = ({ onOpenProposal }) 
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-12 space-y-4">
           <div className="inline-block px-3 py-1 border border-red-600/30 bg-red-600/10 text-red-500 text-[10px] font-bold uppercase tracking-widest rounded-sm">
-            Ouzze Locação Corporativa
+            {badge}
           </div>
           
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight">
-            Tecnologia sem <br className="hidden sm:block" />
-            <span className="text-red-600">
-              imobilizar capital.
-            </span>
+            {title}
           </h2>
 
           <p className="text-zinc-400 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
-            Modelos flexíveis de locação corporativa para manter o parque tecnológico sempre atualizado com suporte e substituição inclusos.
+            {description}
           </p>
         </div>
 
